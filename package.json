@@ -1,0 +1,21 @@
+{
+  "name": "uniswap-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "v2-sdk",
+    "uniswap-2-interface"
+  ],
+  "scripts": {
+    "build": "yarn workspaces run build",
+    "start": "yarn workspace uniswap-2-interface start",
+    "build:sdk": "yarn workspace @uniswap/sdk build",
+    "build:interface": "yarn workspace uniswap-2-interface build"
+  },
+  "repository": "git@github.com:HIRO-Trading/WChainDexFrontend.git",
+  "author": "Ivan Gorshkov <ig@hirotech.io>",
+  "license": "MIT",
+  "engines": {
+    "node": "18.x"
+  }
+}

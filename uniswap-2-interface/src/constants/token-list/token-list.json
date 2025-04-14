@@ -1,0 +1,128 @@
+{
+  "name": "Wchain Token List",
+  "logoURI": "https://raw.githubusercontent.com/wadzchain/wadzchain-token-list/main/logo.png",
+  "keywords": [
+    "audited",
+    "verified",
+    "lending",
+    "aave"
+  ],
+  "tags": {
+    "stablecoin": {
+      "name": "Stablecoin",
+      "description": "Tokens that are fixed to an external asset"
+    }
+  },
+  "tokens": [
+    {
+      "name": "DIM token",
+      "decimals": 18,
+      "symbol": "DIM",
+      "address": "0x626a40Ea2Cc2a8A5EF628D49608AaEE99C03c309",
+      "chainId": 171717,
+      "tags": []
+    },
+    {
+      "name": "DIN token",
+      "decimals": 18,
+      "symbol": "DIN",
+      "address": "0x626a40Ea2Cc2a8A5EF628D49608AaEE99C03c309",
+      "chainId": 56,
+      "tags": []
+    },
+    {
+      "name": "ROG token",
+      "decimals": 18,
+      "symbol": "ROG",
+      "address": "0xC5F33E43Bfe7Fea9ac41400C00F8a7532E32AE0c",
+      "chainId": 56,
+      "tags": []
+    },
+    {
+      "name": "Test Token",
+      "decimals": 18,
+      "symbol": "TC",
+      "address": "0xbacabc872c127218a526eee7282c7f837d6a28b5",
+      "chainId": 171717,
+      "tags": []
+    },
+    {
+      "name": "Wrapped WCO",
+      "decimals": 18,
+      "symbol": "WWCO",
+      "address": "0x2996F51be16a9ee9A0a867f7518D55908F6B44CA",
+      "chainId": 171717,
+      "tags": []
+    },
+    {
+      "name": "Binance-Peg Ethereum Token",
+      "decimals": 18,
+      "symbol": "ETH",
+      "address": "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+      "chainId": 56,
+      "tags": []
+    },
+    {
+      "name": "Wrapped BNB",
+      "decimals": 18,
+      "symbol": "WBNB",
+      "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "chainId": 56,
+      "tags": []
+    },
+    {
+      "name": "Token TRON",
+      "decimals": 6,
+      "symbol": "TRX",
+      "address": "0xCE7de646e7208a4Ef112cb6ed5038FA6cC6b12e3",
+      "chainId": 56,
+      "tags": []
+    },
+    {
+      "name": "Tether USD",
+      "symbol": "USDT",
+      "decimals": 6,
+      "chainId": 1,
+      "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "tags": []
+    },
+    {
+      "name": "BNB",
+      "decimals": 18,
+      "symbol": "BNB",
+      "address": "0xB8c77482e45F1F44dE1745F52C74426C631bDD52",
+      "chainId": 1,
+      "tags": []
+    },
+    {
+      "name": "Wrapped ETH",
+      "decimals": 18,
+      "symbol": "WETH",
+      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "chainId": 1,
+      "tags": []
+    },
+    {
+      "name": "SPN Token",
+      "decimals": 18,
+      "symbol": "SPN",
+      "address": "0x626a40Ea2Cc2a8A5EF628D49608AaEE99C03c309",
+      "chainId": 1,
+      "tags": []
+    },
+    {
+      "name": "SPM Token",
+      "decimals": 18,
+      "symbol": "SPM",
+      "address": "0x8aafec649F98695eEac517f17Fb8773676b4070d",
+      "chainId": 1,
+      "tags": []
+    }
+  ],
+  "timestamp": "2025-03-04T13:15:33.267Z",
+  "version": {
+    "major": 2,
+    "minor": 6,
+    "patch": 1
+  }
+}
