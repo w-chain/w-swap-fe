@@ -10,10 +10,12 @@ import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import BNBLogoPng from './assets/bnb-logo.png'
 import USDTLogo from './assets/usdt.webp'
 import USDCLogo from './assets/usdc.webp'
+import WBTCLogo from './assets/wbtc.webp'
 
 import { useActiveWeb3React } from '../../hooks'
 
 const getTokenLogoURL = (address: string, chainId: ChainId) => {
+  // Temporarily Cheat sheet until we found better dynamic sourcing for logos
   if (['0x2170Ed0880ac9A755fd29B2688956BD959F933F8', '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'].includes(address)) {
     return EthereumLogo;
   }
@@ -22,6 +24,14 @@ const getTokenLogoURL = (address: string, chainId: ChainId) => {
   }
   if (['0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d'].includes(address)) {
     return USDCLogo;
+  }
+
+  if (['0x0555E30da8f98308EdB960aa94C0Db47230d2B9c', '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599'].includes(address)) {
+    return WBTCLogo;
+  }
+
+  if (['0x2996F51be16a9ee9A0a867f7518D55908F6B44CA', '0xF4b85c92c50677E4314413Db6358B037eaA1A721'].includes(address)) {
+    return WcoLogoPng;
   }
 
   const prefixMap: Partial<Record<ChainId, string>> = {
