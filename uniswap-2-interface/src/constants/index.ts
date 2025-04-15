@@ -2,7 +2,7 @@ import { ChainId, JSBI, Percent, Token, WETH } from '@uniswap/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
-import { BNB_CHAIN_ID, WADZCHAIN_CHAIN_ID } from '../wadzchain_config'
+import { BNB_CHAIN_ID, W_CHAIN_ID } from '../w-chain-config'
 
 // a list of tokens by chain
 type ChainTokenList = {
@@ -22,7 +22,7 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
   [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
   [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
-  [WADZCHAIN_CHAIN_ID]: [WETH[WADZCHAIN_CHAIN_ID]],
+  [W_CHAIN_ID]: [WETH[W_CHAIN_ID]],
   [BNB_CHAIN_ID]: [WETH[BNB_CHAIN_ID]]
 }
 
