@@ -7,10 +7,10 @@
     "dex",
     "swap"
   ],
-  "timestamp": "2025-03-04T13:15:33.267Z",
+  "timestamp": "2025-05-15T13:38:42.123Z",
   "version": {
     "major": 3,
-    "minor": 0,
+    "minor": 1,
     "patch": 0
   },
   "tokens": [
@@ -78,11 +78,39 @@
       "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7"
     },
     {
+      "name": "Tether USD",
+      "symbol": "USDT",
+      "decimals": 6,
+      "chainId": 171717,
+      "address": "0x40CB2CCcF80Ed2192b53FB09720405F6Fe349743"
+    },
+    {
+      "name": "Tether USD",
+      "symbol": "USDT",
+      "decimals": 6,
+      "chainId": 71117,
+      "address": "'0x9D6d68774326b2100adD0aA29C928Ed7bdC3B127'"
+    },
+    {
       "name": "USD Coin",
       "symbol": "USDC",
       "decimals": 6,
       "chainId": 1,
       "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+    },
+    {
+      "name": "USD Coin",
+      "symbol": "USDC",
+      "decimals": 6,
+      "chainId": 71117,
+      "address": "0x1aB74716E3Ec78c71967a846199407c351094c45"
+    },
+    {
+      "name": "USD Coin",
+      "symbol": "USDC",
+      "decimals": 6,
+      "chainId": 171717,
+      "address": "0x643eC74Ed2B79098A37Dc45dcc7F1AbfE2AdE6d8"
     },
     {
       "name": "BNB",
