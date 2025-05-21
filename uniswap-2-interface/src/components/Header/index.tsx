@@ -20,7 +20,6 @@ import Settings from '../Settings'
 import Row, { RowBetween } from '../Row'
 import Web3Status from '../Web3Status'
 // import VersionSwitch from './VersionSwitch'
-import { WADZCHAIN_CHAIN_ID } from '../../wadzchain_config'
 import { getNativeTokenSymbol } from '../../utils/getNativeTokenSymbol'
 
 const HeaderFrame = styled.div`
@@ -129,13 +128,9 @@ const BalanceText = styled(Text)`
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
-  // TODO: remove other chains
-  [ChainId.MAINNET]: null,
-  [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ROPSTEN]: 'Ropsten',
-  [ChainId.GÖRLI]: 'Görli',
-  [ChainId.KOVAN]: 'Kovan',
-  [WADZCHAIN_CHAIN_ID]: 'W Chain',
+  [ChainId.MAINNET]: 'Ethereum',
+  [ChainId.WCHAIN]: 'W Chain',
+  [ChainId.WCHAIN_TESTNET]: 'W Chain Testnet',
   [ChainId.BNB]: 'BNB'
 }
 

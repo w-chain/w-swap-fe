@@ -21,14 +21,15 @@ export class Currency {
   public static readonly BNB: Currency = new Currency(18, 'BNB', 'BNB')
 
   getSymbol(chainId: ChainId) {
-    if (chainId === ChainId.WADZCHAIN_MAINNET) {
-      return Currency.WCO.symbol
+    switch (chainId) {
+      case ChainId.WCHAIN:
+      case ChainId.WCHAIN_TESTNET:
+        return Currency.WCO.symbol
+      case ChainId.BNB:
+        return Currency.BNB.symbol
+      default:
+        return Currency.ETHER.symbol
     }
-    if (chainId === ChainId.BNB) {
-      return Currency.BNB.symbol
-    }
-
-    return Currency.ETHER.symbol
   }
   /**
    * Constructs an instance of the base class `Currency`. The only instance of the base class `Currency` is `Currency.ETHER`.

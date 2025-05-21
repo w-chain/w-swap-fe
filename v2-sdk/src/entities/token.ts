@@ -1,5 +1,5 @@
 import invariant from 'tiny-invariant'
-import { BNB_WBNB_ADDRESS, ChainId, WADZCHAIN_WWCO_ADDRESS } from '../constants'
+import { ChainId } from '../constants'
 import { validateAndParseAddress } from '../utils'
 import { Currency } from './currency'
 
@@ -64,24 +64,7 @@ export const WETH = {
     'WETH',
     'Wrapped Ether'
   ),
-  [ChainId.ROPSTEN]: new Token(
-    ChainId.ROPSTEN,
-    '0xc778417E063141139Fce010982780140Aa0cD5Ab',
-    18,
-    'WETH',
-    'Wrapped Ether'
-  ),
-  [ChainId.RINKEBY]: new Token(
-    ChainId.RINKEBY,
-    '0xc778417E063141139Fce010982780140Aa0cD5Ab',
-    18,
-    'WETH',
-    'Wrapped Ether'
-  ),
-  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'),
-  /** NOTE: Wadz-specific */
-  [ChainId.WADZCHAIN_MAINNET]: new Token(ChainId.WADZCHAIN_MAINNET, WADZCHAIN_WWCO_ADDRESS, 18, 'WWCO', 'Wrapped WCO'),
-  /** NOTE: BNB-specific */
-  [ChainId.BNB]: new Token(ChainId.BNB, BNB_WBNB_ADDRESS, 18, 'WBNB', 'Wrapped BNB')
+  [ChainId.WCHAIN]: new Token(ChainId.WCHAIN, '0x2996F51be16a9ee9A0a867f7518D55908F6B44CA', 18, 'WWCO', 'Wrapped WCO'),
+  [ChainId.WCHAIN_TESTNET]: new Token(ChainId.WCHAIN_TESTNET, '0x228CF2E1c2e9B273C807cefB3905bC4064fcBC12', 18, 'WWCO', 'Wrapped WCO'),
+  [ChainId.BNB]: new Token(ChainId.BNB, '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', 18, 'WBNB', 'Wrapped BNB')
 }

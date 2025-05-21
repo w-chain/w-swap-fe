@@ -9,8 +9,7 @@ import footerLogo from './assets/wadz-footer-logo.png'
 const MAIN_TEXT =
   'W Chain stands out as a pioneering hybrid blockchain designed specifically for seamless global payments. Combining the best of both worlds, it delivers exceptional scalability, speed, and security. Built to manage a high volume of transactions effortlessly, W Chain guarantees that each transaction is fast, secure, and efficient.'
 
-/** NOTE: Wadz-specific */
-const links = [
+  const links = [
   { text: 'Contact us', href: 'https://w-chain.com/contact-us/' },
   { text: 'FAQ', href: 'https://w-chain.com/faq/' },
   { text: 'Guidelines', href: 'https://w-chain.com/guidelines/' },
@@ -18,17 +17,17 @@ const links = [
 ]
 
 const FooterWrapper = styled.footer`
-  padding-top: 32px;
-  padding-bottom: 32px;
+  padding-top: 16px;
+  padding-bottom: 16px;
   padding-left: 32px;
   padding-right: 32px;
   position: relative;
-  min-height: 190px;
+  min-height: 60;
   display: flex;
   flex-wrap: wrap;
   gap: 32px;
   width: 100%;
-  background: white;
+  background: linear-gradient(to bottom, #E6F3FF, #004C99);
   align-items: center;
 `
 
@@ -92,18 +91,18 @@ const SocialIcon = styled.a`
     opacity: 0.8;
   }
 `
-/** NOTE: Wadz-specific */
+
 const socialLinks = [
-  { icon: discordSvg, href: 'https://discord.gg/wadz' },
-  { icon: telegramSvg, href: 'https://t.me/wadz_global' },
-  { icon: twitterSvg, href: 'https://twitter.com/wadz' },
-  { icon: linkedinSvg, href: 'https://linkedin.com/company/wadz' }
+  { icon: discordSvg, href: 'https://discord.gg/hr35kDxtfT' },
+  { icon: telegramSvg, href: 'https://t.me/official_wchain' },
+  { icon: twitterSvg, href: 'https://x.com/WChainNetwork' },
+  { icon: linkedinSvg, href: 'https://www.linkedin.com/company/wchain' }
 ]
 
 export function Footer() {
   return (
     <FooterWrapper>
-      <Logo src={footerLogo} alt="Wadz Logo" />
+      <Logo src={footerLogo} alt="W Chain Logo" />
       <ContentSection>
         <Description>{MAIN_TEXT}</Description>
         <LinksWrapper>

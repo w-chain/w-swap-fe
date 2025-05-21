@@ -40,7 +40,7 @@ function deserializeToken(serializedToken: SerializedToken): Token {
 }
 
 export function useIsDarkMode(): boolean {
-  /** NOTE: Wadz-specific set the dark theme */
+  /** Force the dark theme */
   return true
 
   // const { userDarkMode, matchesDarkMode } = useSelector<
@@ -186,7 +186,7 @@ export function useTrackedTokenPairs(): [Token, Token][] {
   const generatedPairs: [Token, Token][] = useMemo(
     () =>
       chainId
-        ? flatMap(Object.keys(tokens), tokenAddress => {
+        ? flatMap(Object.keys(tokens), (tokenAddress: string) => {
             const token = tokens[tokenAddress]
             // for each token on the current chain,
             return (

@@ -75,13 +75,15 @@ const StyledLogo = styled(Logo)<{ size: string }>`
 `
 
 const getNativeCurrencyLogoURL = (chainId?: ChainId) => {
-  if (chainId === ChainId.WADZCHAIN_MAINNET) {
-    return WcoLogoPng
-  } else if (chainId === ChainId.BNB) {
-    return BNBLogoPng
+  switch (chainId) {
+    case ChainId.WCHAIN:
+    case ChainId.WCHAIN_TESTNET:
+      return WcoLogoPng
+    case ChainId.BNB:
+      return BNBLogoPng
+    default:
+      return EthereumLogo
   }
-
-  return EthereumLogo
 }
 
 export default function CurrencyLogo({

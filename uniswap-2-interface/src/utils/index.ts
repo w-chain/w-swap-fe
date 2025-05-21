@@ -6,7 +6,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER, getRouterAddress } from '@uniswap/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
-import { WADZCHAIN_CHAIN_ID } from '../wadzchain_config'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -18,23 +17,17 @@ export function isAddress(value: any): string | false {
 }
 
 const ETHERSCAN_LINKS: { [chainId in ChainId]: string } = {
-  1: 'https://etherscan.io',
-  3: 'https://ropsten.etherscan.io',
-  4: 'https://rinkeby.etherscan.io',
-  5: 'https://goerli.etherscan.io',
-  42: 'https://kovan.etherscan.io',
-  [WADZCHAIN_CHAIN_ID]: 'https://scan.w-chain.com',
+  [ChainId.MAINNET]: 'https://etherscan.io',
+  [ChainId.WCHAIN]: 'https://scan.w-chain.com',
+  [ChainId.WCHAIN_TESTNET]: 'https://scan-testnet.w-chain.com',
   [ChainId.BNB]: 'https://bscscan.com'
 }
 
 const ETHERSCAN_NAMES: { [chainId in ChainId]: string } = {
-  [1]: 'Etherscan',
-  [3]: 'Etherscan (Ropsten)',
-  [4]: 'Etherscan (Rinkeby)',
-  [5]: 'Etherscan (Goerli)',
-  [42]: 'Etherscan (Kovan)',
-  [WADZCHAIN_CHAIN_ID]: 'W-Chainscan',
-  [ChainId.BNB]: 'Bscscan'
+  [ChainId.MAINNET]: 'Etherscan',
+  [ChainId.WCHAIN]: 'W Scan',
+  [ChainId.WCHAIN_TESTNET]: 'W Scan',
+  [ChainId.BNB]: 'BscScan'
 }
 
 export function getPoolLink(chainId: ChainId = 1, pairAddress: string): string {

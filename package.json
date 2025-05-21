@@ -12,8 +12,7 @@
     "build:sdk": "yarn workspace @uniswap/sdk build",
     "build:interface": "yarn workspace uniswap-2-interface build"
   },
-  "repository": "git@github.com:HIRO-Trading/WChainDexFrontend.git",
-  "author": "Ivan Gorshkov <ig@hirotech.io>",
+  "repository": "git@github.com:w-chain/w-swap-contracts.git",
   "license": "MIT",
   "engines": {
     "node": "18.x"

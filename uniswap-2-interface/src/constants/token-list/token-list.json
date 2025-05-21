@@ -89,7 +89,7 @@
       "symbol": "USDT",
       "decimals": 6,
       "chainId": 71117,
-      "address": "'0x9D6d68774326b2100adD0aA29C928Ed7bdC3B127'"
+      "address": "0x9D6d68774326b2100adD0aA29C928Ed7bdC3B127"
     },
     {
       "name": "USD Coin",

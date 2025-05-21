@@ -2,21 +2,14 @@ import JSBI from 'jsbi'
 
 // exports for external consumption
 export type BigintIsh = JSBI | bigint | string
-export const WADZCHAIN_CHAIN_ID: ChainId = 171717 as const
-/** NOTE: Wadz-specific */
 export enum ChainId {
   MAINNET = 1,
-  ROPSTEN = 3,
-  RINKEBY = 4,
-  GÖRLI = 5,
-  KOVAN = 42,
-  WADZCHAIN_MAINNET = WADZCHAIN_CHAIN_ID,
-  BNB = 56
+  BNB = 56,
+  WCHAIN = 171717,
+  WCHAIN_TESTNET = 71117
 }
-/** NOTE: Wadz-specific */
-export const WADZCHAIN_RPC_URL = 'https://rpc.wadzchain.io'
-export const WADZCHAIN_WWCO_ADDRESS = '0x2996F51be16a9ee9A0a867f7518D55908F6B44CA'
-export const BNB_WBNB_ADDRESS = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
+
+export const WCHAIN_RPC_URL = 'https://rpc.w-chain.com'
 
 export enum TradeType {
   EXACT_INPUT,
@@ -29,12 +22,13 @@ export enum Rounding {
   ROUND_UP
 }
 
-/** NOTE: Wadz-specific */
+/** NOTE: Defined by W Chain */
 const INIT_CODE_HASH = '0xef8ef663d992dea71acf872a41c6c344699e481f62330c39dae2be4102890f7a'
 const INIT_CODE_HASH_MAP = {
   [ChainId.BNB]: '0xef8ef663d992dea71acf872a41c6c344699e481f62330c39dae2be4102890f7a',
   [ChainId.MAINNET]: '0xef8ef663d992dea71acf872a41c6c344699e481f62330c39dae2be4102890f7a',
-  [ChainId.WADZCHAIN_MAINNET]: '0xef8ef663d992dea71acf872a41c6c344699e481f62330c39dae2be4102890f7a'
+  [ChainId.WCHAIN]: '0xef8ef663d992dea71acf872a41c6c344699e481f62330c39dae2be4102890f7a',
+  [ChainId.WCHAIN_TESTNET]: '0x4e0dc4183e2d370ec6c3d91123c73cfc17797eaf0df7dd399aef69b1fd9e2915'
 }
 
 export const getInitCodeHash = (chainId: ChainId) => {
@@ -45,7 +39,8 @@ const FACTORY_ADDRESS = '0x9A9bed06107B0036361DE7320042918c029EDB78'
 const FACTORY_ADDRESS_MAP = {
   [ChainId.BNB]: '0x2996F51be16a9ee9A0a867f7518D55908F6B44CA',
   [ChainId.MAINNET]: '0x65166A8f9C8bC43fA0647F088FCDb9B044C9F48D',
-  [ChainId.WADZCHAIN_MAINNET]: '0x9A9bed06107B0036361DE7320042918c029EDB78'
+  [ChainId.WCHAIN]: '0x9A9bed06107B0036361DE7320042918c029EDB78',
+  [ChainId.WCHAIN_TESTNET]: '0x1577db59335Cb79B2560462A4f06f8664480DDa8'
 }
 
 export const getFactoryAddress = (chainId: ChainId) => {
@@ -56,7 +51,8 @@ const ROUTER_ADDRESS = '0xdbA784B3A27a5dBFCa0739eD3E8EFdea2bF8F663'
 const ROUTER_ADDRESS_MAP = {
   [ChainId.BNB]: '0x65166A8f9C8bC43fA0647F088FCDb9B044C9F48D',
   [ChainId.MAINNET]: '0xaD2DD426639fE954f6c47f55758CCF9AFC535BE0',
-  [ChainId.WADZCHAIN_MAINNET]: '0xdbA784B3A27a5dBFCa0739eD3E8EFdea2bF8F663'
+  [ChainId.WCHAIN]: '0xdbA784B3A27a5dBFCa0739eD3E8EFdea2bF8F663',
+  [ChainId.WCHAIN_TESTNET]: '0x5105989c863e801fC610396529BE9f2A6B95bF0A'
 }
 
 export const getRouterAddress = (chainId: ChainId) => {

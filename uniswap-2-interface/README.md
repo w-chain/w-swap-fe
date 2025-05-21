@@ -1,7 +1,7 @@
 # Checklist
 
-- [ ] Add multicall address for wadzchain
-- [ ] Update token list for wadzchain to use local
+- [*] Add multicall address for W Chain
+- [*] Update token list for W Chain to use local
 
 # Uniswap Interface
 

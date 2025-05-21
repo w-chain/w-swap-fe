@@ -3,7 +3,6 @@ import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
-import { WADZCHAIN_CHAIN_ID } from '../../wadzchain_config'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -32,12 +31,9 @@ export type TokenAddressMap = Readonly<{ [chainId in ChainId]: Readonly<{ [token
  * An empty result, useful as a default.
  */
 const EMPTY_LIST: TokenAddressMap = {
-  [ChainId.KOVAN]: {},
-  [ChainId.RINKEBY]: {},
-  [ChainId.ROPSTEN]: {},
-  [ChainId.GÖRLI]: {},
   [ChainId.MAINNET]: {},
-  [WADZCHAIN_CHAIN_ID]: {},
+  [ChainId.WCHAIN]: {},
+  [ChainId.WCHAIN_TESTNET]: {},
   [ChainId.BNB]: {}
 }
 

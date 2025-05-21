@@ -23,7 +23,7 @@ import { Token } from './token'
 
 let PAIR_ADDRESS_CACHE: { [token0Address: string]: { [token1Address: string]: string } } = {}
 
-/** Note: WADZ Specific multichain is here */
+/** Note: W Swap Specific multichain is here */
 export class Pair {
   public readonly liquidityToken: Token
   private readonly tokenAmounts: [TokenAmount, TokenAmount]
