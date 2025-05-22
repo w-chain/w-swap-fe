@@ -30,6 +30,12 @@ const USDCAddresses = [
   '0x643eC74Ed2B79098A37Dc45dcc7F1AbfE2AdE6d8', // W Chain MAINNET 
 ]
 
+const WCOAddresses = [
+  '0xF4b85c92c50677E4314413Db6358B037eaA1A721', // ETH & BSC 
+  '0xEdB8008031141024d50cA2839A607B2f82C1c045', // W Chain
+  '0x8495cbfd11759f920a5f6ad34ca5f2b499a348fc' // W Chain TESTNET
+]
+
 const getTokenLogoURL = (address: string, chainId: ChainId) => {
   // Temporarily Cheat sheet until we found better dynamic sourcing for logos
   if (['0x2170Ed0880ac9A755fd29B2688956BD959F933F8', '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'].includes(address)) {
@@ -48,7 +54,7 @@ const getTokenLogoURL = (address: string, chainId: ChainId) => {
     return WBTCLogo;
   }
 
-  if (['0x2996F51be16a9ee9A0a867f7518D55908F6B44CA', '0xF4b85c92c50677E4314413Db6358B037eaA1A721'].includes(address)) {
+  if (['0xEdB8008031141024d50cA2839A607B2f82C1c045', '0xF4b85c92c50677E4314413Db6358B037eaA1A721'].includes(address)) {
     return WcoLogoPng;
   }
 
