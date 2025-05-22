@@ -10,7 +10,7 @@
   "timestamp": "2025-05-15T13:38:42.123Z",
   "version": {
     "major": 3,
-    "minor": 1,
+    "minor": 2,
     "patch": 0
   },
   "tokens": [
@@ -20,6 +20,13 @@
       "symbol": "WWCO",
       "address": "0x2996F51be16a9ee9A0a867f7518D55908F6B44CA",
       "chainId": 171717
+    },
+    {
+      "name": "Wrapped WCO",
+      "decimals": 18,
+      "symbol": "WWCO",
+      "address": "0x228CF2E1c2e9B273C807cefB3905bC4064fcBC12",
+      "chainId": 71117
     },
     {
       "name": "Bridged WCO",
