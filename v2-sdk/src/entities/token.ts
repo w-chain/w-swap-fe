@@ -65,6 +65,6 @@ export const WETH = {
     'Wrapped Ether'
   ),
   [ChainId.WCHAIN]: new Token(ChainId.WCHAIN, '0x2996F51be16a9ee9A0a867f7518D55908F6B44CA', 18, 'WWCO', 'Wrapped WCO'),
-  [ChainId.WCHAIN_TESTNET]: new Token(ChainId.WCHAIN_TESTNET, '0x228CF2E1c2e9B273C807cefB3905bC4064fcBC12', 18, 'WWCO', 'Wrapped WCO'),
+  [ChainId.WCHAIN_TESTNET]: new Token(ChainId.WCHAIN_TESTNET, '0x8495cbfd11759f920a5f6ad34ca5f2b499a348fc', 18, 'WWCO', 'Wrapped WCO'),
   [ChainId.BNB]: new Token(ChainId.BNB, '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', 18, 'WBNB', 'Wrapped BNB')
 }

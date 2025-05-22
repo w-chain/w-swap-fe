@@ -12,6 +12,16 @@ export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC
 export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD Coin')
 export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
 
+export const WCHAIN_TOKENS = {
+  USDT: new Token(ChainId.WCHAIN, '0x40CB2CCcF80Ed2192b53FB09720405F6Fe349743', 6, 'USDT', 'Tether USD'),
+  USDC: new Token(ChainId.WCHAIN, '0x643eC74Ed2B79098A37Dc45dcc7F1AbfE2AdE6d8', 6, 'USDC', 'USD Coin'),
+}
+
+export const WCHAIN_TESTNET_TOKENS = {
+  USDT: new Token(ChainId.WCHAIN_TESTNET, '0x9D6d68774326b2100adD0aA29C928Ed7bdC3B127', 6, 'USDT', 'Tether USD'),
+  USDC: new Token(ChainId.WCHAIN_TESTNET, '0x1aB74716E3Ec78c71967a846199407c351094c45', 6, 'USDC', 'USD Coin'),
+}
+
 const WETH_ONLY: ChainTokenList = {
   [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],
   [ChainId.WCHAIN]: [WETH[ChainId.WCHAIN]],
@@ -23,7 +33,9 @@ const WETH_ONLY: ChainTokenList = {
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], USDC, USDT],
-  [ChainId.WCHAIN]: [...WETH_ONLY[ChainId.WCHAIN], USDC, USDT],
+  [ChainId.WCHAIN]: [...WETH_ONLY[ChainId.WCHAIN], WCHAIN_TOKENS.USDT, WCHAIN_TOKENS.USDC],
+  [ChainId.WCHAIN_TESTNET]: [...WETH_ONLY[ChainId.WCHAIN_TESTNET], WCHAIN_TESTNET_TOKENS.USDT, WCHAIN_TESTNET_TOKENS.USDC],
+  [ChainId.BNB]: [...WETH_ONLY[ChainId.BNB]]
 }
 
 /**
@@ -39,13 +51,19 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], USDC, USDT]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], USDC, USDT],
+  [ChainId.WCHAIN]: [...WETH_ONLY[ChainId.WCHAIN], WCHAIN_TOKENS.USDT, WCHAIN_TOKENS.USDC],
+  [ChainId.WCHAIN_TESTNET]: [...WETH_ONLY[ChainId.WCHAIN_TESTNET], WCHAIN_TESTNET_TOKENS.USDT, WCHAIN_TESTNET_TOKENS.USDC],
+  [ChainId.BNB]: [...WETH_ONLY[ChainId.BNB]]
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], USDC, USDT]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], USDC, USDT],
+  [ChainId.WCHAIN]: [...WETH_ONLY[ChainId.WCHAIN], WCHAIN_TOKENS.USDT, WCHAIN_TOKENS.USDC],
+  [ChainId.WCHAIN_TESTNET]: [...WETH_ONLY[ChainId.WCHAIN_TESTNET], WCHAIN_TESTNET_TOKENS.USDT, WCHAIN_TESTNET_TOKENS.USDC],
+  [ChainId.BNB]: [...WETH_ONLY[ChainId.BNB]]
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
@@ -53,6 +71,16 @@ export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } 
     [WETH[ChainId.MAINNET], USDT],
     [USDC, USDT],
     [DAI, USDT]
+  ],
+  [ChainId.WCHAIN]: [
+    [WETH[ChainId.WCHAIN], WCHAIN_TOKENS.USDT],
+    [WETH[ChainId.WCHAIN], WCHAIN_TOKENS.USDC],
+    [WCHAIN_TOKENS.USDC, WCHAIN_TOKENS.USDT]
+  ],
+  [ChainId.WCHAIN_TESTNET]: [
+    [WETH[ChainId.WCHAIN_TESTNET], WCHAIN_TESTNET_TOKENS.USDT],
+    [WETH[ChainId.WCHAIN_TESTNET], WCHAIN_TESTNET_TOKENS.USDC],
+    [WCHAIN_TESTNET_TOKENS.USDC, WCHAIN_TESTNET_TOKENS.USDT]
   ]
 }
 
