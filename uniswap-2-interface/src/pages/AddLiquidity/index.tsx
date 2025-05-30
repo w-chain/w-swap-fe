@@ -317,7 +317,16 @@ export default function AddLiquidity({
     <>
       <AppBody>
         <AddRemoveTabs adding={true} />
-        <Wrapper>
+        <Wrapper
+          style={{
+            background: 'rgba(255,255,255,0.95)',
+            borderRadius: '24px',
+            boxShadow: '0 8px 32px rgba(74,144,226,0.08)',
+            padding: '2.5rem 2rem',
+            maxWidth: 480,
+            margin: '0 auto'
+          }}
+        >
           <TransactionConfirmationModal
             isOpen={showConfirm}
             onDismiss={handleDismissConfirmation}

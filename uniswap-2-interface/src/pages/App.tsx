@@ -35,17 +35,14 @@ const AppWrapper = styled.div`
 `
 
 const AppBg = styled.div`
-  background-image: url(${WadzBg});
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: 0.3;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   min-height: 100vh;
+  background: #fff;
+  overflow: hidden;
 `
 
 const HeadBodyWrapper = styled.div`
@@ -76,10 +73,45 @@ const BodyWrapper = styled.div`
   `};
 
   z-index: 1;
+
+  @media (max-width: 768px) {
+    padding-top: 80px;
+  }
+
+  @media (max-width: 1024px) {
+    padding-top: 100px;
+  }
 `
 
 const Marginer = styled.div`
   margin-top: 5rem;
+`
+
+const SeamlessWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  height: fit-content;
+  z-index: 10;
+
+  p {
+    font-family: Montserrat;
+    font-weight: 600;
+    font-size: 2.5rem;
+    margin: 0;
+    line-height: 1.2;
+    color: #fff;
+  }
+`
+
+const SeamlessGradient = styled.div`
+  top: 73px;
+  background: linear-gradient(180deg, #034e94 0%, #75b6fe 59.62%, #ffffff 100%);
+  width: 100%;
+  height: 500px;
+  left: 0px;
+  position: absolute;
 `
 
 export default function App() {
@@ -96,6 +128,12 @@ export default function App() {
             </HeaderWrapper>
             <BodyWrapper>
               <Popups />
+
+              <SeamlessGradient />
+              <SeamlessWrapper>
+                <p>Seamless Swaps. Unified Liquidity.</p>
+                <p>Built for Utility​​ ​Tokens.​​​</p>
+              </SeamlessWrapper>
               <Web3ReactManager>
                 <Switch>
                   <Route exact strict path="/swap" component={Swap} />
@@ -118,7 +156,6 @@ export default function App() {
               <Marginer />
             </BodyWrapper>
           </HeadBodyWrapper>
-
           <Footer />
         </AppWrapper>
       </HashRouter>

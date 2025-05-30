@@ -41,7 +41,7 @@ function deserializeToken(serializedToken: SerializedToken): Token {
 
 export function useIsDarkMode(): boolean {
   /** Force the dark theme */
-  return true
+  return false
 
   // const { userDarkMode, matchesDarkMode } = useSelector<
   //   AppState,

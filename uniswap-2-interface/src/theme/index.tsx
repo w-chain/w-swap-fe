@@ -54,19 +54,21 @@ export function colors(darkMode: boolean): Colors {
     bg4: darkMode ? '#565A69' : '#CED0D9',
     bg5: darkMode ? '#6C7284' : '#888D9B',
 
+    buttonBg1: darkMode ? '#6C7284' : '#95cbfe',
+    buttonHoverBg1: darkMode ? '#212429' : '#7ab7f3',
+    buttonBg2: darkMode ? '#6C7284' : '#043F84',
+    buttonHoverBg2: darkMode ? '#212429' : '#032d5f',
+
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#ff007a',
-    primary2: darkMode ? '#3680E7' : '#FF8CC3',
-    primary3: darkMode ? '#4D8FEA' : '#FF99C9',
-    primary4: darkMode ? '#376bad70' : '#F6DDE8',
-    primary5: darkMode ? '#153d6f70' : '#FDEAF1',
+    primary1: darkMode ? '#2172E5' : '#9ec1e3',
+    primary2: darkMode ? '#3680E7' : '#B4DAFE',
 
     // color text
-    primaryText1: darkMode ? '#6da8ff' : '#ff007a',
+    primaryText1: darkMode ? '#6da8ff' : '#043F84',
 
     // secondary colors
     secondary1: darkMode ? '#2172E5' : '#ff007a',
@@ -169,38 +171,40 @@ export const TYPE = {
 }
 
 export const FixedGlobalStyle = createGlobalStyle`
-html, input, textarea, button {
-  font-family: 'Inter', sans-serif;
-  letter-spacing: -0.018em;
-  font-display: fallback;
-}
-@supports (font-variation-settings: normal) {
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
   html, input, textarea, button {
-    font-family: 'Inter var', sans-serif;
+    font-family: 'Montserrat', 'Inter', sans-serif;
+    letter-spacing: -0.018em;
+    font-display: fallback;
   }
-}
+  @supports (font-variation-settings: normal) {
+    html, input, textarea, button {
+      font-family: 'Montserrat', 'Inter var', sans-serif;
+    }
+  }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
 
-* {
-  box-sizing: border-box;
-}
+  * {
+    box-sizing: border-box;
+  }
 
-button {
-  user-select: none;
-}
+  button {
+    user-select: none;
+  }
 
-html {
-  font-size: 16px;
-  font-variant: none;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
+  html {
+    font-size: 16px;
+    font-variant: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  }
 `
 
 export const ThemedGlobalStyle = createGlobalStyle`

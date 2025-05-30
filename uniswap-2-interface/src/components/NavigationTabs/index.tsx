@@ -23,23 +23,24 @@ const StyledNavLink = styled(NavLink).attrs({
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   justify-content: center;
-  height: 3rem;
-  border-radius: 3rem;
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text3};
-  font-size: 20px;
+  color: #00000080;
+  font-size: 1.2rem;
+  font-weight: 600;
+  font-family: Montserrat;
+  padding: 6px 32px;
+  border-radius: 12px;
 
   &.${activeClassName} {
-    border-radius: 12px;
-    font-weight: 500;
-    color: ${({ theme }) => theme.text1};
+    color: #043f84;
+    background: #b4dafe;
   }
 
   :hover,
   :focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
+    color: #043f84;
   }
 `
 

@@ -20,15 +20,17 @@ export interface Colors {
   bg4: Color
   bg5: Color
 
+  buttonBg1: Color
+  buttonHoverBg1: Color
+  buttonBg2: Color
+  buttonHoverBg2: Color
+
   modalBG: Color
   advancedBG: Color
 
   //blues
   primary1: Color
   primary2: Color
-  primary3: Color
-  primary4: Color
-  primary5: Color
 
   primaryText1: Color
 

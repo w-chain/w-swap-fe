@@ -29,8 +29,11 @@ const HeaderFrame = styled.div`
   flex-direction: column;
   width: 100%;
   top: 0;
-  position: absolute;
-  z-index: 2;
+  position: sticky;
+  z-index: 10;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(74, 144, 226, 0.08);
+  padding-bottom: 0.5rem;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     padding: 12px 0 0 0;
     width: calc(100%);
@@ -74,7 +77,9 @@ const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
+  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.primary2)};
+  box-shadow: inset -2px -2px 4px rgba(4, 63, 132, 0.2);
+
   border-radius: 12px;
   white-space: nowrap;
   width: 100%;
@@ -96,6 +101,7 @@ const NetworkCard = styled(YellowCard)`
   margin-right: 10px;
   border-radius: 12px;
   padding: 8px 12px;
+  font-weight: 600;
 `
 
 const UniIcon = styled.div`
@@ -125,6 +131,7 @@ const BalanceText = styled(Text)`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
   `};
+  color: ${({ theme }) => theme.primaryText1};
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
@@ -160,7 +167,7 @@ export default function Header() {
             </TestnetWrapper>
             <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
               {account && userEthBalance ? (
-                <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+                <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={600}>
                   {userEthBalance?.toSignificant(4)} {getNativeTokenSymbol(chainId)}
                 </BalanceText>
               ) : null}

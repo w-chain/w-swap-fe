@@ -12,7 +12,7 @@ import { StyledInternalLink, TYPE } from '../../theme'
 import { Text } from 'rebass'
 import { LightCard } from '../../components/Card'
 import { RowBetween } from '../../components/Row'
-import { ButtonPrimary } from '../../components/Button'
+import { ButtonPrimary, ButtonPrimaryDark } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -60,19 +60,30 @@ export default function Pool() {
     <>
       <AppBody>
         <SwapPoolTabs active={'pool'} />
-        <AutoColumn gap="lg" justify="center">
-          <ButtonPrimary id="join-pool-button" as={Link} style={{ padding: 16 }} to="/add/ETH">
+        <AutoColumn
+          gap="lg"
+          justify="center"
+          style={{
+            background: 'rgba(255,255,255,0.95)',
+            borderRadius: '24px',
+            boxShadow: '0 8px 32px rgba(74,144,226,0.08)',
+            padding: '2.5rem 2rem',
+            maxWidth: 480,
+            margin: '0 auto'
+          }}
+        >
+          <ButtonPrimaryDark id="join-pool-button" as={Link} to="/add/ETH">
             <Text fontWeight={500} fontSize={20}>
               Add Liquidity
             </Text>
-          </ButtonPrimary>
+          </ButtonPrimaryDark>
 
           <AutoColumn gap="12px" style={{ width: '100%' }}>
             <RowBetween padding={'0 8px'}>
               <Text color={theme.text1} fontWeight={500}>
                 Your Liquidity
               </Text>
-              <Question text="When you add liquidity, you are given pool tokens that represent your share. If you don’t see a pool you joined in this list, try importing a pool below." />
+              <Question text="When you add liquidity, you are given pool tokens that represent your share. If you don't see a pool you joined in this list, try importing a pool below." />
             </RowBetween>
 
             {!account ? (
