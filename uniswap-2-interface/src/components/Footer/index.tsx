@@ -43,12 +43,32 @@ const FooterGrid = styled.div`
   gap: 48px;
   width: 100%;
   align-items: flex-start;
+
+  & > div:first-child {
+    max-width: 400px;
+  }
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 32px 24px;
+    gap: 32px;
+
+    & > div:first-child {
+      grid-column: span 3;
+      max-width: 100%;
+    }
+  }
 `
 
 const Section = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
+  @media (max-width: 768px) {
+    align-items: center;
+    text-align: center;
+  }
 `
 
 const SectionTitle = styled.div`
@@ -63,6 +83,10 @@ const SectionLine = styled.div`
   height: 2px;
   background: #e6f3ff;
   margin-bottom: 16px;
+
+  @media (max-width: 768px) {
+    margin: 0 auto 16px;
+  }
 `
 
 const SectionLink = styled.a`
@@ -79,6 +103,11 @@ const SectionLink = styled.a`
 const SocialIconsRow = styled.div`
   display: flex;
   gap: 12px;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+    width: 100%;
+  }
 `
 
 const SocialIconBox = styled.a`
@@ -111,6 +140,12 @@ const BottomBar = styled.div`
   border-radius: 0 0 24px 24px;
   font-size: 15px;
   margin-top: 0;
+
+  @media (max-width: 768px) {
+    padding: 24px 16px;
+    text-align: center;
+    justify-content: center;
+  }
 `
 
 const buildTheBlockLinks = [
@@ -136,7 +171,7 @@ export function Footer() {
   return (
     <FooterWrapper>
       <FooterGrid>
-        <Section style={{ maxWidth: '400px' }}>
+        <Section>
           <Description>{MAIN_TEXT}</Description>
         </Section>
         <Section>

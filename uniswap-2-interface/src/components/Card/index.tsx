@@ -18,8 +18,12 @@ export const LightCard = styled(Card)`
   background-color: ${({ theme }) => theme.bg1};
 `
 
-export const GreyCard = styled(Card)`
-  background-color: ${({ theme }) => theme.bg3};
+export const GreyCard = styled(Card)<{ backgroundColor?: string }>`
+  background-color: ${({ theme, backgroundColor }) => backgroundColor || theme.bg3};
+`
+
+export const PurpleCard = styled(Card)`
+  background-color: ${({ theme }) => theme.bg6};
 `
 
 export const OutlineCard = styled(Card)`

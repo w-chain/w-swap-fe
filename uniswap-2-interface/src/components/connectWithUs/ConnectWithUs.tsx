@@ -173,14 +173,14 @@ const ConnectWithUsBg = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding-top: 80px;
+  justify-content: flex-start;
   width: 100%;
   position: relative;
+  z-index: 0;
 
   .fish-top-right {
     position: absolute;
-    top: -100px;
+    top: -250px;
     right: max(-80px, -10vw);
     width: 40vw;
     max-width: 350px;
@@ -201,6 +201,16 @@ const ConnectWithUsBg = styled.div`
     transform: scaleX(-1);
     opacity: 0.3;
     z-index: -1;
+  }
+
+  @media (max-width: 1024px) {
+    .fish-top-right {
+      top: -200px;
+    }
+
+    .fish-bottom-left {
+      bottom: 400px;
+    }
   }
 `
 

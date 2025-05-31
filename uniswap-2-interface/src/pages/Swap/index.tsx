@@ -45,7 +45,6 @@ import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
 import FishIcon from '../../assets/svg/fish-icon.svg'
-import ConnectWithUs from '../../components/connectWithUs/ConnectWithUs'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -272,6 +271,8 @@ export default function Swap() {
     onCurrencySelection
   ])
 
+  console.log('wrapType', wrapType)
+
   return (
     <>
       <TokenWarningModal
@@ -385,12 +386,12 @@ export default function Swap() {
             {!account ? (
               <ButtonPrimaryDark onClick={toggleWalletModal}>Connect Wallet</ButtonPrimaryDark>
             ) : showWrap ? (
-              <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
+              <ButtonPrimaryDark disabled={Boolean(wrapInputError)} onClick={onWrap}>
                 {wrapInputError ??
                   (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
-              </ButtonPrimary>
+              </ButtonPrimaryDark>
             ) : noRoute && userHasSpecifiedInputOutput ? (
-              <GreyCard style={{ textAlign: 'center' }}>
+              <GreyCard style={{ textAlign: 'center', background: 'transparent' }}>
                 <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
               </GreyCard>
             ) : showApproveFlow ? (
@@ -458,6 +459,10 @@ export default function Swap() {
                 id="swap-button"
                 disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
                 error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
+                style={{
+                  background:
+                    !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError ? 'transparent' : ''
+                }}
               >
                 <Text fontSize={20} fontWeight={500}>
                   {swapInputError
@@ -472,11 +477,10 @@ export default function Swap() {
             {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
             {betterTradeLinkVersion && <BetterTradeLink version={betterTradeLinkVersion} />}
           </BottomGrouping>
+
+          <AdvancedSwapDetailsDropdown trade={wrapType === WrapType.WRAP ? undefined : trade} />
         </Wrapper>
       </AppBody>
-      <AdvancedSwapDetailsDropdown trade={trade} />
-
-      <ConnectWithUs />
     </>
   )
 }

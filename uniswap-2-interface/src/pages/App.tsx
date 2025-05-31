@@ -23,6 +23,7 @@ import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import WadzBg from '../assets/images/wadz/bg.png'
 import { Footer } from '../components/Footer'
+import ConnectWithUs from '../components/connectWithUs/ConnectWithUs'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -49,7 +50,6 @@ const HeadBodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 100svh;
 `
 const HeaderWrapper = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -156,6 +156,7 @@ export default function App() {
               <Marginer />
             </BodyWrapper>
           </HeadBodyWrapper>
+          <ConnectWithUs />
           <Footer />
         </AppWrapper>
       </HashRouter>

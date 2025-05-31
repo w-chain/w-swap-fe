@@ -8,7 +8,7 @@ import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { BlueCard, GreyCard, LightCard } from '../../components/Card'
+import { BlueCard, GreyCard, LightCard, PurpleCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -317,16 +317,7 @@ export default function AddLiquidity({
     <>
       <AppBody>
         <AddRemoveTabs adding={true} />
-        <Wrapper
-          style={{
-            background: 'rgba(255,255,255,0.95)',
-            borderRadius: '24px',
-            boxShadow: '0 8px 32px rgba(74,144,226,0.08)',
-            padding: '2.5rem 2rem',
-            maxWidth: 480,
-            margin: '0 auto'
-          }}
-        >
+        <Wrapper>
           <TransactionConfirmationModal
             isOpen={showConfirm}
             onDismiss={handleDismissConfirmation}
@@ -342,7 +333,7 @@ export default function AddLiquidity({
             )}
             pendingText={pendingText}
           />
-          <AutoColumn gap="20px">
+          <AutoColumn gap="12px">
             {noLiquidity && (
               <ColumnCenter>
                 <BlueCard>
@@ -373,7 +364,7 @@ export default function AddLiquidity({
               showCommonBases
             />
             <ColumnCenter>
-              <Plus size="16" color={theme.text2} />
+              <Plus size="16" color={theme.primaryText1} strokeWidth={3} />
             </ColumnCenter>
             <CurrencyInputPanel
               value={formattedAmounts[Field.CURRENCY_B]}
@@ -389,28 +380,28 @@ export default function AddLiquidity({
             />
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <>
-                <GreyCard padding="0px" borderRadius={'20px'}>
+                <PurpleCard padding="0px" borderRadius={'12px'}>
                   <RowBetween padding="1rem">
-                    <TYPE.subHeader fontWeight={500} fontSize={14}>
+                    <TYPE.subHeader fontWeight={600} fontSize={14} color={theme.primaryText1}>
                       {noLiquidity ? 'Initial prices' : 'Prices'} and pool share
                     </TYPE.subHeader>
                   </RowBetween>{' '}
-                  <LightCard padding="1rem" borderRadius={'20px'}>
+                  <GreyCard padding="1rem" borderRadius={'12px'} backgroundColor={'#75B6FE'}>
                     <PoolPriceBar
                       currencies={currencies}
                       poolTokenPercentage={poolTokenPercentage}
                       noLiquidity={noLiquidity}
                       price={price}
                     />
-                  </LightCard>
-                </GreyCard>
+                  </GreyCard>
+                </PurpleCard>
               </>
             )}
 
             {!account ? (
               <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
             ) : (
-              <AutoColumn gap={'md'}>
+              <AutoColumn gap={'md'} style={{ marginTop: '10px' }}>
                 {(approvalA === ApprovalState.NOT_APPROVED ||
                   approvalA === ApprovalState.PENDING ||
                   approvalB === ApprovalState.NOT_APPROVED ||
