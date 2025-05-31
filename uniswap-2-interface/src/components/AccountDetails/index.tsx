@@ -16,7 +16,7 @@ import { injected, walletconnect, walletlink } from '../../connectors'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import Identicon from '../Identicon'
-import { ButtonSecondary } from '../Button'
+import { ButtonPrimaryDark, ButtonSecondary } from '../Button'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 
@@ -32,6 +32,7 @@ const HeaderRow = styled.div`
 
 const UpperSection = styled.div`
   position: relative;
+  background-color: white;
 
   h5 {
     margin: 0;
@@ -182,9 +183,9 @@ const TransactionListWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
 `
 
-const WalletAction = styled(ButtonSecondary)`
+const WalletAction = styled(ButtonPrimaryDark)`
   width: fit-content;
-  font-weight: 400;
+  font-weight: 500;
   margin-left: 8px;
   font-size: 0.825rem;
   padding: 4px 6px;

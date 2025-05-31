@@ -68,11 +68,11 @@ export const ButtonPrimaryDark = styled(Base)`
   background-color: ${({ theme }) => theme.buttonBg2};
   color: white;
   font-weight: 600;
-
+/* 
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.buttonBg2)};
     background-color: ${({ theme }) => darken(0.05, theme.buttonHoverBg2)};
-  }
+  } */
   &:hover {
     background-color: ${({ theme }) => darken(0.05, theme.buttonBg2)};
   }

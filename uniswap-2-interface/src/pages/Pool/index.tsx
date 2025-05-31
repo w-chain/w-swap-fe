@@ -60,18 +60,7 @@ export default function Pool() {
     <>
       <AppBody>
         <SwapPoolTabs active={'pool'} />
-        <AutoColumn
-          gap="lg"
-          justify="center"
-          style={{
-            background: 'rgba(255,255,255,0.95)',
-            borderRadius: '24px',
-            boxShadow: '0 8px 32px rgba(74,144,226,0.08)',
-            padding: '2.5rem 2rem',
-            maxWidth: 480,
-            margin: '0 auto'
-          }}
-        >
+        <AutoColumn gap="lg" justify="center">
           <ButtonPrimaryDark id="join-pool-button" as={Link} to="/add/ETH">
             <Text fontWeight={500} fontSize={20}>
               Add Liquidity

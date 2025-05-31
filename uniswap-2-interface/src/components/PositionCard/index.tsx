@@ -14,7 +14,7 @@ import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { ButtonSecondary } from '../Button'
 
-import Card, { GreyCard } from '../Card'
+import Card, { GreyCard, PurpleCard } from '../Card'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
@@ -66,36 +66,36 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
   return (
     <>
       {userPoolBalance && (
-        <GreyCard border={border}>
+        <PurpleCard border={border}>
           <AutoColumn gap="12px">
             <FixedHeightRow>
               <RowFixed>
-                <Text fontWeight={500} fontSize={16}>
+                <Text fontWeight={600} fontSize={14} color={'#043F84'}>
                   Your position
                 </Text>
               </RowFixed>
             </FixedHeightRow>
             <FixedHeightRow onClick={() => setShowMore(!showMore)}>
               <RowFixed>
-                <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
-                <Text fontWeight={500} fontSize={20}>
+                <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={30} />
+                <Text fontWeight={600} fontSize={16} color={'#043F84'}>
                   {getCurrencySymbol(currency0, chainId)}/{getCurrencySymbol(currency1, chainId)}
                 </Text>
               </RowFixed>
               <RowFixed>
-                <Text fontWeight={500} fontSize={20}>
+                <Text fontWeight={600} fontSize={16} color={'#043F84'}>
                   {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
                 </Text>
               </RowFixed>
             </FixedHeightRow>
             <AutoColumn gap="4px">
               <FixedHeightRow>
-                <Text color="#888D9B" fontSize={16} fontWeight={500}>
-                  {getCurrencySymbol(currency0, chainId)}:
+                <Text color="#585858" fontSize={14} fontWeight={600}>
+                  {getCurrencySymbol(currency0, chainId)}
                 </Text>
                 {token0Deposited ? (
                   <RowFixed>
-                    <Text color="#888D9B" fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                    <Text color="#585858" fontSize={14} fontWeight={600} marginLeft={'6px'}>
                       {token0Deposited?.toSignificant(6)}
                     </Text>
                   </RowFixed>
@@ -104,12 +104,12 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                 )}
               </FixedHeightRow>
               <FixedHeightRow>
-                <Text color="#888D9B" fontSize={16} fontWeight={500}>
-                  {getCurrencySymbol(currency1, chainId)}:
+                <Text color="#585858" fontSize={14} fontWeight={600}>
+                  {getCurrencySymbol(currency1, chainId)}
                 </Text>
                 {token1Deposited ? (
                   <RowFixed>
-                    <Text color="#888D9B" fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                    <Text color="#585858" fontSize={14} fontWeight={600} marginLeft={'6px'}>
                       {token1Deposited?.toSignificant(6)}
                     </Text>
                   </RowFixed>
@@ -119,7 +119,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
               </FixedHeightRow>
             </AutoColumn>
           </AutoColumn>
-        </GreyCard>
+        </PurpleCard>
       )}
     </>
   )
