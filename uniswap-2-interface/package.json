@@ -111,5 +111,8 @@
   },
   "engines": {
     "node": "18.x"
+  },
+  "dependencies": {
+    "@ethersproject/abstract-provider": "^5.8.0"
   }
 }

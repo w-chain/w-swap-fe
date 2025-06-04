@@ -9,7 +9,7 @@ import { calculateGasMargin, getRouterContract, isAddress, shortenAddress } from
 import isZero from '../utils/isZero'
 import v1SwapArguments from '../utils/v1SwapArguments'
 import { useActiveWeb3React } from './index'
-import { useV1ExchangeContract } from './useContract'
+import { useV1ExchangeContract } from './bridge/useContract'
 import useENS from './useENS'
 import { Version } from './useToggledVersion'
 import { getCurrencySymbol } from '../utils/getNativeTokenSymbol'

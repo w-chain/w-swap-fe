@@ -22,7 +22,7 @@ import Slider from '../../components/Slider'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
-import { usePairContract } from '../../hooks/useContract'
+import { usePairContract } from '../../hooks/bridge/useContract'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'

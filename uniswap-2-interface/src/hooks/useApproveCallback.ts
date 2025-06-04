@@ -8,7 +8,7 @@ import { Field } from '../state/swap/actions'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { calculateGasMargin } from '../utils'
-import { useTokenContract } from './useContract'
+import { useTokenContract } from './bridge/useContract'
 import { useActiveWeb3React } from './index'
 import { Version } from './useToggledVersion'
 
