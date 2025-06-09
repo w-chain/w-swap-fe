@@ -30,7 +30,6 @@ export function getNetworkFromChainId(chainId: number): Networks {
 }
 
 export function getNetworkImage(network: Networks): string {
-  console.log('network', network)
 
   switch (network) {
     case Networks.ETH :

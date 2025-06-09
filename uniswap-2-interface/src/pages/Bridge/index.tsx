@@ -5,19 +5,16 @@ import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonError, ButtonLight, ButtonPrimary, ButtonConfirmed, ButtonPrimaryDark } from '../../components/Button'
-import Card, { GreyCard } from '../../components/Card'
+import { ButtonPrimaryDark } from '../../components/Button'
+import Card from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { AutoRow, RowBetween } from '../../components/Row'
-import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
-import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import { ArrowWrapper, BottomGrouping, Wrapper } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
-import ProgressSteps from '../../components/ProgressSteps'
 
 import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
@@ -37,12 +34,11 @@ import {
   useSwapState
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
-import { LinkStyledButton, TYPE } from '../../theme'
+import { LinkStyledButton } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
-import Loader from '../../components/Loader'
 import FishIcon from '../../assets/svg/fish-icon.svg'
 import NetworkInputPanel from './components/NetworkInputPanel'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -51,6 +47,7 @@ import { AppDispatch, AppState } from '../../state'
 import { setFromToken } from './stores'
 import { Networks, TokenSymbols } from './shared/types'
 import type { BridgeState } from './stores/BridgeStates'
+import BridgeTokenInputPanel from './components/BridgeTokenSelect'
 
 // Utility to get available tokens based on network selection
 function getAvailableFromTokens(from: Networks, to: Networks): TokenSymbols[] {
@@ -248,14 +245,6 @@ export default function Bridge() {
   // warnings on slippage
   const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
 
-  // show approve flow when: no error on inputs, not approved or pending, or approved in current session
-  // never show if price impact is above threshold in non expert mode
-  const showApproveFlow =
-    !swapInputError &&
-    (approval === ApprovalState.NOT_APPROVED ||
-      approval === ApprovalState.PENDING ||
-      (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
-    !(priceImpactSeverity > 3 && !isExpertMode)
 
   const handleConfirmDismiss = useCallback(() => {
     setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
@@ -300,6 +289,25 @@ export default function Bridge() {
     dispatch(setFromToken(token))
     // Optionally close modal here
   }
+
+  console.log("availableFromTokens",availableFromTokens)
+
+    // Function to log selected networks and token
+    function logBridgeState() {
+      console.log('From Network:', bridgeState.from)
+      console.log('To Network:', bridgeState.to)
+      console.log('From Token:', bridgeState.fromToken)
+      console.log('To Token:', bridgeState.toToken)
+    }
+  
+    // Stub for bridge contract call
+    function handleBridge() {
+      // Here you would call the contract with the selected state
+      logBridgeState()
+      // TODO: implement contract call
+    }
+ 
+  
 
   return (
     <>
@@ -416,13 +424,15 @@ export default function Bridge() {
           </AutoRow>
 
           <br />
-          <CurrencyInputPanel
+   
+          <BridgeTokenInputPanel
             value={formattedAmounts[Field.INPUT]}
             onUserInput={handleTypeInput}
             label={''}
             showMaxButton={!atMaxAmountInput}
-            currency={currencies[Field.INPUT]}
-            onCurrencySelect={handleInputSelect}
+            onTokenSelect={handleFromTokenSelect}
+            availableTokens={availableFromTokens}
+            selectedToken={bridgeState.fromToken}
             id="swap-currency-input"
             hideInput={false}
             hideBalance={false}
@@ -431,100 +441,15 @@ export default function Bridge() {
           <BottomGrouping>
             {!account ? (
               <ButtonPrimaryDark onClick={toggleWalletModal}>Connect Wallet</ButtonPrimaryDark>
-            ) : showWrap ? (
-              <ButtonPrimaryDark disabled={Boolean(wrapInputError)} onClick={onWrap}>
-                {wrapInputError ??
-                  (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
-              </ButtonPrimaryDark>
-            ) : noRoute && userHasSpecifiedInputOutput ? (
-              <GreyCard style={{ textAlign: 'center', background: 'transparent' }}>
-                <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
-              </GreyCard>
-            ) : showApproveFlow ? (
-              <RowBetween>
-                <ButtonConfirmed
-                  onClick={approveCallback}
-                  disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
-                  width="48%"
-                  altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
-                  confirmed={approval === ApprovalState.APPROVED}
-                >
-                  {approval === ApprovalState.PENDING ? (
-                    <AutoRow gap="6px" justify="center">
-                      Approving <Loader stroke="white" />
-                    </AutoRow>
-                  ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
-                    'Approved'
-                  ) : (
-                    'Approve ' + currencies[Field.INPUT]?.symbol
-                  )}
-                </ButtonConfirmed>
-                <ButtonError
-                  onClick={() => {
-                    if (isExpertMode) {
-                      handleSwap()
-                    } else {
-                      setSwapState({
-                        tradeToConfirm: trade,
-                        attemptingTxn: false,
-                        swapErrorMessage: undefined,
-                        showConfirm: true,
-                        txHash: undefined
-                      })
-                    }
-                  }}
-                  width="48%"
-                  id="swap-button"
-                  disabled={
-                    !isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)
-                  }
-                  error={isValid && priceImpactSeverity > 2}
-                >
-                  <Text fontSize={16} fontWeight={500}>
-                    {priceImpactSeverity > 3 && !isExpertMode
-                      ? `Price Impact High`
-                      : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
-                  </Text>
-                </ButtonError>
-              </RowBetween>
             ) : (
-              <ButtonError
-                onClick={() => {
-                  if (isExpertMode) {
-                    handleSwap()
-                  } else {
-                    setSwapState({
-                      tradeToConfirm: trade,
-                      attemptingTxn: false,
-                      swapErrorMessage: undefined,
-                      showConfirm: true,
-                      txHash: undefined
-                    })
-                  }
-                }}
-                id="swap-button"
-                disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
-                error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
-                style={{
-                  background:
-                    !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError ? 'transparent' : ''
-                }}
-              >
-                <Text fontSize={20} fontWeight={500}>
-                  {swapInputError
-                    ? swapInputError
-                    : priceImpactSeverity > 3 && !isExpertMode
-                    ? `Price Impact Too High`
-                    : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
-                </Text>
-              </ButtonError>
+              <ButtonPrimaryDark disabled={Boolean(wrapInputError)} onClick={handleBridge}>
+         
+                Move Funds to W Chain
+           </ButtonPrimaryDark>
+            
             )}
-            {showApproveFlow && <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />}
-            {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-            {betterTradeLinkVersion && <BetterTradeLink version={betterTradeLinkVersion} />}
-          </BottomGrouping>
+       </BottomGrouping>
 
-          <AdvancedSwapDetailsDropdown trade={wrapType === WrapType.WRAP ? undefined : trade} />
         </Wrapper>
       </AppBody>
     </>

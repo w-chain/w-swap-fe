@@ -23,9 +23,11 @@ const bridgeContractSlice = createSlice({
   initialState,
   reducers: {
     setBridgeContract: (state, action: PayloadAction<Contract>) => {
+      // @ts-ignore
       state.bridgeContract = action.payload
     },
     setHandlerContract: (state, action: PayloadAction<Contract>) => {
+      // @ts-ignore
       state.handlerContract = action.payload
     },
     setInitialized: (state, action: PayloadAction<boolean>) => {
