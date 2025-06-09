@@ -11,6 +11,13 @@ import lists from './lists/reducer'
 import burn from './burn/reducer'
 import multicall from './multicall/reducer'
 
+
+// Bridge
+import bridgeContract from '../pages/Bridge/stores/BridgeContract'
+import bridgeStates from '../pages/Bridge/stores/BridgeStates'
+import network from '../pages/Bridge/stores/Network'
+import transaction from '../pages/Bridge/stores/Transaction'
+
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
 const store = configureStore({
@@ -22,7 +29,12 @@ const store = configureStore({
     mint,
     burn,
     multicall,
-    lists
+    lists,
+    // Bridge
+    bridgeContract,
+    bridgeStates,
+    network,
+    transaction
   },
   middleware: [...getDefaultMiddleware({ thunk: false }), save({ states: PERSISTED_KEYS })],
   preloadedState: load({ states: PERSISTED_KEYS })
