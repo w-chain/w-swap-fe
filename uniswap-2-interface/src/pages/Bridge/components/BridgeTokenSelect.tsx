@@ -3,6 +3,7 @@ import styled, { ThemeContext } from 'styled-components'
 import { TokenSymbols } from '../shared/types'
 import BridgeTokenSearchModal from './BridgeTokenSearchModal'
 import { ReactComponent as DropDown } from '../../../assets/images/dropdown.svg'
+import { getTokenImage } from '../shared/utils'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -30,6 +31,7 @@ const StyledInput = styled.input`
 `
 
 const TokenSelect = styled.button`
+  display: flex;
   align-items: center;
   height: 2.2rem;
   font-size: 0.8rem;
@@ -72,6 +74,15 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
   font-size: 0.875rem;
 `
 
+const TokenIcon = styled.img`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  object-fit: contain;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+`
+
 export default function BridgeTokenInputPanel({
   value,
   onUserInput,
@@ -95,6 +106,8 @@ export default function BridgeTokenInputPanel({
           <div style={{ display: 'flex', alignItems: 'center', padding: '1rem' }}>
             <StyledInput value={value} onChange={e => onUserInput(e.target.value)} placeholder="0.0" />
             <TokenSelect onClick={() => setModalOpen(true)}>
+              {selectedToken && <TokenIcon src={getTokenImage(selectedToken)} alt={`${selectedToken} logo`} />}
+
               <StyledTokenName active={!!selectedToken}>{selectedToken || 'Select Token'}</StyledTokenName>
               <StyledDropDown />
             </TokenSelect>

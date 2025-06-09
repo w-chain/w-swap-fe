@@ -1,3 +1,5 @@
+import { TokenSymbols } from "../types";
+
 export function getBSCTargetToken(token: TokenSymbols) {
   switch (token) {
     case TokenSymbols.USDT:

@@ -13,6 +13,8 @@ const Tabs = styled.div`
   align-items: center;
   border-radius: 3rem;
   justify-content: space-evenly;
+  position: relative;
+  z-index: 2;
 `
 
 const activeClassName = 'ACTIVE'
@@ -56,17 +58,19 @@ const StyledArrowLeft = styled(ArrowLeft)`
 export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' | 'bridge' }) {
   const { t } = useTranslation()
   return (
-    <Tabs style={{ marginBottom: '20px' }}>
-      <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => active === 'swap'}>
-        {t('swap')}
-      </StyledNavLink>
-      <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={() => active === 'pool'}>
-        {t('pool')}
-      </StyledNavLink>
-      <StyledNavLink id={`bridge-nav-link`} to={'/bridge'} isActive={() => active === 'bridge'}>
-        {t('bridge')}
-      </StyledNavLink>
-    </Tabs>
+    <div style={{ position: 'relative' }}>
+      <Tabs style={{ marginBottom: '20px', zIndex: 2 }}>
+        <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => active === 'swap'}>
+          {t('swap')}
+        </StyledNavLink>
+        <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={() => active === 'pool'}>
+          {t('pool')}
+        </StyledNavLink>
+        <StyledNavLink id={`bridge-nav-link`} to={'/bridge'} isActive={() => active === 'bridge'}>
+          {t('bridge')}
+        </StyledNavLink>
+      </Tabs>
+    </div>
   )
 }
 
