@@ -21,10 +21,8 @@ import RemoveLiquidity from './RemoveLiquidity'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-import WadzBg from '../assets/images/wadz/bg.png'
-import { Footer } from '../components/Footer'
-import ConnectWithUs from '../components/connectWithUs/ConnectWithUs'
 import Bridge from './Bridge'
+import Landing from './Landing'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -33,18 +31,7 @@ const AppWrapper = styled.div`
   align-items: flex-start;
   overflow-x: hidden;
   min-height: 100vh;
-  background-color: #000000;
-`
-
-const AppBg = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  min-height: 100vh;
-  background: #fff;
-  overflow: hidden;
+  background-color: #fff;
 `
 
 const HeadBodyWrapper = styled.div`
@@ -88,33 +75,6 @@ const Marginer = styled.div`
   margin-top: 5rem;
 `
 
-const SeamlessWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  height: fit-content;
-  z-index: 10;
-
-  p {
-    font-family: Montserrat;
-    font-weight: 600;
-    font-size: 2.5rem;
-    margin: 0;
-    line-height: 1.2;
-    color: #fff;
-  }
-`
-
-const SeamlessGradient = styled.div`
-  top: 73px;
-  background: linear-gradient(180deg, #034e94 0%, #75b6fe 59.62%, #ffffff 100%);
-  width: 100%;
-  height: 500px;
-  left: 0px;
-  position: absolute;
-`
-
 export default function App() {
   return (
     <Suspense fallback={null}>
@@ -122,7 +82,6 @@ export default function App() {
         <Route component={GoogleAnalyticsReporter} />
         <Route component={DarkModeQueryParamReader} />
         <AppWrapper>
-          <AppBg />
           <HeadBodyWrapper>
             <HeaderWrapper>
               <Header />
@@ -130,13 +89,9 @@ export default function App() {
             <BodyWrapper>
               <Popups />
 
-              <SeamlessGradient />
-              <SeamlessWrapper>
-                <p>Seamless Swaps. Unified Liquidity.</p>
-                <p>Built for Utility​​ ​Tokens.​​​</p>
-              </SeamlessWrapper>
               <Web3ReactManager>
                 <Switch>
+                  <Route exact strict path="/" component={Landing} />
                   <Route exact strict path="/swap" component={Swap} />
                   <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                   <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
@@ -155,11 +110,9 @@ export default function App() {
                   <Route component={RedirectPathToSwapOnly} />
                 </Switch>
               </Web3ReactManager>
-              <Marginer />
+              {/* <Marginer /> */}
             </BodyWrapper>
           </HeadBodyWrapper>
-          <ConnectWithUs />
-          <Footer />
         </AppWrapper>
       </HashRouter>
     </Suspense>

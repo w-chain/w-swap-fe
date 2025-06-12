@@ -21,19 +21,20 @@ const activeClassName = 'ACTIVE'
 
 const StyledNavLink = styled(NavLink).attrs({
   activeClassName
-})`
+})<{ disabled?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   justify-content: center;
   outline: none;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   text-decoration: none;
-  color: #00000080;
+  color: ${({ disabled }) => (disabled ? '#00000040' : '#00000080')};
   font-size: 1.2rem;
   font-weight: 600;
   font-family: Montserrat;
   padding: 6px 32px;
   border-radius: 12px;
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
 
   &.${activeClassName} {
     color: #043f84;
@@ -42,7 +43,7 @@ const StyledNavLink = styled(NavLink).attrs({
 
   :hover,
   :focus {
-    color: #043f84;
+    color: ${({ disabled }) => (disabled ? '#00000040' : '#043f84')};
   }
 `
 
@@ -55,20 +56,24 @@ const StyledArrowLeft = styled(ArrowLeft)`
   color: ${({ theme }) => theme.text1};
 `
 
-export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' | 'bridge' }) {
+export function SwapPoolTabs({ active, landing }: { active: 'swap' | 'pool' | 'bridge'; landing?: boolean }) {
   const { t } = useTranslation()
   return (
     <div style={{ position: 'relative' }}>
       <Tabs style={{ marginBottom: '20px', zIndex: 2 }}>
-        <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => active === 'swap'}>
+        <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => active === 'swap'} disabled={landing}>
           {t('swap')}
         </StyledNavLink>
-        <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={() => active === 'pool'}>
-          {t('pool')}
-        </StyledNavLink>
-        <StyledNavLink id={`bridge-nav-link`} to={'/bridge'} isActive={() => active === 'bridge'}>
-          {t('bridge')}
-        </StyledNavLink>
+        {!landing && (
+          <>
+            <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={() => active === 'pool'}>
+              {t('pool')}
+            </StyledNavLink>
+            <StyledNavLink id={`bridge-nav-link`} to={'/bridge'} isActive={() => active === 'bridge'}>
+              {t('bridge')}
+            </StyledNavLink>
+          </>
+        )}
       </Tabs>
     </div>
   )

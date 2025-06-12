@@ -176,7 +176,7 @@ const ConnectWithUsBg = styled.div`
   justify-content: flex-start;
   width: 100%;
   position: relative;
-  z-index: 0;
+  z-index: 1;
 
   .fish-top-right {
     position: absolute;
