@@ -11,7 +11,7 @@ export const BodyWrapper = styled.div`
   background: #d9ebff;
   box-shadow: 4px 4px 4px rgba(4, 63, 132, 0.25);
   border-radius: 15px;
-  margin-bottom: 10px;
+  margin-bottom: 100px;
   height: auto;
 `
 

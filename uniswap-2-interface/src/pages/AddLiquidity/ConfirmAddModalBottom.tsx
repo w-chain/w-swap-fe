@@ -8,6 +8,7 @@ import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
 import { useActiveWeb3React } from '../../hooks'
 import { getCurrencySymbol } from '../../utils/getNativeTokenSymbol'
+import { PurpleCard } from '../../components/Card'
 
 export function ConfirmAddModalBottom({
   noLiquidity,
@@ -27,45 +28,50 @@ export function ConfirmAddModalBottom({
   const { chainId } = useActiveWeb3React()
 
   return (
-    <>
+    <PurpleCard
+      style={{
+        background: 'rgba(4, 63, 132, 0.25)',
+        padding: '20px 26px'
+      }}
+    >
       <RowBetween>
-        <TYPE.body>{getCurrencySymbol(currencies[Field.CURRENCY_A], chainId)} Deposited</TYPE.body>
+        <TYPE.primary fontSize={14}>{getCurrencySymbol(currencies[Field.CURRENCY_A], chainId)} Deposited</TYPE.primary>
         <RowFixed>
-          <CurrencyLogo currency={currencies[Field.CURRENCY_A]} style={{ marginRight: '8px' }} />
-          <TYPE.body>{parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}</TYPE.body>
+          <CurrencyLogo currency={currencies[Field.CURRENCY_A]} style={{ marginRight: '8px' }} size="24px" />
+          <TYPE.primary>{parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}</TYPE.primary>
         </RowFixed>
       </RowBetween>
-      <RowBetween>
-        <TYPE.body>{getCurrencySymbol(currencies[Field.CURRENCY_B], chainId)} Deposited</TYPE.body>
+      <RowBetween style={{ marginTop: '5px' }}>
+        <TYPE.primary fontSize={14}>{getCurrencySymbol(currencies[Field.CURRENCY_B], chainId)} Deposited</TYPE.primary>
         <RowFixed>
-          <CurrencyLogo currency={currencies[Field.CURRENCY_B]} style={{ marginRight: '8px' }} />
-          <TYPE.body>{parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}</TYPE.body>
+          <CurrencyLogo currency={currencies[Field.CURRENCY_B]} style={{ marginRight: '8px' }} size="24px" />
+          <TYPE.body fontSize={14}>{parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}</TYPE.body>
         </RowFixed>
       </RowBetween>
-      <RowBetween>
-        <TYPE.body>Rates</TYPE.body>
-        <TYPE.body>
+      <RowBetween style={{ marginTop: '5px' }}>
+        <TYPE.primary fontSize={14}>Rates</TYPE.primary>
+        <TYPE.primary fontSize={14}>
           {`1 ${getCurrencySymbol(currencies[Field.CURRENCY_A], chainId)} = ${price?.toSignificant(
             4
           )} ${getCurrencySymbol(currencies[Field.CURRENCY_B], chainId)}`}
-        </TYPE.body>
+        </TYPE.primary>
       </RowBetween>
-      <RowBetween style={{ justifyContent: 'flex-end' }}>
-        <TYPE.body>
+      <RowBetween style={{ justifyContent: 'flex-end', marginTop: '5px' }}>
+        <TYPE.primary fontSize={14}>
           {`1 ${getCurrencySymbol(currencies[Field.CURRENCY_B], chainId)} = ${price
             ?.invert()
             .toSignificant(4)} ${getCurrencySymbol(currencies[Field.CURRENCY_A], chainId)}`}
-        </TYPE.body>
+        </TYPE.primary>
       </RowBetween>
       <RowBetween>
-        <TYPE.body>Share of Pool:</TYPE.body>
-        <TYPE.body>{noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}%</TYPE.body>
+        <TYPE.primary fontSize={14}>Share of Pool:</TYPE.primary>
+        <TYPE.primary fontSize={14}>{noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}%</TYPE.primary>
       </RowBetween>
       <ButtonPrimaryDark style={{ margin: '20px 0 0 0' }} onClick={onAdd}>
-        <Text fontWeight={500} fontSize={20}>
+        <Text fontWeight={600} fontSize={16}>
           {noLiquidity ? 'Create Pool & Supply' : 'Confirm Supply'}
         </Text>
       </ButtonPrimaryDark>
-    </>
+    </PurpleCard>
   )
 }

@@ -24,6 +24,7 @@ const Section = styled(AutoColumn)`
 const BottomSection = styled(Section)`
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
+  /* padding: 0; */
 `
 
 const ConfirmedIcon = styled(ColumnCenter)`
@@ -110,25 +111,29 @@ export function ConfirmationModalContent({
   title,
   bottomContent,
   onDismiss,
-  topContent
+  topContent,
+  bottomPadding
 }: {
   title: string
   onDismiss: () => void
   topContent: () => React.ReactNode
   bottomContent: () => React.ReactNode
+  bottomPadding?: string
 }) {
   return (
     <Wrapper>
       <Section>
         <RowBetween>
-          <Text fontWeight={600} fontSize={20} color={'#043F84'}>
+          <Text fontWeight={600} fontSize={14} color={'#043F84'}>
             {title}
           </Text>
-          <CloseIcon onClick={onDismiss} />
+          <CloseIcon onClick={onDismiss} size={18} strokeWidth={2.5} />
         </RowBetween>
         {topContent()}
       </Section>
-      <BottomSection gap="12px">{bottomContent()}</BottomSection>
+      <BottomSection gap="12px" style={{ padding: bottomPadding }}>
+        {bottomContent()}
+      </BottomSection>
     </Wrapper>
   )
 }

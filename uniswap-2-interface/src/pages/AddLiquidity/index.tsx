@@ -212,10 +212,10 @@ export default function AddLiquidity({
 
   const modalHeader = () => {
     return noLiquidity ? (
-      <AutoColumn gap="20px">
+      <AutoColumn gap="20px" style={{ padding: '24px' }}>
         <LightCard mt="20px" borderRadius="20px">
           <RowFlat style={{ alignItems: 'center' }}>
-            <Text fontSize="32px" fontWeight={500} marginRight={10}>
+            <Text fontSize="30px" fontWeight={600} color={'#043F84'} marginRight={10}>
               {getCurrencySymbol(currencies[Field.CURRENCY_A], chainId) +
                 '/' +
                 getCurrencySymbol(currencies[Field.CURRENCY_B], chainId)}
@@ -229,9 +229,9 @@ export default function AddLiquidity({
         </LightCard>
       </AutoColumn>
     ) : (
-      <AutoColumn gap="20px">
+      <AutoColumn gap="20px" style={{ padding: '24px' }}>
         <RowFlat style={{ marginTop: '20px', alignItems: 'center' }}>
-          <Text fontSize="32px" fontWeight={500} marginRight={10}>
+          <Text fontSize="30px" fontWeight={600} color={'#043F84'} marginRight={10}>
             {liquidityMinted?.toSignificant(6)}
           </Text>
           <DoubleCurrencyLogo
@@ -248,7 +248,7 @@ export default function AddLiquidity({
               ' Pool Tokens'}
           </Text>
         </Row>
-        <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
+        <TYPE.italic fontSize={10} textAlign="left" padding={'8px 0 0 0 '} color={'#043F84'} fontWeight={600}>
           {`Output is estimated. If the price changes by more than ${allowedSlippage /
             100}% your transaction will revert.`}
         </TYPE.italic>
@@ -329,6 +329,7 @@ export default function AddLiquidity({
                 onDismiss={handleDismissConfirmation}
                 topContent={modalHeader}
                 bottomContent={modalBottom}
+                bottomPadding="0px"
               />
             )}
             pendingText={pendingText}
@@ -446,11 +447,21 @@ export default function AddLiquidity({
                     background:
                       (!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED) &&
                       !(!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B])
-                        ? 'transparent'
+                        ? '#044084b8'
+                        : '',
+                    cursor:
+                      (!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED) &&
+                      !(!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B])
+                        ? 'not-allowed'
+                        : '',
+                    color:
+                      (!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED) &&
+                      !(!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B])
+                        ? '#e6e6e6'
                         : ''
                   }}
                 >
-                  <Text fontSize={20} fontWeight={500}>
+                  <Text fontSize={14} fontWeight={600}>
                     {error ?? 'Supply'}
                   </Text>
                 </ButtonError>
