@@ -149,22 +149,30 @@ const BottomBar = styled.div`
 `
 
 const buildTheBlockLinks = [
-  { text: 'Blogs & Article', href: '#' },
-  { text: 'Tutorials', href: '#' },
-  { text: 'Guidelines', href: '#' },
-  { text: 'FAQ', href: '#' }
+  { text: 'Blogs & Article', href: 'https://w-chain.com/blog/' },
+  { text: 'Tutorials', href: 'https://wchain.gitbook.io/wchain-hub/' },
+  { text: 'Guidelines', href: 'https://w-chain.com/guidelines/' },
+  { text: 'FAQ', href: 'https://w-chain.com/faq/' }
 ]
 const programLinks = [
-  { text: 'Tokenomics', href: '#' },
+  { text: 'Tokenomics', href: 'https://w-chain.com/wchain-tokenomics/' },
   { text: 'Airdrop', href: '#' },
   { text: 'Raffles', href: '#' },
   { text: 'Strategic Buyback', href: '#' }
 ]
 const wcnLinks = [
-  { text: 'WCN Testnet Scan', href: '#' },
-  { text: 'WCN Mainnet Scan', href: '#' },
+  {
+    text: 'WCN Testnet Scan',
+    href:
+      'https://scan-testnet.w-chain.com/?_gl=1*10f265a*_ga*ODgzMzM5NzEyLjE3NDY2MjgxMDU.*_ga_SNV30L8084*czE3NDk4MTM5MjAkbzQkZzEkdDE3NDk4MTUzNzckajYwJGwwJGgw'
+  },
+  {
+    text: 'WCN Mainnet Scan',
+    href:
+      'https://scan.w-chain.com/?_gl=1*10f265a*_ga*ODgzMzM5NzEyLjE3NDY2MjgxMDU.*_ga_SNV30L8084*czE3NDk4MTM5MjAkbzQkZzEkdDE3NDk4MTUzNzckajYwJGwwJGgw'
+  },
   { text: 'Migration Portal', href: '#' },
-  { text: 'W Bridge', href: '#' }
+  { text: 'W Bridge', href: 'https://bridge.w-chain.com/' }
 ]
 
 export function Footer() {
