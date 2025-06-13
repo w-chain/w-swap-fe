@@ -12,26 +12,23 @@ export const ClickableText = styled(Text)`
   color: ${({ theme }) => theme.primary1};
 `
 export const MaxButton = styled.button<{ width: string }>`
-  padding: 0.5rem 1rem;
-  background-color: ${({ theme }) => theme.primary2};
-  border: 1px solid ${({ theme }) => theme.primary2};
+  padding: 10px 26px;
+  background: rgba(4, 63, 132, 0.2);
   border-radius: 0.5rem;
-  font-size: 1rem;
+  font-size: 14px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 0.25rem 0.5rem;
   `};
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   margin: 0.25rem;
   overflow: hidden;
-  color: ${({ theme }) => theme.primary1};
+  color: ${({ theme }) => theme.primaryText1};
   :hover {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    background: rgba(4, 63, 132, 0.2);
   }
-  :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
-    outline: none;
-  }
+  border: none;
+  border-radius: 15px;
 `
 
 export const Dots = styled.span`

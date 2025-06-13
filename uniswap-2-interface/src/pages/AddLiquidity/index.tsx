@@ -471,7 +471,7 @@ export default function AddLiquidity({
         </Wrapper>
 
         {pair && !noLiquidity && pairState !== PairState.INVALID ? (
-          <AutoColumn style={{ minWidth: '20rem', marginTop: '1rem', width: '90%', margin: '20px auto 0 auto' }}>
+          <AutoColumn style={{ width: '85%', justifySelf: 'center', marginTop: '3rem' }}>
             <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
           </AutoColumn>
         ) : null}

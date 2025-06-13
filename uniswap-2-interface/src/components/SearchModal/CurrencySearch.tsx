@@ -20,7 +20,7 @@ import CurrencyList from './CurrencyList'
 import { filterTokens } from './filtering'
 import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
-import { PaddedColumn, SearchInput, Separator } from './styleds'
+import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
 import AutoSizer from 'react-virtualized-auto-sizer'
 
 interface CurrencySearchProps {
@@ -138,16 +138,20 @@ export function CurrencySearch({
   const selectedListInfo = useSelectedListInfo()
 
   return (
-    <Column style={{ width: '100%', flex: '1 1', background: 'white' }}>
-      <PaddedColumn gap="14px">
+    <Column style={{ width: '100%', flex: '1 1', background: '#D9EBFF' }}>
+      <PaddedColumn gap="6px">
         <RowBetween>
-          <Text fontWeight={500} fontSize={16}>
-            Select a token
+          <Text fontWeight={600} fontSize={18} color={'#043F84'}>
+            Select token
             <QuestionHelper text="Find a token by searching for its name or symbol or by pasting its address below." />
           </Text>
-          <CloseIcon onClick={onDismiss} />
+          <CloseIcon onClick={onDismiss} size={18} strokeWidth={2.5} color={'#043F84'} />
         </RowBetween>
-        <SearchInput
+
+        <TYPE.darkGray color={'#585858'} style={{ fontSize: '14px' }} fontWeight={600} width={'100%'}>
+          Select the token you want to move from Source Chain.
+        </TYPE.darkGray>
+        {/* <SearchInput
           type="text"
           id="token-search-input"
           placeholder={t('tokenSearchPlaceholder')}
@@ -155,8 +159,8 @@ export function CurrencySearch({
           ref={inputRef as RefObject<HTMLInputElement>}
           onChange={handleInput}
           onKeyDown={handleEnter}
-        />
-        {showCommonBases && (
+        /> */}
+        {/* {showCommonBases && (
           <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
         )}
         <RowBetween>
@@ -164,10 +168,9 @@ export function CurrencySearch({
             Token Name
           </Text>
           <SortButton ascending={invertSearchOrder} toggleSortOrder={() => setInvertSearchOrder(iso => !iso)} />
-        </RowBetween>
+        </RowBetween> */}
+        <SeparatorDark style={{ background: '#043F83', marginTop: '10px' }} />
       </PaddedColumn>
-
-      <Separator />
 
       <div style={{ flex: '1' }}>
         <AutoSizer disableWidth>
@@ -185,9 +188,10 @@ export function CurrencySearch({
         </AutoSizer>
       </div>
 
-      <Separator />
       {/** NOTE: WADZ-specific */}
       <Card>
+        <Separator style={{ background: '#043F83', marginBottom: '10px' }} />
+
         <RowBetween>
           {selectedListInfo.current ? (
             <Row>

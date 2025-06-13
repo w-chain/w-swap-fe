@@ -34,7 +34,7 @@ export default function QuestionHelper({ text }: { text: string }) {
       <Tooltip text={text} show={show}>
         <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
           {/* <Question size={16} /> */}
-          <TYPE.primary fontSize={14} fontWeight={600}>
+          <TYPE.primary fontSize={15} fontWeight={600}>
             ?
           </TYPE.primary>
         </QuestionWrapper>

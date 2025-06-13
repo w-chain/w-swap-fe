@@ -10,6 +10,7 @@ import styled from 'styled-components'
 import { setFromNetwork, setToNetwork } from '../stores/BridgeStates'
 import { ReactComponent as DropDown } from '../../../assets/images/dropdown.svg'
 import type { BridgeState } from '../stores/BridgeStates'
+import { Separator } from '../../../components/SearchModal/styleds'
 
 const NetworkButton = styled(ButtonLight)`
   display: flex;
@@ -60,8 +61,8 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
 
 // Modal Card styling
 const ModalCard = styled.div`
-  background: #fff;
-  border-radius: 16px;
+  background: #D9EBFF;
+  border-radius: 15px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
   padding: 0;
   width: 100%;
@@ -73,21 +74,20 @@ const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  border-bottom: 1px solid #e0e0e0;
-  margin-bottom: 16px;
 `
 
 const ModalTitle = styled.div`
   font-size: 18px;
-  font-weight: 700;
-  color: #222;
+  font-weight: 600;
+  color: #043F84;
 `
 
 const ModalSubtitle = styled.div`
   font-size: 14px;
-  color: #888;
+  color: #585858;
   margin-top: 4px;
   margin-bottom: 16px;
+  font-weight: 600;
 `
 
 const CloseButton = styled.button`
@@ -103,6 +103,7 @@ const CloseButton = styled.button`
 const StyledNetworkList = styled(NetworkList)`
   padding: 0 24px 24px 24px;
   gap: 0;
+  background: #D9EBFF;
 `
 
 const StyledNetworkListItem = styled(NetworkListItem)<{ selected: boolean; disabled: boolean }>`
@@ -124,9 +125,9 @@ const StyledNetworkButton = styled.button`
   background: transparent;
   box-shadow: none;
   padding: 12px 0 12px 16px;
-  font-size: 16px;
-  font-weight: 500;
-  color: #222;
+  font-size: 18px;
+  font-weight: 600;
+  color: #043F83;
   cursor: pointer;
   border-radius: 8px;
   transition: background 0.15s, color 0.15s;
@@ -142,7 +143,7 @@ const StyledNetworkButton = styled.button`
 
   &:disabled {
     cursor: not-allowed;
-    opacity: 0.5;
+    opacity: 0.8;
     background: transparent;
   }
 
@@ -221,6 +222,7 @@ export default function NetworkSelect({ direction }: NetworkSelectProps) {
               <X size={20} />
             </CloseButton>
           </ModalHeader>
+          <Separator  style={{ background: '#043F83', width:"auto",margin:"0 24px" }} />
           <StyledNetworkList>
             {networks.map(network_ => {
               const selected = network === network_
