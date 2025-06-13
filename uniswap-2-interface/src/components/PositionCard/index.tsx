@@ -28,10 +28,10 @@ export const FixedHeightRow = styled(RowBetween)`
 `
 
 export const HoverCard = styled(Card)`
-  border: 1px solid ${({ theme }) => theme.bg2};
-  :hover {
-    border: 1px solid ${({ theme }) => darken(0.06, theme.bg2)};
-  }
+  background: #95cbfe;
+  border: 1px solid rgba(4, 63, 132, 0.2);
+  border-radius: 12px;
+  padding: 13px;
 `
 
 interface PositionCardProps {
@@ -159,9 +159,9 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
         <FixedHeightRow onClick={() => setShowMore(!showMore)} style={{ cursor: 'pointer' }}>
           <RowFixed>
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
-            <Text fontWeight={500} fontSize={20}>
+            <Text fontWeight={600} fontSize={16} color={'#043F84'}>
               {!currency0 || !currency1 ? (
-                <Dots>Loading</Dots>
+                <Dots style={{ color: '#043F84', fontWeight: 500 }}>Loading</Dots>
               ) : (
                 `${getCurrencySymbol(currency0, chainId)}/${getCurrencySymbol(currency1, chainId)}`
               )}
@@ -169,9 +169,9 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
           </RowFixed>
           <RowFixed>
             {showMore ? (
-              <ChevronUp size="20" style={{ marginLeft: '10px' }} />
+              <ChevronUp size="20" style={{ marginLeft: '10px' }} strokeWidth={2} />
             ) : (
-              <ChevronDown size="20" style={{ marginLeft: '10px' }} />
+              <ChevronDown size="20" style={{ marginLeft: '10px' }} strokeWidth={2} />
             )}
           </RowFixed>
         </FixedHeightRow>
@@ -194,7 +194,6 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                 '-'
               )}
             </FixedHeightRow>
-
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={500}>
@@ -228,17 +227,30 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                 {poolTokenPercentage ? poolTokenPercentage.toFixed(2) + '%' : '-'}
               </Text>
             </FixedHeightRow>
-
             <AutoRow justify="center" marginTop={'10px'}>
               <ExternalLink href={getPoolLink(chainId, pair.liquidityToken.address)}>
                 View pool information ↗
               </ExternalLink>
             </AutoRow>
             <RowBetween marginTop="10px">
-              <ButtonSecondary as={Link} to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`} width="48%">
+              <ButtonSecondary
+                as={Link}
+                to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}
+                width="48%"
+                style={{
+                  background: 'rgba(4, 63, 132, 0.2)'
+                }}
+              >
                 Add
               </ButtonSecondary>
-              <ButtonSecondary as={Link} width="48%" to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}>
+              <ButtonSecondary
+                as={Link}
+                width="48%"
+                to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
+                style={{
+                  background: 'rgba(4, 63, 132, 0.2)'
+                }}
+              >
                 Remove
               </ButtonSecondary>
             </RowBetween>

@@ -12,9 +12,10 @@ const Base = styled(RebassButton)<{
   borderRadius?: string
   altDisabledStyle?: boolean
 }>`
-  padding: ${({ padding }) => (padding ? padding : '12px 18px')};
+  padding: ${({ padding }) => (padding ? padding : '14px 18px')};
   width: ${({ width }) => (width ? width : '100%')};
   font-weight: 500;
+  font-size: 14px;
   text-align: center;
   border-radius: 12px;
   border-radius: ${({ borderRadius }) => borderRadius && borderRadius};
@@ -94,8 +95,8 @@ export const ButtonPrimaryDark = styled(Base)`
 export const ButtonLight = styled(Base)`
   background-color: ${({ theme }) => theme.primary2};
   color: ${({ theme }) => theme.primaryText1};
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.03, theme.primary2)};
     background-color: ${({ theme, disabled }) => !disabled && darken(0.03, theme.primary2)};
@@ -122,8 +123,8 @@ export const ButtonLight = styled(Base)`
 export const ButtonGray = styled(Base)`
   background-color: ${({ theme }) => theme.bg3};
   color: ${({ theme }) => theme.text2};
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.05, theme.bg2)};
     background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.bg2)};
@@ -140,7 +141,8 @@ export const ButtonGray = styled(Base)`
 export const ButtonSecondary = styled(Base)`
   background-color: ${({ theme }) => theme.primary2};
   color: ${({ theme }) => theme.primaryText1};
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 600;
   border-radius: 8px;
   padding: ${({ padding }) => (padding ? padding : '10px')};
 

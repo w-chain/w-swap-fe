@@ -18,6 +18,12 @@ export const LightCard = styled(Card)`
   background-color: ${({ theme }) => theme.bg1};
 `
 
+export const BlueLightCard = styled(Card)`
+  background: #95cbfe;
+  border: 1px solid rgba(4, 63, 132, 0.2);
+  border-radius: 12px;
+`
+
 export const GreyCard = styled(Card)<{ backgroundColor?: string }>`
   background-color: ${({ theme, backgroundColor }) => backgroundColor || theme.bg3};
 `

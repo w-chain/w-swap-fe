@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { HelpCircle as Question } from 'react-feather'
 import styled from 'styled-components'
 import Tooltip from '../Tooltip'
+import { TYPE } from '../../theme'
 
 const QuestionWrapper = styled.div`
   display: flex;
@@ -12,9 +13,9 @@ const QuestionWrapper = styled.div`
   background: none;
   outline: none;
   cursor: default;
-  border-radius: 36px;
-  background-color: ${({ theme }) => theme.bg2};
-  color: ${({ theme }) => theme.text2};
+  /* border-radius: 36px; */
+  /* background-color: ${({ theme }) => theme.bg2}; */
+  color: ${({ theme }) => theme.primaryText1};
 
   :hover,
   :focus {
@@ -32,7 +33,10 @@ export default function QuestionHelper({ text }: { text: string }) {
     <span style={{ marginLeft: 4 }}>
       <Tooltip text={text} show={show}>
         <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
-          <Question size={16} />
+          {/* <Question size={16} /> */}
+          <TYPE.primary fontSize={14} fontWeight={600}>
+            ?
+          </TYPE.primary>
         </QuestionWrapper>
       </Tooltip>
     </span>

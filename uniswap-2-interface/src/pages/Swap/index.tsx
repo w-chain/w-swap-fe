@@ -92,6 +92,7 @@ export default function Swap() {
     currencies[Field.OUTPUT],
     typedValue
   )
+
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
   const toggledVersion = useToggledVersion()
@@ -461,10 +462,13 @@ export default function Swap() {
                 error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                 style={{
                   background:
-                    !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError ? 'transparent' : ''
+                    !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError ? '#044084b8' : '',
+                  cursor:
+                    !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError ? 'not-allowed' : '',
+                  color: !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError ? '#e6e6e6' : ''
                 }}
               >
-                <Text fontSize={20} fontWeight={500}>
+                <Text fontSize={14} fontWeight={600}>
                   {swapInputError
                     ? swapInputError
                     : priceImpactSeverity > 3 && !isExpertMode

@@ -10,7 +10,7 @@ import { useUserHasLiquidityInAllTokens } from '../../data/V1'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
 import { Text } from 'rebass'
-import { LightCard } from '../../components/Card'
+import { BlueLightCard } from '../../components/Card'
 import { RowBetween } from '../../components/Row'
 import { ButtonPrimary, ButtonPrimaryDark } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
@@ -61,32 +61,35 @@ export default function Pool() {
       <AppBody>
         <SwapPoolTabs active={'pool'} />
         <AutoColumn gap="lg" justify="center">
-          <ButtonPrimaryDark id="join-pool-button" as={Link} to="/add/ETH">
-            <Text fontWeight={500} fontSize={20}>
+          <ButtonPrimaryDark id="join-pool-button" as={Link} to="/add/ETH" padding={'16px'}>
+            <Text fontWeight={600} fontSize={16}>
               Add Liquidity
             </Text>
           </ButtonPrimaryDark>
 
-          <AutoColumn gap="12px" style={{ width: '100%' }}>
+          <AutoColumn
+            gap="12px"
+            style={{ width: '100%', background: '#B4DAFE', borderRadius: '12px', padding: '16px' }}
+          >
             <RowBetween padding={'0 8px'}>
-              <Text color={theme.text1} fontWeight={500}>
+              <Text color={theme.primaryText1} fontWeight={600} fontSize={14}>
                 Your Liquidity
               </Text>
               <Question text="When you add liquidity, you are given pool tokens that represent your share. If you don't see a pool you joined in this list, try importing a pool below." />
             </RowBetween>
 
             {!account ? (
-              <LightCard padding="40px">
-                <TYPE.body color={theme.text3} textAlign="center">
+              <BlueLightCard>
+                <TYPE.body color={theme.primaryText1} textAlign="center">
                   Connect to a wallet to view your liquidity.
                 </TYPE.body>
-              </LightCard>
+              </BlueLightCard>
             ) : v2IsLoading ? (
-              <LightCard padding="40px">
-                <TYPE.body color={theme.text3} textAlign="center">
-                  <Dots>Loading</Dots>
+              <BlueLightCard>
+                <TYPE.body color={theme.primaryText1} textAlign="center">
+                  <Dots style={{ color: '#043F84', fontWeight: 500 }}>Loading</Dots>
                 </TYPE.body>
-              </LightCard>
+              </BlueLightCard>
             ) : allV2PairsWithLiquidity?.length > 0 ? (
               <>
                 {allV2PairsWithLiquidity.map(v2Pair => (
@@ -94,15 +97,21 @@ export default function Pool() {
                 ))}
               </>
             ) : (
-              <LightCard padding="40px">
-                <TYPE.body color={theme.text3} textAlign="center">
+              <BlueLightCard>
+                <TYPE.body color={theme.primaryText1} textAlign="center">
                   No liquidity found.
                 </TYPE.body>
-              </LightCard>
+              </BlueLightCard>
             )}
 
             <div>
-              <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
+              <Text
+                textAlign="center"
+                fontSize={14}
+                fontWeight={600}
+                color={'#585858'}
+                style={{ padding: '.5rem 0 .5rem 0' }}
+              >
                 {hasV1Liquidity ? 'Uniswap V1 liquidity found!' : "Don't see a pool you joined?"}{' '}
                 <StyledInternalLink id="import-pool-link" to={hasV1Liquidity ? '/migrate/v1' : '/find'}>
                   {hasV1Liquidity ? 'Migrate now.' : 'Import it.'}
