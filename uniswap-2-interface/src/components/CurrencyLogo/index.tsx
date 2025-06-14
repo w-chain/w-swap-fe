@@ -33,7 +33,7 @@ const USDCAddresses = [
 const WCOAddresses = [
   '0xF4b85c92c50677E4314413Db6358B037eaA1A721', // ETH & BSC
   '0xEdB8008031141024d50cA2839A607B2f82C1c045', // W Chain
-  '0x8495cbfd11759f920a5f6ad34ca5f2b499a348fc' // W Chain TESTNET
+  '0x8495CbfD11759f920a5F6AD34ca5f2b499a348fc' // W Chain TESTNET
 ]
 
 const getTokenLogoURL = (address: string, chainId: ChainId) => {
