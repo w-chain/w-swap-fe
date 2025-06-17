@@ -35,10 +35,20 @@ const bridgeStatesSlice = createSlice({
     setFromNetwork: (state, action: PayloadAction<Networks>) => {
       state.from = action.payload
       state.fromChainId = getNetworkChainId(action.payload, false)
+      // Clear tokens when network changes as they might not be available
+      state.fromToken = undefined
+      state.toToken = undefined
+      state.selectedTokenAddress = undefined
+      state.fromAmount = undefined
     },
     setToNetwork: (state, action: PayloadAction<Networks>) => {
       state.to = action.payload
       state.toChainId = getNetworkChainId(action.payload, false)
+      // Clear tokens when network changes as they might not be available
+      state.fromToken = undefined
+      state.toToken = undefined
+      state.selectedTokenAddress = undefined
+      state.fromAmount = undefined
     },
     setFromToken: (state, action: PayloadAction<TokenSymbols | undefined>) => {
       state.fromToken = action.payload
@@ -49,6 +59,9 @@ const bridgeStatesSlice = createSlice({
           state.toToken = action.payload
         }
         state.selectedTokenAddress = getTokenBySymbol(state.fromChainId, action.payload)?.address ?? undefined
+      } else {
+        state.toToken = undefined
+        state.selectedTokenAddress = undefined
       }
     },
     setToToken: (state, action: PayloadAction<TokenSymbols | undefined>) => {
@@ -72,9 +85,20 @@ const bridgeStatesSlice = createSlice({
     },
     swapNetworks: (state) => {
       const oldFrom = state.from
+      const oldFromChainId = state.fromChainId
       const oldTo = state.to
+      const oldToChainId = state.toChainId
+      
       state.from = oldTo
+      state.fromChainId = oldToChainId
       state.to = oldFrom
+      state.toChainId = oldFromChainId
+      
+      // Clear tokens since they might not be valid for swapped networks
+      state.fromToken = undefined
+      state.toToken = undefined
+      state.selectedTokenAddress = undefined
+      state.fromAmount = undefined
     }
   }
 })

@@ -23,6 +23,7 @@ export function useBridgeApproveCallback(
   const tokenAmount = useMemo(() => {
     if (!tokenSymbol || !chainId) return undefined;
     const uniToken = getTokenAsUniV2Token(tokenSymbol, chainId);
+    if (!uniToken) return undefined;
     const amount = amountToApprove ? utils.parseUnits(String(amountToApprove), uniToken.decimals) : constants.MaxUint256
     return new TokenAmount(uniToken, amount.toString());
   }, [tokenSymbol, chainId, amountToApprove]);
