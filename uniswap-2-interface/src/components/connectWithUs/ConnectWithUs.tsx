@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import WcoLogoPng from '../../components/CurrencyLogo/assets/wco-logo.png'
-import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import USDTLogo from '../../components/CurrencyLogo/assets/usdt.webp'
 import USDCLogo from '../../components/CurrencyLogo/assets/usdc.webp'
+import WAVELogo from '../../components/CurrencyLogo/assets/wave.webp'
 import { ConnectSvg, GuidelinesSvg, LiquiditySvg, StakingSvg, SupportSvg, WaveSvg } from './connectSvgs'
 import FishBG from '../../assets/images/fish-bg.png'
 
@@ -11,17 +11,17 @@ const pairs = [
   {
     icon: USDTLogo,
     name: 'WCO/USDT',
-    tvl: '$1.9M'
+    tvl: 'Growing...'
   },
   {
     icon: USDCLogo,
-    name: 'WCO/USD Coin',
-    tvl: '$1.9M'
+    name: 'WCO/USDC',
+    tvl: 'Growing...'
   },
   {
-    icon: EthereumLogo,
-    name: 'WCO/ETH',
-    tvl: '$1.9M'
+    icon: WAVELogo,
+    name: 'WCO/WAVE',
+    tvl: 'Growing...'
   }
 ]
 
@@ -99,7 +99,7 @@ const ConnectWithUs = () => {
           </Container>
 
           <Container direction="row" align="center">
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <a href="/#/pool" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div
                 style={{
                   display: 'flex',
@@ -122,7 +122,7 @@ const ConnectWithUs = () => {
               <ContainerTitle>
                 Fuel the ecosystem and earn fees! Provide liquidity to pools on W Swap and benefit from every swap.
               </ContainerTitle>
-            </div>
+            </a>
 
             <SVGContainer>
               <LiquiditySvg />
@@ -141,22 +141,22 @@ const ConnectWithUs = () => {
 
       <Title style={{ marginTop: '120px' }}>Connect With Us</Title>
 
-      <ConnectWithUsWrapper>
-        <ConnectWithUsContainer>
+      <ConnectWithUsWrapper >
+        <ConnectWithUsContainer href="https://w-chain.com/contact-us/" target="_blank" rel="noreferrer">
           <ContainerTitle>Customer Support</ContainerTitle>
           <ConnectWithSvgWrapper>
             <SupportSvg />
           </ConnectWithSvgWrapper>
         </ConnectWithUsContainer>
 
-        <ConnectWithUsContainer>
+        <ConnectWithUsContainer href="https://w-chain.com/guidelines/" target="_blank" rel="noreferrer">
           <ContainerTitle>Guidelines</ContainerTitle>
           <ConnectWithSvgWrapper>
             <GuidelinesSvg />
           </ConnectWithSvgWrapper>
         </ConnectWithUsContainer>
 
-        <ConnectWithUsContainer>
+        <ConnectWithUsContainer href="https://w-chain.com/faq/" target="_blank" rel="noreferrer">
           <ContainerTitle>Connect with our Community </ContainerTitle>
           <ConnectWithSvgWrapper>
             <ConnectSvg />
@@ -317,7 +317,7 @@ const Content = styled.p`
   margin: 0;
 `
 
-const ConnectWithUsContainer = styled.div`
+const ConnectWithUsContainer = styled.a`
   padding: 53px 32px;
   background: #d9ebff;
   border-radius: 15px;

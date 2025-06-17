@@ -156,9 +156,7 @@ const buildTheBlockLinks = [
 ]
 const programLinks = [
   { text: 'Tokenomics', href: 'https://w-chain.com/wchain-tokenomics/' },
-  { text: 'Airdrop', href: '#' },
-  { text: 'Raffles', href: '#' },
-  { text: 'Strategic Buyback', href: '#' }
+  { text: 'Airdrop', href: 'https://w-chain.com/airdrop/' },
 ]
 const wcnLinks = [
   {
@@ -171,7 +169,6 @@ const wcnLinks = [
     href:
       'https://scan.w-chain.com/?_gl=1*10f265a*_ga*ODgzMzM5NzEyLjE3NDY2MjgxMDU.*_ga_SNV30L8084*czE3NDk4MTM5MjAkbzQkZzEkdDE3NDk4MTUzNzckajYwJGwwJGgw'
   },
-  { text: 'Migration Portal', href: '#' },
   { text: 'W Bridge', href: 'https://bridge.w-chain.com/' }
 ]
 
