@@ -7,22 +7,25 @@ import { getBSCTargetToken } from '../shared/utils/token'
 
 export interface BridgeState {
   from: Networks
-  fromChainId?: ChainId
+  fromChainId: ChainId
   fromToken?: TokenSymbols
   fromAmount?: number
   to: Networks
-  toChainId?: ChainId
+  toChainId: ChainId
   toToken?: TokenSymbols
   toAmount?: number
   fee: number
-  handlerAllowance: bigint
+  selectedTokenAddress?: string
+  handlerAllowance: string
 }
 
 const initialState: BridgeState = {
   from: Networks.ETH,
+  fromChainId: ChainId.ETH,
   to: Networks.WCHAIN,
+  toChainId: ChainId.WCHAIN,
   fee: 0,
-  handlerAllowance: BigInt(0)
+  handlerAllowance: '0'
 }
 
 const bridgeStatesSlice = createSlice({
@@ -45,6 +48,7 @@ const bridgeStatesSlice = createSlice({
         } else {
           state.toToken = action.payload
         }
+        state.selectedTokenAddress = getTokenBySymbol(state.fromChainId, action.payload)?.address ?? undefined
       }
     },
     setToToken: (state, action: PayloadAction<TokenSymbols | undefined>) => {
@@ -59,7 +63,7 @@ const bridgeStatesSlice = createSlice({
     setFee: (state, action: PayloadAction<number>) => {
       state.fee = action.payload
     },
-    setHandlerAllowance: (state, action: PayloadAction<bigint>) => {
+    setHandlerAllowance: (state, action: PayloadAction<string>) => {
       state.handlerAllowance = action.payload
     },
     resetTokens: (state) => {

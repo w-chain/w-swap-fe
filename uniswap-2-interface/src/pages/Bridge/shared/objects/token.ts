@@ -1,6 +1,7 @@
-import type { Provider, Signer, ContractTransactionResponse } from "ethers";
 import type { ChainId } from "../types";
-import { Contract, MaxUint256 } from "ethers";
+import { Contract, constants, BigNumber } from "ethers";
+import type { Provider } from "@ethersproject/providers";
+import type { Signer, ContractTransaction } from "ethers";
 import { ERC20_ABI } from "../abi/token";
 import { wait } from "../utils/time";
 import { BRIDGE_CONTRACT_REGISTRY } from "../contracts/bridge";
@@ -18,7 +19,7 @@ export default class Token {
     public decimals: number
   ) {
     this.contract = new Contract(address, ERC20_ABI);
-    this.handlerContractAddress = BRIDGE_CONTRACT_REGISTRY[chainId].erc20Handler;
+    this.handlerContractAddress = BRIDGE_CONTRACT_REGISTRY[chainId]?.erc20Handler || '';
   }
 
   /**
@@ -35,28 +36,28 @@ export default class Token {
 
   public async balanceOf(account: string, provider: Provider) {
     const balance = await (this.contract.connect(provider) as Contract).balanceOf!(account);
-    return BigInt(balance);
+    return balance;
   }
 
   public async allowance(owner: string, spender: string, provider: Provider) {
     const allowance = await (this.contract.connect(provider) as Contract).allowance!(owner, spender);
-    return BigInt(allowance);
+    return allowance;
   }
 
-  public async approve(spender: string, amount: bigint, signer: Signer) {
-    const tx: ContractTransactionResponse = await (this.contract.connect(signer) as Contract).approve!(spender, amount);
+  public async approve(spender: string, amount: BigNumber, signer: Signer) {
+    const tx: ContractTransaction = await (this.contract.connect(signer) as Contract).approve!(spender, amount);
     await wait(2000); // Fix on BSC late indexed tx
     await tx.wait();
     return tx.hash;
   }
 
   public async approveMax(spender: string, signer: Signer) {
-    return this.approve(spender, MaxUint256, signer);
+    return this.approve(spender, constants.MaxUint256, signer);
   }
 
   public async handlerAllowance(owner: string, provider: Provider) {
     const allowance = await (this.contract.connect(provider) as Contract).allowance!(owner, this.handlerContractAddress);
-    return BigInt(allowance);
+    return allowance;
   }
 
   public async handlerApproveMax(signer: Signer) {

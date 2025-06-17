@@ -1,5 +1,4 @@
-import { Currency, Pair } from '@uniswap/sdk'
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import { RowBetween } from '../../../components/Row'
@@ -36,44 +35,28 @@ const Container = styled.div<{ hideInput: boolean }>`
   border-radius: 12px;
 `
 
-interface CurrencyInputPanelProps {
-  value: string
-  onUserInput: (value: string) => void
-  onMax?: () => void
-  showMaxButton: boolean
-  label?: string
-  onCurrencySelect?: (currency: Currency) => void
-  currency?: Currency | null
-  disableCurrencySelect?: boolean
-  hideBalance?: boolean
-  pair?: Pair | null
-  hideInput?: boolean
-  otherCurrency?: Currency | null
+interface NetworkInputPanelProps {
+  label: string
   id: string
-  showCommonBases?: boolean
   direction: 'from' | 'to'
 }
 
 export default function NetworkInputPanel({
-  label = 'Input',
-  disableCurrencySelect = false,
-  hideInput = false,
+  label,
   id,
   direction
-}: CurrencyInputPanelProps) {
+}: NetworkInputPanelProps) {
   return (
     <InputPanel id={id}>
-      <Container hideInput={hideInput}>
-        {!hideInput && (
-          <LabelRow>
-            <RowBetween>
-              <TYPE.body color={'#000'} fontWeight={600} fontSize={14}>
-                {label}
-              </TYPE.body>
-            </RowBetween>
-          </LabelRow>
-        )}
-        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={disableCurrencySelect}>
+      <Container hideInput={false}>
+        <LabelRow>
+          <RowBetween>
+            <TYPE.body color={'#000'} fontWeight={600} fontSize={14}>
+              {label}
+            </TYPE.body>
+          </RowBetween>
+        </LabelRow>
+        <InputRow selected={false}>
           <NetworkSelect direction={direction} />
         </InputRow>
       </Container>

@@ -272,8 +272,6 @@ export default function Swap() {
     onCurrencySelection
   ])
 
-  console.log('wrapType', wrapType)
-
   return (
     <>
       <TokenWarningModal

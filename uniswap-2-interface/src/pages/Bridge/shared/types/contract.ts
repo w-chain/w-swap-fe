@@ -1,4 +1,4 @@
-export type SupportedChainId = 1 | 171717 | 11155111 | 71117;
+export type SupportedChainId = 1 | 11155111 | 56 | 97 | 171717 | 71117;
 
 export type BridgeContracts = {
   bridge: string;

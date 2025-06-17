@@ -4,13 +4,12 @@ import { Networks as BridgeNetworks } from '../shared/types'
 import { getNetworkImage } from '../shared/utils/network'
 import { AppDispatch, AppState } from '../../../state'
 import Modal from '../../../components/Modal'
-import { ButtonLight, ButtonPrimary } from '../../../components/Button'
-import { ChevronDown, X } from 'react-feather'
+import { ButtonLight } from '../../../components/Button'
+import { X } from 'react-feather'
 import styled from 'styled-components'
 import { setFromNetwork, setToNetwork } from '../stores/BridgeStates'
 import { ReactComponent as DropDown } from '../../../assets/images/dropdown.svg'
 import type { BridgeState } from '../stores/BridgeStates'
-import { Separator } from '../../../components/SearchModal/styleds'
 
 const NetworkButton = styled(ButtonLight)`
   display: flex;
@@ -222,7 +221,7 @@ export default function NetworkSelect({ direction }: NetworkSelectProps) {
               <X size={20} />
             </CloseButton>
           </ModalHeader>
-          <Separator  style={{ background: '#043F83', width:"auto",margin:"0 24px" }} />
+
           <StyledNetworkList>
             {networks.map(network_ => {
               const selected = network === network_

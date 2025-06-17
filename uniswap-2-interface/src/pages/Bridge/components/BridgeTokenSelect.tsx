@@ -1,9 +1,11 @@
 import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
+import { Input as NumericalInput } from '../../../components/NumericalInput'
 import { TokenSymbols } from '../shared/types'
 import BridgeTokenSearchModal from './BridgeTokenSearchModal'
 import { ReactComponent as DropDown } from '../../../assets/images/dropdown.svg'
 import { getTokenImage } from '../shared/utils'
+import { TokenAmount } from '@uniswap/sdk'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -18,16 +20,14 @@ const Container = styled.div<{ hideInput: boolean }>`
   background-color: #b4dafe;
 `
 
-const StyledInput = styled.input`
-  background: transparent;
+const StyledInput = styled(NumericalInput)`
+background: transparent;
+color: #000;
+font-size: 1.875rem;
+font-weight: 600;
+&::placeholder {
   color: #000;
-  border: none;
-  font-size: 1.875rem;
-  width: 100%;
-  font-weight: 600;
-  &::placeholder {
-    color: #000;
-  }
+}
 `
 
 const TokenSelect = styled.button`
@@ -52,17 +52,13 @@ const TokenSelect = styled.button`
 `
 
 interface BridgeTokenInputPanelProps {
-  value: string
+  value: string | number | undefined
   onUserInput: (value: string) => void
   onTokenSelect: (token: TokenSymbols) => void
   availableTokens: TokenSymbols[]
   selectedToken?: TokenSymbols
-  showMaxButton?: boolean
-  onMax?: () => void
-  label?: string
   id?: string
-  hideInput?: boolean
-  hideBalance?: boolean
+  balance?: TokenAmount
 }
 
 const StyledDropDown = styled(DropDown)`
@@ -89,44 +85,41 @@ export default function BridgeTokenInputPanel({
   onTokenSelect,
   availableTokens,
   selectedToken,
-  showMaxButton,
-  onMax,
-  label,
   id,
-  hideInput,
-  hideBalance
+  balance
 }: BridgeTokenInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const theme = useContext(ThemeContext)
 
   return (
     <InputPanel id={id}>
-      <Container hideInput={!!hideInput}>
-        {!hideInput && (
-          <div style={{ display: 'flex', alignItems: 'center', padding: '1rem' }}>
-            <StyledInput value={value} onChange={e => onUserInput(e.target.value)} placeholder="0.0" />
-            <TokenSelect onClick={() => setModalOpen(true)}>
-              {selectedToken && <TokenIcon src={getTokenImage(selectedToken)} alt={`${selectedToken} logo`} />}
+      <Container hideInput={false}>
+      <div style={{ display: 'flex', alignItems: 'center', padding: '1rem' }}>
+        <StyledInput
+          className="token-amount-input"
+          value={value === undefined ? '' : value}
+          onUserInput={val => {
+            onUserInput(val)
+          }}
+        />
+        <TokenSelect onClick={() => setModalOpen(true)}>
+          {selectedToken && <TokenIcon src={getTokenImage(selectedToken)} alt={`${selectedToken} logo`} />}
 
-              <StyledTokenName active={!!selectedToken}>{selectedToken || 'Select Token'}</StyledTokenName>
-              <StyledDropDown />
-            </TokenSelect>
-          </div>
-        )}
-        {/* Balance display can be added here if needed */}
-        {!hideBalance && (
-          <div
-            style={{
-              padding: '0 1rem 1rem',
-              fontSize: '14px',
-              fontWeight: 600,
-              color: '#000',
-              justifySelf: 'flex-end'
-            }}
-          >
-            Balance: 0.00
-          </div>
-        )}
+          <StyledTokenName active={!!selectedToken}>{selectedToken || 'Select Token'}</StyledTokenName>
+          <StyledDropDown />
+        </TokenSelect>
+      </div>
+      <div
+        style={{
+          padding: '0 1rem 1rem',
+          fontSize: '14px',
+          fontWeight: 600,
+          color: '#000',
+          justifySelf: 'flex-end'
+        }}
+      >
+        {balance ? `Balance: ${balance.toSignificant(6)}` : "Balance: 0.00"}
+      </div>
       </Container>
       <BridgeTokenSearchModal
         isOpen={modalOpen}

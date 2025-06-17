@@ -25,7 +25,7 @@ export function useBridgeStates() {
       dispatch(actions.setToAmount(amount)), [dispatch]),
     setFee: useCallback((fee: number) => 
       dispatch(actions.setFee(fee)), [dispatch]),
-    setHandlerAllowance: useCallback((allowance: bigint) => 
+    setHandlerAllowance: useCallback((allowance: string) => 
       dispatch(actions.setHandlerAllowance(allowance)), [dispatch]),
     resetTokens: useCallback(() => 
       dispatch(actions.resetTokens()), [dispatch]),

@@ -34,7 +34,6 @@ export const walletconnect = new WalletConnectConnector({
 export const walletlink = new WalletLinkConnector({
   url: NETWORK_URL,
   appName: 'WSwap',
-  // TODO: add logo
   appLogoUrl:
-    'https://mpng.pngfly.com/20181202/bex/kisspng-emoji-domain-unicorn-pin-badges-sticker-unicorn-tumblr-emoji-unicorn-iphoneemoji-5c046729264a77.5671679315437924251569.jpg'
+    'https://w-chain-data.s3.eu-north-1.amazonaws.com/images/wchain-logo-no-bg.png'
 })

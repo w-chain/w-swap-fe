@@ -1,3 +1,5 @@
+import { ChainId } from "../types";
+
 export const getDomainId = (chainId: ChainId) => {
   switch (chainId) {
     case ChainId.WCHAIN:

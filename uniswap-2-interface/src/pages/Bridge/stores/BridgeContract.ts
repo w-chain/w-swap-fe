@@ -41,12 +41,17 @@ export const { setBridgeContract, setHandlerContract, setInitialized } = bridgeC
 // Thunks
 export const initializeContracts = (chainId: ChainId) => async (dispatch: any) => {
   try {
+    const contractRegistry = BRIDGE_CONTRACT_REGISTRY[chainId];
+    if (!contractRegistry) {
+      throw new Error(`Unsupported chain ID: ${chainId}`);
+    }
+    
     const bridgeContract = new Contract(
-      BRIDGE_CONTRACT_REGISTRY[chainId].bridge,
+      contractRegistry.bridge,
       BRIDGE_ABI
     )
     const handlerContract = new Contract(
-      BRIDGE_CONTRACT_REGISTRY[chainId].erc20Handler,
+      contractRegistry.erc20Handler,
       ERC20_ABI
     )
     

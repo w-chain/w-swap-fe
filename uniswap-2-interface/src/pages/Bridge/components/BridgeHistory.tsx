@@ -1,45 +1,50 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { AppState, AppDispatch } from '../../../state'
-import { clearCompletedTransactions } from '../stores/Transaction'
+import { clearCompletedTransactions, initializeTransactions, updateTransactionStatus } from '../stores/Transaction'
 import { TransactionStatus, Networks } from '../shared/types/enums'
-import { getTokenImage } from '../shared/utils'
+import { BridgeTransaction } from '../shared/types/transaction'
+import { getTokenImage, getNetworkImage, getNetworkFromChainId, getExplorerTxUrl } from '../shared/utils'
 
 const ModalCard = styled.div`
   padding: 0;
   position: relative;
   width: 100%;
   padding-top: 10px;
-  min-width: 480px;
+  max-width: 100%;
+  overflow-x: hidden;
 `
 
 const Section = styled.div`
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 `
 const SectionTitle = styled.h2`
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #043f84;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
+  margin-top: 0;
 `
 const EmptyText = styled.div`
   text-align: center;
   color: #585858;
-  padding: 24px 0;
-  font-size: 14px;
+  padding: 16px 0;
+  font-size: 13px;
   font-weight: 600;
 `
 const ClearButton = styled.button`
-  border: 1px solid #b4dafe;
-  background: #fff;
+  border: 1px solid #1976d2;
+  background: none;
   color: #1976d2;
-  border-radius: 8px;
-  padding: 6px 16px;
-  font-size: 1rem;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
-  margin-left: 12px;
+  margin-left: 8px;
+  margin-bottom: 12px;
+  white-space: nowrap;
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -49,19 +54,19 @@ const ClearButton = styled.button`
 const Divider = styled.div`
   height: 1px;
   background: #c7e0fa;
-  margin: 24px 0 24px 0;
+  margin: 16px 0;
 `
 
 const TxCard = styled.div`
   background: #c7e0fa;
-  border-radius: 18px;
+  border-radius: 12px;
   box-shadow: 0 2px 8px rgba(4, 63, 132, 0.08);
-  padding: 20px 24px 16px 24px;
-  margin-bottom: 24px;
+  padding: 16px;
+  margin-bottom: 16px;
   transition: box-shadow 0.15s;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   &:hover {
     box-shadow: 0 6px 24px rgba(4, 63, 132, 0.16);
   }
@@ -70,33 +75,29 @@ const TxCard = styled.div`
 const TxRow = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
+  flex-wrap: wrap;
 `
 
-const ChainIcon = styled.div`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #fff;
+const StatusRow = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: 700;
-  color: #1976d2;
-  margin-right: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  justify-content: flex-end;
+  margin-bottom: 0px;
+  
+  @media (max-width: 480px) {
+    justify-content: flex-start;
+  }
 `
 
 const Arrow = styled.span`
-  font-size: 22px;
-  margin: 0 8px;
+  font-size: 16px;
+  margin: 0 4px;
   color: #043f84;
+  flex-shrink: 0;
 `
 
 const StatusText = styled.div<{ status: TransactionStatus }>`
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 600;
   color: ${({ status }) =>
     status === TransactionStatus.SUCCESS
@@ -105,91 +106,101 @@ const StatusText = styled.div<{ status: TransactionStatus }>`
       ? '#e74c3c'
       : '#888'};
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  
+  @media (max-width: 480px) {
+    margin-left: 0;
+    font-size: 12px;
+  }
+`
+
+const PollingIndicator = styled.div`
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1976d2;
+  animation: pulse 2s infinite;
+  
+  @keyframes pulse {
+    0% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(1.2);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 `
 
 const TxDetails = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
+  flex-direction: column;
+  gap: 12px;
   margin-top: 8px;
-  font-size: 16px;
+  font-size: 14px;
+  
+  @media (min-width: 481px) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
 `
 
 const DetailCol = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  min-width: 180px;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
 `
 
 const TokenIcon = styled.img`
-  width: 28px;
-  height: 28px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: #fff;
   object-fit: contain;
-  margin-right: 8px;
+  margin-right: 6px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  flex-shrink: 0;
 `
 
 const AmountBox = styled.div`
   display: flex;
+  gap: 4px;
   align-items: center;
   background: #eaf4fb;
-  border-radius: 8px;
-  padding: 4px 12px;
+  border-radius: 6px;
+  padding: 4px 8px;
   font-weight: 700;
-  font-size: 18px;
-  margin-right: 8px;
-`
-
-const AddTokenButton = styled.button`
-  background: #e0e0e0;
-  border: none;
-  border-radius: 8px;
-  padding: 4px 10px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #222;
-  margin-left: 8px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  gap: 4px;
+  font-size: 14px;
+  margin-right: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 `
 
 const Ellipsis = styled.span`
-  max-width: 120px;
+  max-width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   display: inline-block;
   vertical-align: bottom;
+  
+  @media (max-width: 480px) {
+    max-width: 80px;
+  }
 `
-
-const Pagination = styled.div`
-  text-align: center;
-  color: #043f84;
-  font-size: 20px;
-  font-weight: 600;
-  margin-top: 16px;
-  margin-bottom: 8px;
-  letter-spacing: 2px;
-`
-
-function getNetworkIcon(chainId: number) {
-  // Replace with your getNetworkImage utility if available
-  if (chainId === 1) return '🟦' // ETH placeholder
-  if (chainId === 56) return '🟨' // BSC placeholder
-  if (chainId === 171717) return '🟦' // W Chain placeholder
-  return '🌐'
-}
-
-function getNetworkName(chainId: number) {
-  // Map chainId to Networks enum value, fallback to chainId
-  const entry = Object.entries(Networks).find(([, value]) => Number(value) === chainId)
-  return entry ? entry[0] : chainId
-}
 
 function ellipsis(str: string, start = 6, end = 4) {
   if (!str) return ''
@@ -197,20 +208,140 @@ function ellipsis(str: string, start = 6, end = 4) {
   return str.slice(0, start) + '...' + str.slice(-end)
 }
 
+// Proposal fetcher function
+async function getProposal(fromChainId: number, toChainId: number, data: string, depositNonce: string, txHash: string) {
+  if (!fromChainId || !toChainId || !data || !depositNonce || !txHash) return
+
+  try {
+    const queryParams = new URLSearchParams({
+      toChainId: toChainId.toString(),
+      fromChainId: fromChainId.toString(),
+      depositNonce,
+      data
+    })
+
+    const response = await fetch(`https://bridge.w-chain.com/api/validator/proposal?${queryParams}`)
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const res = await response.json()
+    const { status, yesVotes } = res
+
+    return { status, yesVotes, txHash }
+  } catch (error) {
+    console.error('Failed to fetch proposal:', error)
+    return null
+  }
+}
+
 export default function BridgeHistory() {
   const dispatch = useDispatch<AppDispatch>()
   const transactions = useSelector((state: AppState) => state.transaction.transactions)
+  const initialized = useSelector((state: AppState) => state.transaction.initialized)
   const [clearLoading, setClearLoading] = useState(false)
+  const intervalRefs = useRef<Map<string, NodeJS.Timeout>>(new Map())
 
-  const pendingTransactions = transactions.filter(
-    tx => tx.status === TransactionStatus.PENDING || tx.status === TransactionStatus.AWAITING
-  )
-  const completedTransactions = transactions.filter(
-    tx =>
+  // Initialize transactions from localStorage on component mount
+  useEffect(() => {
+    if (!initialized) {
+      dispatch(initializeTransactions())
+    }
+  }, [dispatch, initialized])
+
+  // Auto-save transactions when they change (backup mechanism)
+  useEffect(() => {
+    if (initialized && transactions.length > 0) {
+      try {
+        localStorage.setItem('bridge_transactions', JSON.stringify(transactions))
+      } catch (error) {
+        console.error('Failed to backup transactions to localStorage:', error)
+      }
+    }
+  }, [transactions, initialized])
+
+  // Polling function for a single transaction
+  const pollTransaction = useCallback(async (tx: BridgeTransaction) => {
+    try {
+      const result = await getProposal(
+        tx.fromChainId,
+        tx.toChainId,
+        tx.data,
+        tx.depositNonce,
+        tx.txHash
+      )
+
+      if (result && result.status === 3) {
+        dispatch(updateTransactionStatus({ txHash: tx.txHash, status: TransactionStatus.SUCCESS }))
+        // Clear the interval for this transaction
+        const intervalId = intervalRefs.current.get(tx.txHash)
+        if (intervalId) {
+          clearInterval(intervalId)
+          intervalRefs.current.delete(tx.txHash)
+        }
+      }
+    } catch (error) {
+      console.error(`Error polling transaction ${tx.txHash}:`, error)
+    }
+  }, [dispatch])
+
+  // Set up polling for pending transactions
+  useEffect(() => {
+    if (!initialized) return
+
+    const pendingTxs = transactions.filter(
+      tx => tx.status === TransactionStatus.PENDING || tx.status === TransactionStatus.AWAITING
+    )
+
+    // Clear existing intervals for transactions that are no longer pending
+    intervalRefs.current.forEach((intervalId, txHash) => {
+      const stillPending = pendingTxs.some(tx => tx.txHash === txHash)
+      if (!stillPending) {
+        clearInterval(intervalId)
+        intervalRefs.current.delete(txHash)
+      }
+    })
+
+    // Set up new intervals for pending transactions
+    pendingTxs.forEach(tx => {
+      if (!intervalRefs.current.has(tx.txHash)) {
+        const intervalId = setInterval(() => {
+          pollTransaction(tx)
+        }, 10000) // Poll every 10 seconds
+        
+        intervalRefs.current.set(tx.txHash, intervalId)
+        
+        // Also poll immediately
+        pollTransaction(tx)
+      }
+    })
+
+    // Cleanup function
+    return () => {
+      intervalRefs.current.forEach(intervalId => clearInterval(intervalId))
+      intervalRefs.current.clear()
+    }
+  }, [transactions, initialized, pollTransaction])
+
+  // Cleanup intervals on component unmount
+  useEffect(() => {
+    return () => {
+      intervalRefs.current.forEach(intervalId => clearInterval(intervalId))
+      intervalRefs.current.clear()
+    }
+  }, [])
+
+  const pendingTransactions = transactions
+    .filter(tx => tx.status === TransactionStatus.PENDING || tx.status === TransactionStatus.AWAITING)
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+  
+  const completedTransactions = transactions
+    .filter(tx =>
       tx.status === TransactionStatus.SUCCESS ||
       tx.status === TransactionStatus.FAILED ||
       tx.status === TransactionStatus.REJECTED
-  )
+    )
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
 
   const handleClearCompleted = useCallback(async () => {
     setClearLoading(true)
@@ -218,6 +349,15 @@ export default function BridgeHistory() {
     await new Promise(res => setTimeout(res, 200))
     setClearLoading(false)
   }, [dispatch])
+
+  // Show loading state while initializing
+  if (!initialized) {
+    return (
+      <ModalCard>
+        <EmptyText>Loading transaction history...</EmptyText>
+      </ModalCard>
+    )
+  }
 
   return (
     <ModalCard>
@@ -229,40 +369,42 @@ export default function BridgeHistory() {
           ) : (
             pendingTransactions.map(tx => (
               <TxCard key={tx.txHash}>
-                <TxRow>
-                  <ChainIcon>{getNetworkIcon(tx.fromChainId)}</ChainIcon>
-                  <span style={{ fontWeight: 600, color: '#043f84' }}>From: {getNetworkName(tx.fromChainId)}</span>
-                  <Arrow>→</Arrow>
-                  <ChainIcon>{getNetworkIcon(tx.toChainId)}</ChainIcon>
-                  <span style={{ fontWeight: 600, color: '#043f84' }}>To: {getNetworkName(tx.toChainId)}</span>
+                <StatusRow>
                   <StatusText status={tx.status}>
-                    {tx.status === TransactionStatus.SUCCESS ? 'Transaction Successful' : tx.status}
+                    {tx.status === TransactionStatus.SUCCESS ? 'Success' : tx.status}
+                    {(tx.status === TransactionStatus.PENDING || tx.status === TransactionStatus.AWAITING) && (
+                      <PollingIndicator title="Checking for updates..." />
+                    )}
                   </StatusText>
+                </StatusRow>
+                <TxRow>
+                  <div style={{ display: 'flex', alignItems: 'center', flex: 1, minWidth: 0 }}>
+                    <TokenIcon src={getNetworkImage(getNetworkFromChainId(tx.fromChainId))} alt={tx.tokenSymbol} /> 
+                    <span style={{ fontWeight: 600, color: '#043f84', fontSize: '13px', marginRight: '4px' }}>From: {getNetworkFromChainId(tx.fromChainId)}</span>
+                    <Arrow>→</Arrow>
+                    <TokenIcon src={getNetworkImage(getNetworkFromChainId(tx.toChainId))} alt={tx.tokenSymbol} /> 
+                    <span style={{ fontWeight: 600, color: '#043f84', fontSize: '13px' }}>To: {getNetworkFromChainId(tx.toChainId)}</span>
+                  </div>
                 </TxRow>
                 <TxDetails>
                   <DetailCol>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                       <AmountBox>
-                        {tx.amount} <TokenIcon src={getTokenImage(tx.tokenSymbol as any)} alt={tx.tokenSymbol} />{' '}
+                        <TokenIcon src={getTokenImage(tx.tokenSymbol as any)} alt={tx.tokenSymbol} />
+                        {tx.amount} 
                         {tx.tokenSymbol}
                       </AmountBox>
-                      <AddTokenButton>
-                        Add token{' '}
-                        <span role="img" aria-label="add">
-                          ➕
-                        </span>
-                      </AddTokenButton>
                     </div>
-                    <div style={{ fontSize: 15, color: '#222', marginTop: 4 }}>
-                      Deposit Tx Hash <Ellipsis>{ellipsis(tx.txHash)}</Ellipsis>
+                    <div style={{ fontSize: 13, color: '#222', marginTop: 4 }}>
+                      Tx Hash: <Ellipsis>{ellipsis(tx.txHash)}</Ellipsis>
                     </div>
                   </DetailCol>
                   <DetailCol>
-                    <div style={{ fontSize: 15, color: '#222' }}>
-                      Recipient <Ellipsis>{ellipsis(tx.recipient)}</Ellipsis>
+                    <div style={{ fontSize: 13, color: '#222' }}>
+                      To: <Ellipsis>{ellipsis(tx.recipient)}</Ellipsis>
                     </div>
-                    <div style={{ fontSize: 15, color: '#222', marginTop: 4 }}>
-                      Deposit Time <Ellipsis>{new Date(tx.timestamp).toLocaleString()}</Ellipsis>
+                    <div style={{ fontSize: 13, color: '#222', marginTop: 4 }}>
+                      Time: <Ellipsis>{new Date(tx.timestamp).toLocaleString()}</Ellipsis>
                     </div>
                   </DetailCol>
                 </TxDetails>
@@ -272,52 +414,57 @@ export default function BridgeHistory() {
         </Section>
         <Divider />
         <Section>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
             <SectionTitle>Completed Transactions</SectionTitle>
-            {/* <ClearButton onClick={handleClearCompleted} disabled={clearLoading}>
-              {clearLoading ? 'Clearing...' : 'Clear Completed Txs'}
-            </ClearButton> */}
+            {completedTransactions.length > 0 && (
+              <ClearButton onClick={handleClearCompleted} disabled={clearLoading}>
+                {clearLoading ? 'Clearing...' : 'Clear Completed'}
+              </ClearButton>
+            )}
           </div>
-          <div style={{ maxHeight: 400, overflowY: 'auto' }}>
+          <div style={{ maxHeight: 350, overflowY: 'auto' }}>
             {completedTransactions.length === 0 ? (
               <EmptyText>No completed transactions</EmptyText>
             ) : (
               completedTransactions.map(tx => (
                 <TxCard key={tx.txHash}>
-                  <TxRow>
-                    <ChainIcon>{getNetworkIcon(tx.fromChainId)}</ChainIcon>
-                    <span style={{ fontWeight: 600, color: '#043f84' }}>From: {getNetworkName(tx.fromChainId)}</span>
-                    <Arrow>→</Arrow>
-                    <ChainIcon>{getNetworkIcon(tx.toChainId)}</ChainIcon>
-                    <span style={{ fontWeight: 600, color: '#043f84' }}>To: {getNetworkName(tx.toChainId)}</span>
+                  <StatusRow>
                     <StatusText status={tx.status}>
-                      {tx.status === TransactionStatus.SUCCESS ? 'Transaction Successful' : tx.status}
+                      {tx.status === TransactionStatus.SUCCESS ? 'Success' : tx.status}
+                      {(tx.status === TransactionStatus.PENDING || tx.status === TransactionStatus.AWAITING) && (
+                        <PollingIndicator title="Checking for updates..." />
+                      )}
                     </StatusText>
+                  </StatusRow>
+                  <TxRow>
+                    <div style={{ display: 'flex', alignItems: 'center', flex: 1, minWidth: 0 }}>
+                      <TokenIcon src={getNetworkImage(getNetworkFromChainId(tx.fromChainId))} alt={tx.tokenSymbol} /> 
+                      <span style={{ fontWeight: 600, color: '#043f84', fontSize: '13px', marginRight: '4px' }}>From: {getNetworkFromChainId(tx.fromChainId)}</span>
+                      <Arrow>→</Arrow>
+                      <TokenIcon src={getNetworkImage(getNetworkFromChainId(tx.toChainId))} alt={tx.tokenSymbol} /> 
+                      <span style={{ fontWeight: 600, color: '#043f84', fontSize: '13px' }}>To: {getNetworkFromChainId(tx.toChainId)}</span>
+                    </div>
                   </TxRow>
                   <TxDetails>
                     <DetailCol>
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                         <AmountBox>
-                          {tx.amount} <TokenIcon src={getTokenImage(tx.tokenSymbol as any)} alt={tx.tokenSymbol} />{' '}
+                          <TokenIcon src={getTokenImage(tx.tokenSymbol as any)} alt={tx.tokenSymbol} />
+                          {tx.amount} {' '}
                           {tx.tokenSymbol}
                         </AmountBox>
-                        <AddTokenButton>
-                          Add token{' '}
-                          <span role="img" aria-label="add">
-                            ➕
-                          </span>
-                        </AddTokenButton>
                       </div>
-                      <div style={{ fontSize: 15, color: '#222', marginTop: 4 }}>
-                        Deposit Tx Hash <Ellipsis>{ellipsis(tx.txHash)}</Ellipsis>
+                      <div style={{ fontSize: 13, color: '#222', marginTop: 4 }}>
+                        Tx Hash: {' '}
+                        <a href={getExplorerTxUrl(tx.fromChainId)}><Ellipsis>{ellipsis(tx.txHash)}</Ellipsis></a>
                       </div>
                     </DetailCol>
                     <DetailCol>
-                      <div style={{ fontSize: 15, color: '#222' }}>
-                        Recipient <Ellipsis>{ellipsis(tx.recipient)}</Ellipsis>
+                      <div style={{ fontSize: 13, color: '#222' }}>
+                        To: <Ellipsis>{ellipsis(tx.recipient)}</Ellipsis>
                       </div>
-                      <div style={{ fontSize: 15, color: '#222', marginTop: 4 }}>
-                        Deposit Time <Ellipsis>{new Date(tx.timestamp).toLocaleString()}</Ellipsis>
+                      <div style={{ fontSize: 13, color: '#222', marginTop: 4 }}>
+                        Time: <Ellipsis>{new Date(tx.timestamp).toLocaleString()}</Ellipsis>
                       </div>
                     </DetailCol>
                   </TxDetails>

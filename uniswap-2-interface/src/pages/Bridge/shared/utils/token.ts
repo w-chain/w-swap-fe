@@ -1,4 +1,6 @@
-import { TokenSymbols } from "../types";
+import { TokenSymbols, Networks, ChainId } from "../types";
+import { getTokenBySymbol } from "../registry/tokens";
+import { Token } from "@uniswap/sdk";
 
 export function getBSCTargetToken(token: TokenSymbols) {
   switch (token) {
@@ -28,4 +30,25 @@ export function getTokenImage(token: TokenSymbols) {
     default:
       return '';
   }
+}
+
+export function getAvailableFromTokens(from: Networks, to: Networks): TokenSymbols[] {
+  if (from === Networks.WCHAIN && to === Networks.BSC) {
+    return [TokenSymbols.bUSDT, TokenSymbols.bUSDC]
+  }
+  return [TokenSymbols.USDT, TokenSymbols.USDC]
+}
+
+export function getTokenAsUniV2Token(symbol: TokenSymbols, chainId: number) {
+  const token = getTokenBySymbol(chainId, symbol);
+  if (!token) {
+    throw new Error(`Token ${symbol} not found on chain ${chainId}`);
+  }
+  return new Token(
+    chainId,
+    token.address,
+    token.decimals,
+    token.symbol,
+    token.name
+  )
 }
