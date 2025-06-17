@@ -41,9 +41,7 @@ export function getAvailableFromTokens(from: Networks, to: Networks): TokenSymbo
 
 export function getTokenAsUniV2Token(symbol: TokenSymbols, chainId: number) {
   const token = getTokenBySymbol(chainId, symbol);
-  if (!token) {
-    throw new Error(`Token ${symbol} not found on chain ${chainId}`);
-  }
+  if (!token) return undefined;
   return new Token(
     chainId,
     token.address,

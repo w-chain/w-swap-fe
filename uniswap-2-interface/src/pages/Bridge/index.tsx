@@ -1,6 +1,5 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { utils } from 'ethers'
 import { ButtonPrimaryDark } from '../../components/Button'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { AutoRow } from '../../components/Row'
@@ -21,8 +20,6 @@ import { getAvailableFromTokens } from './shared/utils/token'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { useToken } from '../../hooks/Tokens'
 import { getTokenBySymbol } from './shared/registry/tokens'
-import Token from './shared/objects/token'
-import { getNetworkLibrary } from '../../connectors'
 import { useBridgeApproveCallback } from './stores/hooks/useBridgeApproveCallback'
 import { ApprovalState } from '../../hooks/useApproveCallback'
 import ConfirmBridgeModal from './components/ConfirmBridgeModal'
@@ -83,7 +80,7 @@ export default function Bridge() {
     if (bridgeState.fromChainId && Number(bridgeState.fromChainId) !== Number(chainId)) {
       setWrongNetwork(true)
     } else {
-      if (wrongNetwork) setWrongNetwork(false)
+      setWrongNetwork(false)
     }
   }, [bridgeState, bridgeState.fromChainId, chainId])
 
