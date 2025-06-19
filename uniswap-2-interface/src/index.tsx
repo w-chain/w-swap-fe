@@ -16,6 +16,7 @@ import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
+import Clarity from '@microsoft/clarity'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
@@ -69,3 +70,7 @@ ReactDOM.render(
   </StrictMode>,
   document.getElementById('root')
 )
+
+const projectId = 's1tbzikhis'
+
+Clarity.init(projectId)

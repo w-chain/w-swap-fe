@@ -8,6 +8,7 @@
     "@babel/plugin-proposal-optional-chaining": "^7.14.5",
     "@craco/craco": "^5.9.0",
     "@ethersproject/experimental": "^5.0.1",
+    "@microsoft/clarity": "^1.0.0",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
@@ -64,6 +65,7 @@
     "react-feather": "^2.0.8",
     "react-ga": "^2.5.7",
     "react-i18next": "^10.7.0",
+    "react-icons": "^5.5.0",
     "react-popper": "^2.2.3",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.0.0",
@@ -111,8 +113,5 @@
   },
   "engines": {
     "node": "18.x"
-  },
-  "dependencies": {
-    "react-icons": "^5.5.0"
   }
 }
