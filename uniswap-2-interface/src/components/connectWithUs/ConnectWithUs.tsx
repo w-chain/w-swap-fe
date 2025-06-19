@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import WcoLogoPng from '../../components/CurrencyLogo/assets/wco-logo.png'
 import USDTLogo from '../../components/CurrencyLogo/assets/usdt.webp'
 import USDCLogo from '../../components/CurrencyLogo/assets/usdc.webp'
-import WAVELogo from '../../components/CurrencyLogo/assets/wave.webp'
+import WAVELogo from '../../components/CurrencyLogo/assets/wave.jpeg'
 import { ConnectSvg, GuidelinesSvg, LiquiditySvg, StakingSvg, SupportSvg, WaveSvg } from './connectSvgs'
 import FishBG from '../../assets/images/fish-bg.png'
 

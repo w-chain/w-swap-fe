@@ -188,7 +188,6 @@ const wcnLinks = [
 const companyLinks = [
   { text: 'About W Chain', href: 'https://w-chain.com/about-w-chain/' },
   { text: 'W Foundation', href: 'https://w-chain.com/w-foundation/' },
-  { text: 'Tokenomics', href: 'https://w-chain.com/wchain-tokenomics/' },
   { text: 'Roadmap', href: 'https://w-chain.com/roadmap/' },
   { text: 'Contact Us', href: 'https://w-chain.com/contact-us/' }
 ]
