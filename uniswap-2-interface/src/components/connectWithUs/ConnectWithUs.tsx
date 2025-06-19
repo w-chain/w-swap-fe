@@ -32,7 +32,7 @@ const ConnectWithUs = () => {
       <img src={FishBG} alt="" className="fish-bottom-left" />
       <Title>Go Direct to DeFi with W Swap</Title>
 
-      <div style={{ display: 'flex', gap: '30px', paddingTop: '25px', flexWrap: 'wrap', justifyContent: 'center' }}>
+      <MainContainer>
         <Container>
           <div
             style={{
@@ -137,11 +137,11 @@ const ConnectWithUs = () => {
             </SVGContainer>
           </Container>
         </div>
-      </div>
+      </MainContainer>
 
       <Title style={{ marginTop: '120px' }}>Connect With Us</Title>
 
-      <ConnectWithUsWrapper >
+      <ConnectWithUsWrapper>
         <ConnectWithUsContainer href="https://w-chain.com/contact-us/" target="_blank" rel="noreferrer">
           <ContainerTitle>Customer Support</ContainerTitle>
           <ConnectWithSvgWrapper>
@@ -235,6 +235,11 @@ const Container = styled.div<{ direction?: string; align?: string; width?: strin
   justify-content: center;
   gap: 25px;
   height: ${({ height }) => height || 'fit-content'};
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    margin-top: 10px;
+  }
 `
 
 const SVGContainer = styled.div`
@@ -355,4 +360,12 @@ const ConnectWithUsWrapper = styled.div`
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
   }
+`
+const MainContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 30px;
+  flex-wrap: wrap;
+  padding-top: 25px;
 `

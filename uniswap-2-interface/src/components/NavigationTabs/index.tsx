@@ -45,6 +45,10 @@ const StyledNavLink = styled(NavLink).attrs({
   :focus {
     color: ${({ disabled }) => (disabled ? '#00000040' : '#043f84')};
   }
+
+  @media (max-width: 768px) {
+    padding: 6px 16px;
+  }
 `
 
 const ActiveText = styled.div`

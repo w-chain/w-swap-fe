@@ -114,6 +114,12 @@ const UniIcon = styled.div`
       width: 4.5rem;
     }
   `};
+
+  @media (max-width: 768px) {
+    img {
+      width: 3.5rem;
+    }
+  }
 `
 
 const HeaderControls = styled.div`
