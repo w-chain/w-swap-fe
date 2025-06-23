@@ -282,7 +282,7 @@ const SeamlessWrapper = styled.div`
   align-items: center;
   gap: 12px;
   height: fit-content;
-  z-index: 10;
+  z-index: 100;
   margin-top: -5px;
 
   p {
@@ -292,6 +292,20 @@ const SeamlessWrapper = styled.div`
     margin: 0;
     line-height: 1.2;
     color: #fff;
+  }
+
+  @media (max-width: 1024px) {
+    p {
+      font-size: 2rem;
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 768px) {
+    p {
+      font-size: 1.8rem;
+      text-align: center;
+    }
   }
 `
 

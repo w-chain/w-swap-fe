@@ -1,10 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import discordSvg from './assets/discord.png'
-import telegramSvg from './assets/telegram.png'
-import twitterSvg from './assets/twitter.png'
-import linkedinSvg from './assets/linkedin.png'
-import footerLogo from './assets/wadz-footer-logo.png'
+import { FaDiscord, FaLinkedin, FaTelegramPlane } from 'react-icons/fa'
 
 const MAIN_TEXT =
   'W Swap is a next-generation decentralized exchange (DEX) on the W Chain ecosystem, delivering lightning-fast, secure, and cost-efficient crypto swaps.'
@@ -29,16 +25,34 @@ const Description = styled.p`
   line-height: 1.5;
 `
 
+// Try to import FaXTwitter from fa6
+// If not available, use a custom SVG
+
+let XIcon = null
+try {
+  // @ts-ignore
+  XIcon = require('react-icons/fa6').FaXTwitter
+} catch {
+  XIcon = () => (
+    <svg width="22" height="22" viewBox="0 0 1200 1227" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M299 0h202l299 441L1099 0h101L801 508l399 719h-202l-299-441-299 441H99l399-719L0 0h299Zm101 1102 200-295 200 295h-400Zm-60-1002H161l340 613-60 108-440-721h199l299 441 60-108-199-333Zm520 0-340 613 60 108 440-721H839l-299 441-60-108 199-333Zm-260 502 60 108 60-108-60-108-60 108Z"
+        fill="#043F84"
+      />
+    </svg>
+  )
+}
+
 const socialLinks = [
-  { icon: discordSvg, href: 'https://discord.gg/hr35kDxtfT' },
-  { icon: telegramSvg, href: 'https://t.me/official_wchain' },
-  { icon: twitterSvg, href: 'https://x.com/WChainNetwork' },
-  { icon: linkedinSvg, href: 'https://www.linkedin.com/company/wchain' }
+  { icon: XIcon, href: 'https://x.com/WChainNetwork' },
+  { icon: FaDiscord, href: 'https://discord.com/invite/MKwECfek45' },
+  { icon: FaLinkedin, href: 'https://www.linkedin.com/company/wadzchain/posts/?feedView=all' },
+  { icon: FaTelegramPlane, href: 'https://t.me/Official_WChain_Updates' }
 ]
 
 const FooterGrid = styled.div`
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr;
   padding: 42px 52px;
   gap: 48px;
   width: 100%;
@@ -49,13 +63,13 @@ const FooterGrid = styled.div`
   }
 
   @media (max-width: 1024px) {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
     padding: 32px 24px;
     gap: 32px;
 
     & > div:first-child {
-      grid-column: span 3;
       max-width: 100%;
+      width: 100%;
     }
   }
 `
@@ -103,6 +117,7 @@ const SectionLink = styled.a`
 const SocialIconsRow = styled.div`
   display: flex;
   gap: 12px;
+  margin-top: 8px;
 
   @media (max-width: 768px) {
     justify-content: center;
@@ -111,21 +126,19 @@ const SocialIconsRow = styled.div`
 `
 
 const SocialIconBox = styled.a`
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   background: #fff;
-  border-radius: 6px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: opacity 0.2s;
+  color: #043f84;
+  font-size: 22px;
+
   &:hover {
     opacity: 0.8;
-  }
-  img {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
   }
 `
 
@@ -156,7 +169,7 @@ const buildTheBlockLinks = [
 ]
 const programLinks = [
   { text: 'Tokenomics', href: 'https://w-chain.com/wchain-tokenomics/' },
-  { text: 'Airdrop', href: 'https://w-chain.com/airdrop/' },
+  { text: 'Airdrop', href: 'https://w-chain.com/airdrop/' }
 ]
 const wcnLinks = [
   {
@@ -170,6 +183,13 @@ const wcnLinks = [
       'https://scan.w-chain.com/?_gl=1*10f265a*_ga*ODgzMzM5NzEyLjE3NDY2MjgxMDU.*_ga_SNV30L8084*czE3NDk4MTM5MjAkbzQkZzEkdDE3NDk4MTUzNzckajYwJGwwJGgw'
   },
   { text: 'W Bridge', href: 'https://bridge.w-chain.com/' }
+]
+
+const companyLinks = [
+  { text: 'About W Chain', href: 'https://w-chain.com/about-w-chain/' },
+  { text: 'W Foundation', href: 'https://w-chain.com/w-foundation/' },
+  { text: 'Roadmap', href: 'https://w-chain.com/roadmap/' },
+  { text: 'Contact Us', href: 'https://w-chain.com/contact-us/' }
 ]
 
 export function Footer() {
@@ -207,14 +227,26 @@ export function Footer() {
           ))}
         </Section>
         <Section>
+          <SectionTitle>Company</SectionTitle>
+          <SectionLine />
+          {companyLinks.map(link => (
+            <SectionLink key={link.text} href={link.href} target="_blank" rel="noopener noreferrer">
+              {link.text}
+            </SectionLink>
+          ))}
+        </Section>
+        <Section>
           <SectionTitle>Social Media</SectionTitle>
           <SectionLine />
           <SocialIconsRow>
-            {socialLinks.map(link => (
-              <SocialIconBox key={link.href} href={link.href} target="_blank" rel="noopener noreferrer">
-                <img src={link.icon} alt="Social media icon" />
-              </SocialIconBox>
-            ))}
+            {socialLinks.map(({ icon: Icon, href }) => {
+              const IconComponent = Icon as React.ComponentType<{ size: number }>
+              return (
+                <SocialIconBox key={href} href={href} target="_blank" rel="noopener noreferrer">
+                  <IconComponent size={16} />
+                </SocialIconBox>
+              )
+            })}
           </SocialIconsRow>
         </Section>
       </FooterGrid>

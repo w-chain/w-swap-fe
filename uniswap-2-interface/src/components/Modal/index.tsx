@@ -37,7 +37,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
     box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadow1)};
     padding: 0px;
     width: 50vw;
-    overflow: hidden;
+    overflow: auto;
 
     align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
 

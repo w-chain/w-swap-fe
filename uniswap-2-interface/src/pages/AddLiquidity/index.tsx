@@ -6,7 +6,7 @@ import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, GreyCard, LightCard, PurpleCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -37,6 +37,21 @@ import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
 import { PoolPriceBar } from './PoolPriceBar'
 import { getCurrencySymbol } from '../../utils/getNativeTokenSymbol'
+
+const ResponsiveText = styled(Text)`
+  font-size: 30px;
+  word-break: break-all;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 24px;
+  `}
+`
+
+const ResponsivePoolToken = styled(Text)`
+  font-size: 24px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 18px;
+  `}
+`
 
 export default function AddLiquidity({
   match: {
@@ -215,11 +230,11 @@ export default function AddLiquidity({
       <AutoColumn gap="20px" style={{ padding: '24px' }}>
         <LightCard mt="20px" borderRadius="20px">
           <RowFlat style={{ alignItems: 'center' }}>
-            <Text fontSize="30px" fontWeight={600} color={'#043F84'} marginRight={10}>
+            <ResponsiveText fontWeight={600} color={'#043F84'} marginRight={10}>
               {getCurrencySymbol(currencies[Field.CURRENCY_A], chainId) +
                 '/' +
                 getCurrencySymbol(currencies[Field.CURRENCY_B], chainId)}
-            </Text>
+            </ResponsiveText>
             <DoubleCurrencyLogo
               currency0={currencies[Field.CURRENCY_A]}
               currency1={currencies[Field.CURRENCY_B]}
@@ -231,9 +246,9 @@ export default function AddLiquidity({
     ) : (
       <AutoColumn gap="20px" style={{ padding: '24px' }}>
         <RowFlat style={{ marginTop: '20px', alignItems: 'center' }}>
-          <Text fontSize="30px" fontWeight={600} color={'#043F84'} marginRight={10}>
+          <ResponsiveText fontWeight={600} color={'#043F84'} marginRight={10}>
             {liquidityMinted?.toSignificant(6)}
-          </Text>
+          </ResponsiveText>
           <DoubleCurrencyLogo
             currency0={currencies[Field.CURRENCY_A]}
             currency1={currencies[Field.CURRENCY_B]}
@@ -241,12 +256,12 @@ export default function AddLiquidity({
           />
         </RowFlat>
         <Row>
-          <Text fontSize="24px" color="#043F84" fontWeight={600}>
+          <ResponsivePoolToken color="#043F84" fontWeight={600}>
             {getCurrencySymbol(currencies[Field.CURRENCY_A], chainId) +
               '/' +
               getCurrencySymbol(currencies[Field.CURRENCY_B], chainId) +
               ' Pool Tokens'}
-          </Text>
+          </ResponsivePoolToken>
         </Row>
         <TYPE.italic fontSize={10} textAlign="left" padding={'8px 0 0 0 '} color={'#043F84'} fontWeight={600}>
           {`Output is estimated. If the price changes by more than ${allowedSlippage /
