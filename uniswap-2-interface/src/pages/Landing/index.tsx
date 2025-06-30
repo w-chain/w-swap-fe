@@ -134,9 +134,7 @@ export default function Landing() {
 
   return (
     <>
-      <AppBg />
       <BodyWrapper>
-        <SeamlessGradient />
         <SeamlessWrapper>
           <p>Seamless Swaps. Unified Liquidity.</p>
           <p>Built for Utility​​ ​Tokens.​​​</p>
@@ -245,16 +243,6 @@ export default function Landing() {
   )
 }
 
-const AppBg = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #fff;
-  overflow: hidden;
-`
-
 const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -307,13 +295,4 @@ const SeamlessWrapper = styled.div`
       text-align: center;
     }
   }
-`
-
-const SeamlessGradient = styled.div`
-  top: 73px;
-  background: linear-gradient(180deg, #034e94 0%, #75b6fe 59.62%, #ffffff 100%);
-  width: 100%;
-  height: 500px;
-  left: 0px;
-  position: absolute;
 `

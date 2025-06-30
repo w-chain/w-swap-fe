@@ -23,6 +23,7 @@ import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Bridge from './Bridge'
 import Landing from './Landing'
+import FishComponent from '../components/FishComponent'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -55,6 +56,7 @@ const BodyWrapper = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 10;
+  min-height: calc(100vh - 120px);
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
       padding: 16px;
@@ -69,10 +71,24 @@ const BodyWrapper = styled.div`
   @media (max-width: 1024px) {
     padding-top: 100px;
   }
-`
 
-const Marginer = styled.div`
-  margin-top: 5rem;
+  .fish-bottom-right {
+    position: fixed;
+    bottom: 0px;
+    right: max(-80px, -10vw);
+    width: 40vw;
+    max-width: 350px;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.3;
+    z-index: 0;
+  }
+
+  @media (max-width: 1024px) {
+    .fish-bottom-right {
+      bottom: 0px;
+    }
+  }
 `
 
 export default function App() {
@@ -88,6 +104,8 @@ export default function App() {
             </HeaderWrapper>
             <BodyWrapper>
               <Popups />
+              <AppBg />
+              <SeamlessGradient />
 
               <Web3ReactManager>
                 <Switch>
@@ -110,7 +128,8 @@ export default function App() {
                   <Route component={RedirectPathToSwapOnly} />
                 </Switch>
               </Web3ReactManager>
-              {/* <Marginer /> */}
+
+              <FishComponent />
             </BodyWrapper>
           </HeadBodyWrapper>
         </AppWrapper>
@@ -118,3 +137,22 @@ export default function App() {
     </Suspense>
   )
 }
+
+const AppBg = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #fff;
+  overflow: hidden;
+`
+
+const SeamlessGradient = styled.div`
+  top: 73px;
+  background: linear-gradient(180deg, #034e94 0%, #75b6fe 59.62%, #ffffff 100%);
+  width: 100%;
+  height: 500px;
+  left: 0px;
+  position: absolute;
+`
