@@ -88,7 +88,7 @@
     {
       "name": "Binance-Peg USD Coin",
       "decimals": 18,
-      "symbol": "USDC",
+      "symbol": "bUSDC",
       "address": "0x9B4805Dc867C279A96F3Ed0745C8bc15153A22E6",
       "chainId": 171717,
       "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/busdc.webp"

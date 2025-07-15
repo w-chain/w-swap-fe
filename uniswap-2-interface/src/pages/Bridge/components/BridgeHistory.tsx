@@ -263,6 +263,12 @@ export default function BridgeHistory() {
   // Polling function for a single transaction
   const pollTransaction = useCallback(async (tx: BridgeTransaction) => {
     try {
+      // Check if transaction has been pending for more than 1 hour
+      const currentTime = new Date().getTime()
+      const transactionTime = new Date(tx.timestamp).getTime()
+      const oneHourInMs = 60 * 60 * 1000 // 1 hour in milliseconds
+      const isExpired = currentTime - transactionTime > oneHourInMs
+
       const result = await getProposal(
         tx.fromChainId,
         tx.toChainId,
@@ -273,6 +279,15 @@ export default function BridgeHistory() {
 
       if (result && result.status === 3) {
         dispatch(updateTransactionStatus({ txHash: tx.txHash, status: TransactionStatus.SUCCESS }))
+        // Clear the interval for this transaction
+        const intervalId = intervalRefs.current.get(tx.txHash)
+        if (intervalId) {
+          clearInterval(intervalId)
+          intervalRefs.current.delete(tx.txHash)
+        }
+      } else if (isExpired) {
+        // If transaction is older than 1 hour and still not successful, mark as FAILED
+        dispatch(updateTransactionStatus({ txHash: tx.txHash, status: TransactionStatus.FAILED }))
         // Clear the interval for this transaction
         const intervalId = intervalRefs.current.get(tx.txHash)
         if (intervalId) {
