@@ -1,9 +1,10 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { ButtonPrimaryDark } from '../../components/Button'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { AutoRow } from '../../components/Row'
 import { ArrowWrapper, BottomGrouping, Wrapper } from '../../components/swap/styleds'
+import { JSBI } from '@uniswap/sdk'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -13,11 +14,11 @@ import NetworkInputPanel from './components/NetworkInputPanel'
 import { useSelector } from 'react-redux'
 import { AppState } from '../../state'
 import { BridgeState, useBridgeStates, useBridgeContract } from './stores'
-import { Networks, TokenSymbols, ChainId } from './shared/types'
+import { TokenSymbols } from './shared/types'
 import BridgeTokenInputPanel from './components/BridgeTokenSelect'
 import BridgeHistory from './components/BridgeHistory'
 import { getAvailableFromTokens } from './shared/utils/token'
-import { useTokenBalance } from '../../state/wallet/hooks'
+import { useTokenBalance, useETHBalances } from '../../state/wallet/hooks'
 import { useToken } from '../../hooks/Tokens'
 import { getTokenBySymbol } from './shared/registry/tokens'
 import { useBridgeApproveCallback } from './stores/hooks/useBridgeApproveCallback'
@@ -37,6 +38,7 @@ const Link = styled.a`
 
 export default function Bridge() {
   const { account, chainId } = useActiveWeb3React()
+  const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [ wrongNetwork, setWrongNetwork ] = useState(false)
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false)
@@ -60,6 +62,17 @@ export default function Bridge() {
 
   const selectedToken = useToken(bridgeState.selectedTokenAddress)
   const selectedTokenBalance = useTokenBalance(account ?? undefined, selectedToken ?? undefined)
+  const currentNetworkETHName = useMemo(() => {
+    switch (chainId) {
+      case 1:
+        return 'ETH'
+      case 56:
+        return 'BNB'
+      case 171717:
+      default:
+        return 'WCO'
+    }
+  }, [chainId])
 
   const validateAmount = (value: string | number | null) => {
     if (value === null || value === '') return undefined;
@@ -85,12 +98,21 @@ export default function Bridge() {
   }, [bridgeState, bridgeState.fromChainId, chainId])
 
   const [ approval, approveCallback ] = useBridgeApproveCallback(bridgeState.fromToken, bridgeState.fromChainId, bridgeState.fromAmount)
-  const [ deposit ] = useBridgeContract()
+  const { deposit, fee, feeLoading, feeInEth } = useBridgeContract()
 
-  const disabled = wrongNetwork || !bridgeState.fromToken || !bridgeState.fromAmount || approval === ApprovalState.PENDING
+  // Check if user has enough ETH to pay the bridge fee
+  const hasInsufficientETHForFee = useMemo(() => {
+    if (!userEthBalance || !fee || feeLoading) return false
+    // Convert ethers BigNumber to JSBI for comparison with CurrencyAmount
+    const feeAsJSBI = JSBI.BigInt(fee.toString())
+    return JSBI.lessThan(userEthBalance.raw, feeAsJSBI)
+  }, [userEthBalance, fee, feeLoading])
+
+  const disabled = wrongNetwork || !bridgeState.fromToken || !bridgeState.fromAmount || approval === ApprovalState.PENDING || hasInsufficientETHForFee
 
   const buttonLabel = () => {
     if (wrongNetwork) return 'Wrong Network'
+    if (hasInsufficientETHForFee) return `Not enough ${currentNetworkETHName} to pay fee`
     if (approval === ApprovalState.PENDING) return 'Approving...'
     if (approval === ApprovalState.NOT_APPROVED) return 'Approve'
     return `Move Funds to ${bridgeState.to}`
@@ -204,6 +226,24 @@ export default function Bridge() {
               id="bridge-token-input"
               balance={selectedTokenBalance}
             />
+
+            {/* Bridge Fee Display */}
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.2)',
+              borderRadius: '12px',
+              padding: '12px 16px',
+              marginTop: '8px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <span style={{ fontSize: '14px', fontWeight: '500' }}>
+                Bridge Fee:
+              </span>
+              <span style={{ fontSize: '14px', fontWeight: '600' }}>
+                {feeLoading ? 'Loading...' : feeInEth ? `${feeInEth} ${currentNetworkETHName}` : 'N/A'}
+              </span>
+            </div>
 
             <BottomGrouping>
               {!account ? (

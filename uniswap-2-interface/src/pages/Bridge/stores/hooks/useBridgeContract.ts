@@ -1,10 +1,10 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState, useEffect } from 'react'
 import { ChainId, TransactionStatus } from '../../shared/types'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useActiveWeb3React } from '../../../../hooks'
 import Token from '../../shared/objects/token'
 import { getDomainId } from '../../shared/utils'
-import { utils } from 'ethers'
+import { utils, BigNumber } from 'ethers'
 import { useContract } from '../../../../hooks/useContract'
 import { BRIDGE_CONTRACT_REGISTRY } from '../../shared/contracts/bridge'
 import { BRIDGE_ABI } from '../../shared/abi/bridge'
@@ -17,6 +17,32 @@ export function useBridgeContract() {
     BRIDGE_ABI
   )
   const { addTransaction, updateDepositNonce, updateTransactionStatus } = useTransaction()
+  const [fee, setFee] = useState<BigNumber | null>(null)
+  const [feeLoading, setFeeLoading] = useState<boolean>(false)
+
+  // Get bridge fee
+  const getFee = useCallback(async (): Promise<BigNumber | null> => {
+    if (!contract) return null
+    
+    try {
+      setFeeLoading(true)
+      const feeValue = await contract._fee()
+      setFee(feeValue)
+      return feeValue
+    } catch (error) {
+      console.error('Failed to get bridge fee:', error)
+      return null
+    } finally {
+      setFeeLoading(false)
+    }
+  }, [contract])
+
+  // Auto-fetch fee when contract or chainId changes
+  useEffect(() => {
+    if (contract && chainId) {
+      getFee()
+    }
+  }, [contract, chainId, getFee])
 
   const deposit = useCallback(async (amount: number, token: Token, destinationChainId: number) => {
     if (!account || !chainId || !contract || !token || !destinationChainId) return
@@ -48,8 +74,15 @@ export function useBridgeContract() {
       return
     }
 
+    // Get current fee for the transaction
+    const currentFee = await getFee()
+    if (!currentFee) {
+      console.error("Failed to get bridge fee")
+      return
+    }
+
     return contract
-      .deposit(domainId, token.resourceId, data)
+      .deposit(domainId, token.resourceId, data, { value: currentFee })
       .then( async (response: TransactionResponse) => {
         addTransaction({
           fromChainId: chainId,
@@ -99,5 +132,11 @@ export function useBridgeContract() {
       })
   }, [account, chainId, contract, addTransaction, updateDepositNonce, updateTransactionStatus])  
 
-  return [deposit]
+  return {
+    deposit,
+    getFee,
+    fee,
+    feeLoading,
+    feeInEth: fee ? utils.formatEther(fee) : null
+  }
 }
