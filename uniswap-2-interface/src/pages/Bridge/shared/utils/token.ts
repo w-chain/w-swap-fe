@@ -1,4 +1,4 @@
-import { TokenSymbols, Networks, ChainId } from "../types";
+import { TokenSymbols, Networks } from "../types";
 import { getTokenBySymbol } from "../registry/tokens";
 import { Token } from "@uniswap/sdk";
 
@@ -12,6 +12,8 @@ export function getBSCTargetToken(token: TokenSymbols) {
       return TokenSymbols.USDT;
     case TokenSymbols.bUSDC:
       return TokenSymbols.USDC;
+    case TokenSymbols.SOL:
+      return TokenSymbols.SOL;
     default:
       throw new Error(`Unsupported token: ${token}`);
   }
@@ -27,6 +29,8 @@ export function getTokenImage(token: TokenSymbols) {
       return '/images/tokens/usdc.webp';
     case TokenSymbols.bUSDC:
       return '/images/tokens/busdc.webp';
+    case TokenSymbols.SOL:
+      return '/images/tokens/sol.webp';
     default:
       return '';
   }
@@ -34,7 +38,10 @@ export function getTokenImage(token: TokenSymbols) {
 
 export function getAvailableFromTokens(from: Networks, to: Networks): TokenSymbols[] {
   if (from === Networks.WCHAIN && to === Networks.BSC) {
-    return [TokenSymbols.bUSDT, TokenSymbols.bUSDC]
+    return [TokenSymbols.bUSDT, TokenSymbols.bUSDC, TokenSymbols.SOL]
+  }
+  if (from === Networks.BSC && to === Networks.WCHAIN) {
+    return [TokenSymbols.USDT, TokenSymbols.USDC, TokenSymbols.SOL]
   }
   return [TokenSymbols.USDT, TokenSymbols.USDC]
 }

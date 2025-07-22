@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from 'react'
+import React, { useState, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { Input as NumericalInput } from '../../../components/NumericalInput'
 import { TokenSymbols } from '../shared/types'
