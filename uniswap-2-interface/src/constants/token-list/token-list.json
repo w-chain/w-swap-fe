@@ -7,10 +7,10 @@
     "dex",
     "swap"
   ],
-  "timestamp": "2025-05-15T13:38:42.123Z",
+  "timestamp": "2025-07-22T03:58:31.123Z",
   "version": {
     "major": 5,
-    "minor": 0,
+    "minor": 1,
     "patch": 0
   },
   "tokens": [
@@ -100,6 +100,14 @@
       "chainId": 171717,
       "address": "0x0Ab978880D3Bf13E448F4F773Acd817e83bDdB0E",
       "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/busdt.webp"
+    },
+    {
+      "name": "Binance-Peg SOL",
+      "symbol": "SOL",
+      "decimals": 18,
+      "chainId": 171717,
+      "address": "0xd4F93CACD6d607789c8eCF1DdDEba8B0c4D915A8",
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/sol.webp"
     },
     {
       "name": "Tether USD",
