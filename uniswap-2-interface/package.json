@@ -90,7 +90,9 @@
     "build": "NODE_OPTIONS='--openssl-legacy-provider' craco build",
     "test": "NODE_OPTIONS='--openssl-legacy-provider' craco test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'"
+    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
+    "copy-token-list": "node scripts/copy-token-list.js",
+    "prebuild": "npm run copy-token-list"
   },
   "eslintConfig": {
     "extends": "react-app"

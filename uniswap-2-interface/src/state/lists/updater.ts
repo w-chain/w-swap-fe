@@ -75,18 +75,20 @@ export default function Updater(): null {
             break
 
           case VersionUpgrade.MAJOR:
+            // Automatically accept major updates to avoid popup issues on mobile browsers
+            dispatch(acceptListUpdate(listUrl))
             dispatch(
               addPopup({
                 key: listUrl,
                 content: {
                   listUpdate: {
                     listUrl,
-                    auto: false,
                     oldList: list.current,
-                    newList: list.pendingUpdate
+                    newList: list.pendingUpdate,
+                    auto: true
                   }
                 },
-                removeAfterMs: null
+                removeAfterMs: 5000 // Auto-remove after 5 seconds
               })
             )
         }

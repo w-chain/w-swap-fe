@@ -1,0 +1,215 @@
+{
+  "name": "W Chain Token List",
+  "logoURI": "https://avatars.githubusercontent.com/u/202958062?s=48&v=4",
+  "keywords": [
+    "audited",
+    "verified",
+    "dex",
+    "swap"
+  ],
+  "timestamp": "2025-07-22T03:58:31.123Z",
+  "version": {
+    "major": 5,
+    "minor": 1,
+    "patch": 0
+  },
+  "tokens": [
+    {
+      "name": "Wrapped WCO",
+      "decimals": 18,
+      "symbol": "WWCO",
+      "address": "0xEdB8008031141024d50cA2839A607B2f82C1c045",
+      "chainId": 171717,
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/wwco.webp"
+    },
+    {
+      "name": "Wrapped WCO",
+      "decimals": 18,
+      "symbol": "WWCO",
+      "address": "0x8495CbfD11759f920a5F6AD34ca5f2b499a348fc",
+      "chainId": 71117,
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/wwco.webp"
+    },
+    {
+      "name": "Bridged WCO",
+      "decimals": 18,
+      "symbol": "WCO",
+      "address": "0xF4b85c92c50677E4314413Db6358B037eaA1A721",
+      "chainId": 56,
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/wwco.webp"
+    },
+    {
+      "name": "Bridged WCO",
+      "decimals": 18,
+      "symbol": "WCO",
+      "address": "0xF4b85c92c50677E4314413Db6358B037eaA1A721",
+      "chainId": 1,
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/wwco.webp"
+    },
+    {
+      "name": "Binance-Peg ETH Token",
+      "decimals": 18,
+      "symbol": "ETH",
+      "address": "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+      "chainId": 56,
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/weth.webp"
+    },
+    {
+      "name": "Wrapped BNB",
+      "decimals": 18,
+      "symbol": "WBNB",
+      "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "chainId": 56
+    },
+    {
+      "name": "Wrapped BTC",
+      "decimals": 8,
+      "symbol": "WBTC",
+      "address": "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c",
+      "chainId": 56,
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/wbtc.webp"
+    },
+    {
+      "name": "Binance-Peg USD Coin",
+      "decimals": 18,
+      "symbol": "USDC",
+      "address": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+      "chainId": 56,
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/busdc.webp"
+    },
+    {
+      "name": "Binance-Peg USD",
+      "symbol": "USDT",
+      "decimals": 18,
+      "chainId": 56,
+      "address": "0x55d398326f99059fF775485246999027B3197955",
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/busdt.webp"
+    },
+    {
+      "name": "Binance-Peg USD Coin",
+      "decimals": 18,
+      "symbol": "bUSDC",
+      "address": "0x9B4805Dc867C279A96F3Ed0745C8bc15153A22E6",
+      "chainId": 171717,
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/busdc.webp"
+    },
+    {
+      "name": "Binance-Peg USD",
+      "symbol": "bUSDT",
+      "decimals": 18,
+      "chainId": 171717,
+      "address": "0x0Ab978880D3Bf13E448F4F773Acd817e83bDdB0E",
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/busdt.webp"
+    },
+    {
+      "name": "Binance-Peg SOL",
+      "symbol": "SOL",
+      "decimals": 18,
+      "chainId": 171717,
+      "address": "0xd4F93CACD6d607789c8eCF1DdDEba8B0c4D915A8",
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/sol.webp"
+    },
+    {
+      "name": "Tether USD",
+      "symbol": "USDT",
+      "decimals": 6,
+      "chainId": 1,
+      "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/usdt.webp"
+    },
+    {
+      "name": "Tether USD",
+      "symbol": "USDT",
+      "decimals": 6,
+      "chainId": 171717,
+      "address": "0x40CB2CCcF80Ed2192b53FB09720405F6Fe349743",
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/usdt.webp"
+    },
+    {
+      "name": "Tether USD",
+      "symbol": "USDT",
+      "decimals": 6,
+      "chainId": 71117,
+      "address": "0x9D6d68774326b2100adD0aA29C928Ed7bdC3B127",
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/usdt.webp"
+    },
+    {
+      "name": "USD Coin",
+      "symbol": "USDC",
+      "decimals": 6,
+      "chainId": 1,
+      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/usdc.webp"
+    },
+    {
+      "name": "USD Coin",
+      "symbol": "USDC",
+      "decimals": 6,
+      "chainId": 71117,
+      "address": "0x1aB74716E3Ec78c71967a846199407c351094c45",
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/usdc.webp"
+    },
+    {
+      "name": "USD Coin",
+      "symbol": "USDC",
+      "decimals": 6,
+      "chainId": 171717,
+      "address": "0x643eC74Ed2B79098A37Dc45dcc7F1AbfE2AdE6d8",
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/usdc.webp"
+    },
+    {
+      "name": "BNB",
+      "decimals": 18,
+      "symbol": "BNB",
+      "address": "0xB8c77482e45F1F44dE1745F52C74426C631bDD52",
+      "chainId": 1
+    },
+    {
+      "name": "AAVE",
+      "decimals": 18,
+      "symbol": "AAVE",
+      "address": "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
+      "chainId": 1
+    },
+    {
+      "name": "Wrapped ETH",
+      "decimals": 18,
+      "symbol": "WETH",
+      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "chainId": 1,
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/weth.webp"
+    },
+    {
+      "name": "Wrapped BTC",
+      "decimals": 8,
+      "symbol": "WBTC",
+      "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      "chainId": 1,
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/wbtc.webp"
+    },
+    {
+      "name": "Meme No. 17",
+      "decimals": 18,
+      "symbol": "M17",
+      "address": "0x47F18DC654f2185Cc100ca7aae2c9c243aDc67F0",
+      "chainId": 71117,
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/m17.webp"
+    },
+    {
+      "name": "Meme No. 17",
+      "decimals": 18,
+      "symbol": "M17",
+      "address": "0x8029766f9ffec9B8D5C65Bb023fFDE9840f2AEcF",
+      "chainId": 171717,
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/m17.webp"
+    },
+    {
+      "name": "WAVE",
+      "decimals": 18,
+      "symbol": "WAVE",
+      "address": "0x42AbfB13B4E3d25407fFa9705146b7Cb812404a0",
+      "chainId": 171717,
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/wave.webp"
+    }
+  ]
+}

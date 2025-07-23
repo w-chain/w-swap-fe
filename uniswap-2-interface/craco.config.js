@@ -27,6 +27,33 @@ module.exports = {
       return webpackConfig;
     },
   },
+  devServer: {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+      'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    },
+    setupMiddlewares: (middlewares, devServer) => {
+      // Add specific middleware for token-list.json to ensure proper CORS headers
+      devServer.app.get('/token-list/token-list.json', (req, res) => {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+        res.header('Content-Type', 'application/json');
+        res.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.header('Pragma', 'no-cache');
+        res.header('Expires', '0');
+        
+        const tokenListPath = path.resolve(__dirname, 'public/token-list/token-list.json');
+        res.sendFile(tokenListPath);
+      });
+      
+      return middlewares;
+    },
+  },
   babel: {
     plugins: [
       '@babel/plugin-proposal-nullish-coalescing-operator',
