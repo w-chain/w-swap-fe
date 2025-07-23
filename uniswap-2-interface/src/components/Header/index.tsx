@@ -5,8 +5,8 @@ import { Text } from 'rebass'
 
 import styled from 'styled-components'
 
-import Logo from '../../assets/svg/wadz-chain-logo.png'
-import LogoDark from '../../assets/svg/wadz-chain-logo.png'
+import Logo from '../Logo'
+import WChainLogo from '../../assets/svg/wadz-chain-logo.png'
 import Wordmark from '../../assets/svg/wordmark.svg'
 import WordmarkDark from '../../assets/svg/wordmark_white.svg'
 import { useActiveWeb3React } from '../../hooks'
@@ -15,12 +15,11 @@ import { useETHBalances } from '../../state/wallet/hooks'
 
 import { YellowCard } from '../Card'
 import Settings from '../Settings'
-// import Menu from '../Menu'
 
 import Row, { RowBetween } from '../Row'
 import Web3Status from '../Web3Status'
-// import VersionSwitch from './VersionSwitch'
 import { getNativeTokenSymbol } from '../../utils/getNativeTokenSymbol'
+
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -31,11 +30,9 @@ const HeaderFrame = styled.div`
   top: 0;
   position: sticky;
   z-index: 10;
-  background: #fff;
-  box-shadow: 0 2px 12px rgba(74, 144, 226, 0.08);
   padding-bottom: 0.5rem;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    padding: 12px 0 0 0;
+    padding: 5px 0 0 0;
     width: calc(100%);
     position: relative;
   `};
@@ -46,13 +43,10 @@ const HeaderElement = styled.div`
   align-items: center;
 `
 
-const HeaderElementWrap = styled.div`
-  display: flex;
-  align-items: center;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    margin-top: 0.5rem;
-`};
+const StyledLogo = styled(Logo)<{ size: string }>`
+  width: ${({ size }) => size};
+  height: ${({ size }) => size};
+  margin-right: 10px;
 `
 
 const Title = styled.a`
@@ -140,11 +134,11 @@ const BalanceText = styled(Text)`
   color: ${({ theme }) => theme.primaryText1};
 `
 
-const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
-  [ChainId.MAINNET]: 'Ethereum',
-  [ChainId.WCHAIN]: 'W Chain',
-  [ChainId.WCHAIN_TESTNET]: 'W Chain Testnet',
-  [ChainId.BNB]: 'BNB'
+const NETWORK_IMAGE: { [chainId in ChainId]: string | null } = {
+  [ChainId.MAINNET]: '/images/networks/eth.webp',
+  [ChainId.WCHAIN]: '/images/networks/w-chain.webp',
+  [ChainId.WCHAIN_TESTNET]: '/images/networks/w-chain.webp',
+  [ChainId.BNB]: '/images/networks/bsc.webp'
 }
 
 export default function Header() {
@@ -159,7 +153,7 @@ export default function Header() {
         <HeaderElement>
           <Title href=".">
             <UniIcon>
-              <img src={isDark ? LogoDark : Logo} alt="logo" />
+              <img src={WChainLogo} alt="logo" />
             </UniIcon>
             <TitleText>
               <img style={{ marginLeft: '4px', marginTop: '4px' }} src={isDark ? WordmarkDark : Wordmark} alt="logo" />
@@ -169,7 +163,9 @@ export default function Header() {
         <HeaderControls>
           <HeaderElement>
             <TestnetWrapper>
-              {!isMobile && chainId && NETWORK_LABELS[chainId] && <NetworkCard>{NETWORK_LABELS[chainId]}</NetworkCard>}
+              {!isMobile && chainId && NETWORK_IMAGE[chainId] && (
+                <StyledLogo srcs={[NETWORK_IMAGE[chainId] ?? '']} size="32px" />
+              )}
             </TestnetWrapper>
             <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
               {account && userEthBalance ? (
@@ -179,12 +175,13 @@ export default function Header() {
               ) : null}
               <Web3Status />
             </AccountElement>
-          </HeaderElement>
-          <HeaderElementWrap>
-            {/* <VersionSwitch /> */}
             <Settings />
-            {/* <Menu /> */}
-          </HeaderElementWrap>
+          </HeaderElement>
+          {/* <HeaderElementWrap>
+            <VersionSwitch />
+            <Settings />
+            <Menu />
+          </HeaderElementWrap> */}
         </HeaderControls>
       </RowBetween>
     </HeaderFrame>

@@ -5,11 +5,13 @@ import { AutoColumn } from '../Column'
 import PopupItem from './PopupItem'
 
 const MobilePopupWrapper = styled.div<{ height: string | number }>`
-  position: relative;
-  max-width: 100%;
+  position: fixed;
+  top: 10%;
+  left: auto;
+  right: auto;
+  max-width: calc(100% - 0.5rem);
   height: ${({ height }) => height};
-  margin: ${({ height }) => (height ? '0 auto;' : 0)};
-  margin-bottom: ${({ height }) => (height ? '20px' : 0)}};
+  z-index: 100;
 
   display: none;
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -38,7 +40,7 @@ const FixedPopupColumn = styled(AutoColumn)`
   z-index: 5;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
+    display: none !important;
   `};
 `
 

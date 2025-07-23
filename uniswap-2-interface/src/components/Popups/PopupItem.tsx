@@ -29,7 +29,11 @@ export const Popup = styled.div`
   overflow: hidden;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: block;
     min-width: 290px;
+    max-width: 290px;
+    flex-shrink: 0;
+    margin-right: 12px;
   `}
 `
 const Fader = styled.div`
