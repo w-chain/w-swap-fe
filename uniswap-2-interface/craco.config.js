@@ -36,9 +36,9 @@ module.exports = {
       'Pragma': 'no-cache',
       'Expires': '0'
     },
-    setupMiddlewares: (middlewares, devServer) => {
+    before: (app, server) => {
       // Add specific middleware for token-list.json to ensure proper CORS headers
-      devServer.app.get('/token-list/token-list.json', (req, res) => {
+      app.get('/token-list/token-list.json', (req, res) => {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -50,8 +50,6 @@ module.exports = {
         const tokenListPath = path.resolve(__dirname, 'public/token-list/token-list.json');
         res.sendFile(tokenListPath);
       });
-      
-      return middlewares;
     },
   },
   babel: {

@@ -14,7 +14,12 @@ export const network = new NetworkConnector({
 
 let networkLibrary: Web3Provider | undefined
 export function getNetworkLibrary(): Web3Provider {
-  return (networkLibrary = networkLibrary ?? new Web3Provider(network.provider as any))
+  if (!networkLibrary) {
+    networkLibrary = new Web3Provider(network.provider as any)
+    // Set polling interval to 2 seconds for 2-second block time blockchain
+    ;(networkLibrary as any).pollingInterval = 2000
+  }
+  return networkLibrary
 }
 
 export const injected = new InjectedConnector({
@@ -27,7 +32,7 @@ export const walletconnect = new WalletConnectConnector({
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
   // @ts-ignore
-  pollingInterval: 15000
+  pollingInterval: 2000
 })
 
 // mainnet only

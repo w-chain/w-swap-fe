@@ -114,7 +114,7 @@ export default function Updater(): null {
   const dispatch = useDispatch<AppDispatch>()
   const state = useSelector<AppState, AppState['multicall']>(state => state.multicall)
   // wait for listeners to settle before triggering updates
-  const debouncedListeners = useDebounce(state.callListeners, 100)
+  const debouncedListeners = useDebounce(state.callListeners, 25)
   const latestBlockNumber = useBlockNumber()
   const { chainId } = useActiveWeb3React()
   const multicallContract = useMulticallContract()

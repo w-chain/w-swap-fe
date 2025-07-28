@@ -13,15 +13,20 @@ export function shouldCheck(
   if (!tx.lastCheckedBlockNumber) return true
   const blocksSinceCheck = lastBlockNumber - tx.lastCheckedBlockNumber
   if (blocksSinceCheck < 1) return false
-  const minutesPending = (new Date().getTime() - tx.addedTime) / 1000 / 60
-  if (minutesPending > 60) {
-    // every 10 blocks if pending for longer than an hour
-    return blocksSinceCheck > 9
-  } else if (minutesPending > 5) {
-    // every 3 blocks if pending more than 5 minutes
-    return blocksSinceCheck > 2
+  const secondsPending = (new Date().getTime() - tx.addedTime) / 1000
+  
+  // Optimized for 2-second block time blockchain
+  if (secondsPending > 3600) {
+    // every 5 blocks if pending for longer than an hour (was 10)
+    return blocksSinceCheck > 4
+  } else if (secondsPending > 300) {
+    // every 2 blocks if pending more than 5 minutes (was 3)
+    return blocksSinceCheck > 1
+  } else if (secondsPending > 30) {
+    // every block if pending more than 30 seconds
+    return true
   } else {
-    // otherwise every block
+    // check every block for first 30 seconds (most critical period)
     return true
   }
 }
