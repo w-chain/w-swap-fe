@@ -6,6 +6,7 @@ import USDCLogo from '../../components/CurrencyLogo/assets/usdc.webp'
 import WAVELogo from '../../components/CurrencyLogo/assets/wave.jpeg'
 import { ConnectSvg, GuidelinesSvg, LiquiditySvg, StakingSvg, SupportSvg, WaveSvg } from './connectSvgs'
 import FishBG from '../../assets/images/fish-bg.png'
+import ReviewCards from '../ReviewCards/ReviewCards'
 
 const pairs = [
   {
@@ -139,7 +140,7 @@ const ConnectWithUs = () => {
         </div>
       </MainContainer>
 
-      <Title style={{ marginTop: '120px' }}>Connect With Us</Title>
+      {/* <Title style={{ marginTop: '120px' }}>Connect With Us</Title>
 
       <ConnectWithUsWrapper>
         <ConnectWithUsContainer href="https://w-chain.com/contact-us/" target="_blank" rel="noreferrer">
@@ -162,7 +163,9 @@ const ConnectWithUs = () => {
             <ConnectSvg />
           </ConnectWithSvgWrapper>
         </ConnectWithUsContainer>
-      </ConnectWithUsWrapper>
+      </ConnectWithUsWrapper> */}
+
+      <ReviewCards />
     </ConnectWithUsBg>
   )
 }

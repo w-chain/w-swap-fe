@@ -237,6 +237,7 @@ export default function Landing() {
 
         <Marginer />
       </BodyWrapper>
+
       <ConnectWithUs />
       <Footer />
     </>
