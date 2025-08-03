@@ -78,6 +78,14 @@ export const TOKENS: Token[] = [
     '0x0000000000000000000000570a5d26f7765ecb712c0924e4de545b89fd43df02',
     18
   ),
+  new Token(
+    ChainId.BSC,
+    'Binance-Peg DOGE',
+    TokenSymbols.DOGE,
+    '0xbA2aE424d960c26247Dd6c32edC70B295c744C43',
+    '0x0000000000000000000000ba2ae424d960c26247dd6c32edc70b295c744c4302',
+    8
+  ),
   // W Chain
   new Token(
     ChainId.WCHAIN,
@@ -118,6 +126,14 @@ export const TOKENS: Token[] = [
     '0xd4F93CACD6d607789c8eCF1DdDEba8B0c4D915A8',
     '0x0000000000000000000000570a5d26f7765ecb712c0924e4de545b89fd43df02',
     18
+  ),
+  new Token(
+    ChainId.WCHAIN,
+    'Binance-Peg DOGE',
+    TokenSymbols.DOGE,
+    '0x6cdfdA79787cAA4ad1a95456095beDc95aBd2d75',
+    '0x0000000000000000000000ba2ae424d960c26247dd6c32edc70b295c744c4302',
+    8
   ),
   // W Chain Testnet
   new Token(

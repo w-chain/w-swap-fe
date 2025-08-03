@@ -16,7 +16,8 @@ export enum TokenSymbols {
   USDC = 'USDC',
   bUSDT = 'bUSDT',
   bUSDC = 'bUSDC',
-  SOL = 'SOL'
+  SOL = 'SOL',
+  DOGE = 'DOGE'
 }
 
 export enum TransactionStatus {

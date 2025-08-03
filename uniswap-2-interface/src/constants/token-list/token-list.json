@@ -7,10 +7,10 @@
     "dex",
     "swap"
   ],
-  "timestamp": "2025-07-23T04:04:31.123Z",
+  "timestamp": "2025-08-03T04:25:31.123Z",
   "version": {
     "major": 6,
-    "minor": 0,
+    "minor": 1,
     "patch": 0
   },
   "tokens": [
@@ -203,6 +203,14 @@
       "chainId": 171717,
       "address": "0xd4F93CACD6d607789c8eCF1DdDEba8B0c4D915A8",
       "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/sol.webp"
+    },
+    {
+      "name": "Binance-Peg DOGE",
+      "symbol": "DOGE",
+      "decimals": 8,
+      "chainId": 171717,
+      "address": "0x6cdfdA79787cAA4ad1a95456095beDc95aBd2d75",
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/doge.webp"
     }
   ]
 }
