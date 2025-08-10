@@ -7,10 +7,10 @@
     "dex",
     "swap"
   ],
-  "timestamp": "2025-08-03T04:25:31.123Z",
+  "timestamp": "2025-08-10T04:25:31.123Z",
   "version": {
     "major": 6,
-    "minor": 1,
+    "minor": 2,
     "patch": 0
   },
   "tokens": [
@@ -211,6 +211,14 @@
       "chainId": 171717,
       "address": "0x6cdfdA79787cAA4ad1a95456095beDc95aBd2d75",
       "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/doge.webp"
+    },
+    {
+      "name": "OG-88",
+      "symbol": "OG-88",
+      "decimals": 18,
+      "chainId": 171717,
+      "address": "0xD1841fC048b488d92fdF73624a2128D10A847E88",
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/og88.webp"
     }
   ]
 }
