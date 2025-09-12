@@ -17,7 +17,7 @@ export function getNetworkLibrary(): Web3Provider {
   if (!networkLibrary) {
     networkLibrary = new Web3Provider(network.provider as any)
     // Set polling interval to 2 seconds for 2-second block time blockchain
-    ;(networkLibrary as any).pollingInterval = 2000
+    ;(networkLibrary as any).pollingInterval = 1000
   }
   return networkLibrary
 }
