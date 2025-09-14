@@ -10,7 +10,7 @@
   "timestamp": "2025-08-10T04:25:31.123Z",
   "version": {
     "major": 6,
-    "minor": 2,
+    "minor": 3,
     "patch": 0
   },
   "tokens": [
@@ -219,6 +219,14 @@
       "chainId": 171717,
       "address": "0xD1841fC048b488d92fdF73624a2128D10A847E88",
       "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/og88.webp"
+    },
+    {
+      "name": "Binance-Peg XRP",
+      "decimals": 18,
+      "symbol": "XRP",
+      "address": "0x4560d5EB0C32A05fA59Acd2E8D639F84A15A2414",
+      "chainId": 171717,
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/xrp.webp"
     }
   ]
 }

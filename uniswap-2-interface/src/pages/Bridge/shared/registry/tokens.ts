@@ -86,6 +86,14 @@ export const TOKENS: Token[] = [
     '0x0000000000000000000000ba2ae424d960c26247dd6c32edc70b295c744c4302',
     8
   ),
+  new Token(
+    ChainId.BSC,
+    'Binance-Peg XRP',
+    TokenSymbols.XRP,
+    '0x1D2F0da169ceB9fC7B3144628dB156f3F6c60dBE',
+    '0x00000000000000000000001d2f0da169ceb9fc7b3144628db156f3f6c60dbe02',
+    18
+  ),
   // W Chain
   new Token(
     ChainId.WCHAIN,
@@ -134,6 +142,14 @@ export const TOKENS: Token[] = [
     '0x6cdfdA79787cAA4ad1a95456095beDc95aBd2d75',
     '0x0000000000000000000000ba2ae424d960c26247dd6c32edc70b295c744c4302',
     8
+  ),
+  new Token(
+    ChainId.WCHAIN,
+    'Binance-Peg XRP',
+    TokenSymbols.XRP,
+    '0x4560d5EB0C32A05fA59Acd2E8D639F84A15A2414',
+    '0x00000000000000000000001d2f0da169ceb9fc7b3144628db156f3f6c60dbe02',
+    18
   ),
   // W Chain Testnet
   new Token(

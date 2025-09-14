@@ -16,6 +16,8 @@ export function getBSCTargetToken(token: TokenSymbols) {
       return TokenSymbols.SOL;
     case TokenSymbols.DOGE:
       return TokenSymbols.DOGE;
+    case TokenSymbols.XRP:
+      return TokenSymbols.XRP;
     default:
       throw new Error(`Unsupported token: ${token}`);
   }
@@ -35,6 +37,8 @@ export function getTokenImage(token: TokenSymbols) {
       return '/images/tokens/sol.webp';
     case TokenSymbols.DOGE:
       return '/images/tokens/doge.webp';
+    case TokenSymbols.XRP:
+      return '/images/tokens/xrp.webp';
     default:
       return '';
   }
@@ -42,10 +46,10 @@ export function getTokenImage(token: TokenSymbols) {
 
 export function getAvailableFromTokens(from: Networks, to: Networks): TokenSymbols[] {
   if (from === Networks.WCHAIN && to === Networks.BSC) {
-    return [TokenSymbols.bUSDT, TokenSymbols.bUSDC, TokenSymbols.SOL, TokenSymbols.DOGE]
+    return [TokenSymbols.bUSDT, TokenSymbols.bUSDC, TokenSymbols.SOL, TokenSymbols.DOGE, TokenSymbols.XRP]
   }
   if (from === Networks.BSC && to === Networks.WCHAIN) {
-    return [TokenSymbols.USDT, TokenSymbols.USDC, TokenSymbols.SOL, TokenSymbols.DOGE]
+    return [TokenSymbols.USDT, TokenSymbols.USDC, TokenSymbols.SOL, TokenSymbols.DOGE, TokenSymbols.XRP]
   }
   return [TokenSymbols.USDT, TokenSymbols.USDC]
 }
