@@ -4,8 +4,9 @@ import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
+import { useHistory, useLocation } from 'react-router-dom'
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonError, ButtonLight, ButtonPrimary, ButtonConfirmed, ButtonPrimaryDark } from '../../components/Button'
+import { ButtonError, ButtonConfirmed, ButtonPrimaryDark } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
@@ -13,21 +14,18 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { AutoRow, RowBetween } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
-import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
 
-import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
-import { getTradeVersion, isTradeBetter } from '../../data/V1'
+import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
@@ -46,7 +44,11 @@ import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
 import FishIcon from '../../assets/svg/fish-icon.svg'
 
+import { getTokensRequiringWarning } from '../../utils/tokenValidation'
+
 export default function Swap() {
+  const history = useHistory()
+  const location = useLocation()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
@@ -59,11 +61,19 @@ export default function Swap() {
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
     [loadedInputCurrency, loadedOutputCurrency]
   )
+  
+  const { account, chainId } = useActiveWeb3React()
+  
+  // Filter tokens that actually need warnings (not in official list and not WCO)
+  const tokensRequiringWarning = useMemo(() => {
+    if (!chainId) return []
+    return getTokensRequiringWarning(urlLoadedTokens, chainId)
+  }, [urlLoadedTokens, chainId])
+  
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
   }, [])
 
-  const { account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
@@ -80,7 +90,6 @@ export default function Swap() {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
-    v1Trade,
     v2Trade,
     currencyBalances,
     parsedAmount,
@@ -95,20 +104,53 @@ export default function Swap() {
 
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
-  const toggledVersion = useToggledVersion()
-  const trade = showWrap
-    ? undefined
-    : {
-        [Version.v1]: v1Trade,
-        [Version.v2]: v2Trade
-      }[toggledVersion]
+  
+  // Use only V2 trade
+  const trade = showWrap ? undefined : v2Trade
 
-  const betterTradeLinkVersion: Version | undefined =
-    toggledVersion === Version.v2 && isTradeBetter(v2Trade, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
-      ? Version.v1
-      : toggledVersion === Version.v1 && isTradeBetter(v1Trade, v2Trade)
-      ? Version.v2
-      : undefined
+  // Function to update URL with current currency selection
+  const updateURL = useCallback((inputCurrencyId?: string, outputCurrencyId?: string) => {
+    const currentParams = new URLSearchParams(location.search)
+    
+    // Update or remove inputCurrency parameter
+    if (inputCurrencyId) {
+      currentParams.set('inputCurrency', inputCurrencyId)
+    } else {
+      currentParams.delete('inputCurrency')
+    }
+    
+    // Update or remove outputCurrency parameter
+    if (outputCurrencyId) {
+      currentParams.set('outputCurrency', outputCurrencyId)
+    } else {
+      currentParams.delete('outputCurrency')
+    }
+    
+    const newSearch = currentParams.toString()
+    const newPath = `${location.pathname}${newSearch ? `?${newSearch}` : ''}`
+    
+    // Only update if the URL actually changed
+    if (newPath !== `${location.pathname}${location.search}`) {
+      history.replace(newPath)
+    }
+  }, [history, location.pathname, location.search])
+
+  // Update URL when currencies change
+  useEffect(() => {
+    const inputCurrencyId = currencies[Field.INPUT]?.symbol === 'ETH' 
+      ? 'WCO' 
+      : currencies[Field.INPUT] instanceof Token 
+        ? (currencies[Field.INPUT] as Token).address 
+        : undefined
+        
+    const outputCurrencyId = currencies[Field.OUTPUT]?.symbol === 'ETH' 
+      ? 'WCO' 
+      : currencies[Field.OUTPUT] instanceof Token 
+        ? (currencies[Field.OUTPUT] as Token).address 
+        : undefined
+    
+    updateURL(inputCurrencyId, outputCurrencyId)
+  }, [currencies, updateURL])
 
   const parsedAmounts = showWrap
     ? {
@@ -214,7 +256,7 @@ export default function Swap() {
           label: [
             trade?.inputAmount?.currency?.symbol,
             trade?.outputAmount?.currency?.symbol,
-            getTradeVersion(trade)
+            'V2' // Always V2 now
           ].join('/')
         })
       })
@@ -275,8 +317,8 @@ export default function Swap() {
   return (
     <>
       <TokenWarningModal
-        isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
-        tokens={urlLoadedTokens}
+        isOpen={tokensRequiringWarning.length > 0 && !dismissTokenWarning}
+        tokens={tokensRequiringWarning}
         onConfirm={handleConfirmTokenWarning}
       />
       <AppBody>
@@ -477,7 +519,6 @@ export default function Swap() {
             )}
             {showApproveFlow && <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />}
             {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-            {betterTradeLinkVersion && <BetterTradeLink version={betterTradeLinkVersion} />}
           </BottomGrouping>
 
           <AdvancedSwapDetailsDropdown trade={wrapType === WrapType.WRAP ? undefined : trade} />

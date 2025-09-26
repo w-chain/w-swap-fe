@@ -1,11 +1,9 @@
 import useENS from '../../hooks/useENS'
-import { Version } from '../../hooks/useToggledVersion'
 import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@uniswap/sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useV1Trade } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
@@ -15,7 +13,6 @@ import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { SwapState } from './reducer'
-import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
 import { getCurrencySymbol } from '../../utils/getNativeTokenSymbol'
@@ -98,7 +95,7 @@ const BAD_RECIPIENT_ADDRESSES: string[] = [
 /**
  * Returns true if any of the pairs or tokens in a trade have the given checksummed address
  * @param trade to check for the given address
- * @param checksummedAddress address to check in the pairs and tokens
+ * @param checksummedAddress address to check for
  */
 function involvesAddress(trade: Trade, checksummedAddress: string): boolean {
   return (
@@ -114,11 +111,8 @@ export function useDerivedSwapInfo(): {
   parsedAmount: CurrencyAmount | undefined
   v2Trade: Trade | undefined
   inputError?: string
-  v1Trade: Trade | undefined
 } {
   const { account, chainId } = useActiveWeb3React()
-
-  const toggledVersion = useToggledVersion()
 
   const {
     independentField,
@@ -156,9 +150,6 @@ export function useDerivedSwapInfo(): {
     [Field.OUTPUT]: outputCurrency ?? undefined
   }
 
-  // get link to trade on v1, if a better rate exists
-  const v1Trade = useV1Trade(isExactIn, currencies[Field.INPUT], currencies[Field.OUTPUT], parsedAmount)
-
   let inputError: string | undefined
   if (!account) {
     inputError = 'Connect Wallet'
@@ -189,19 +180,10 @@ export function useDerivedSwapInfo(): {
 
   const slippageAdjustedAmounts = v2Trade && allowedSlippage && computeSlippageAdjustedAmounts(v2Trade, allowedSlippage)
 
-  const slippageAdjustedAmountsV1 =
-    v1Trade && allowedSlippage && computeSlippageAdjustedAmounts(v1Trade, allowedSlippage)
-
-  // compare input balance to max input based on version
+  // compare input balance to max input based on V2 trade
   const [balanceIn, amountIn] = [
     currencyBalances[Field.INPUT],
-    toggledVersion === Version.v1
-      ? slippageAdjustedAmountsV1
-        ? slippageAdjustedAmountsV1[Field.INPUT]
-        : null
-      : slippageAdjustedAmounts
-      ? slippageAdjustedAmounts[Field.INPUT]
-      : null
+    slippageAdjustedAmounts ? slippageAdjustedAmounts[Field.INPUT] : null
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
@@ -213,8 +195,7 @@ export function useDerivedSwapInfo(): {
     currencyBalances,
     parsedAmount,
     v2Trade: v2Trade ?? undefined,
-    inputError,
-    v1Trade
+    inputError
   }
 }
 
