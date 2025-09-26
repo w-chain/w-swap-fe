@@ -51,7 +51,6 @@ export default function Swap() {
   const location = useLocation()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
-  // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
     useCurrency(loadedUrlParams?.inputCurrencyId),
     useCurrency(loadedUrlParams?.outputCurrencyId)
