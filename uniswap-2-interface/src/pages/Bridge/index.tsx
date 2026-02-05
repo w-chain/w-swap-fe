@@ -7,9 +7,10 @@ import { ArrowWrapper, BottomGrouping, Wrapper } from '../../components/swap/sty
 import { JSBI } from '@uniswap/sdk'
 import { parseUnits } from '@ethersproject/units'
 
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React, useSwitchChain, SwitchChainError, SwitchChainErrorType } from '../../hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import AppBody from '../AppBody'
+import { ChainId as SDKChainId } from '@uniswap/sdk'
 import FishIcon from '../../assets/svg/fish-icon.svg'
 import NetworkInputPanel from './components/NetworkInputPanel'
 import { useSelector } from 'react-redux'
@@ -47,11 +48,25 @@ export default function Bridge() {
   const [bridgeErrorMessage, setBridgeErrorMessage] = useState<string | undefined>(undefined)
   const [inputValue, setInputValue] = useState<string>('')
 
-  // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
+  const { switchChain } = useSwitchChain()
+  const bridgeState = useSelector<AppState, BridgeState>(state => state.bridgeStates)
 
   const { setFromToken, swapNetworks, setFromAmount } = useBridgeStates()
-  const bridgeState = useSelector<AppState, BridgeState>(state => state.bridgeStates)
+
+  useEffect(() => {
+    if (!account || !bridgeState.fromChainId) return
+    
+    const fromChainId = Number(bridgeState.fromChainId) as SDKChainId
+    
+    if (fromChainId !== chainId) {
+      switchChain(fromChainId).catch((error) => {
+        if (error instanceof SwitchChainError && error.type !== SwitchChainErrorType.USER_REJECTED) {
+          console.error('Failed to auto-switch chain:', error.message)
+        }
+      })
+    }
+  }, [bridgeState.fromChainId, chainId, account, switchChain])
 
   const availableFromTokens = useMemo(() => getAvailableFromTokens(bridgeState.from, bridgeState.to), [
     bridgeState.from,
