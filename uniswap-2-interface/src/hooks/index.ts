@@ -85,3 +85,5 @@ export function useInactiveListener(suppress = false) {
     return undefined
   }, [active, error, suppress, activate])
 }
+
+export { useSwitchChain, SwitchChainError, SwitchChainErrorType } from './useSwitchChain'

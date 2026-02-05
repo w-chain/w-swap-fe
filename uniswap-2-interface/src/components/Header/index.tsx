@@ -1,11 +1,9 @@
 import { ChainId } from '@uniswap/sdk'
 import React from 'react'
-import { isMobile } from 'react-device-detect'
 import { Text } from 'rebass'
 
 import styled from 'styled-components'
 
-import Logo from '../Logo'
 import WChainLogo from '../../assets/svg/wadz-chain-logo.png'
 import Wordmark from '../../assets/svg/wordmark.svg'
 import WordmarkDark from '../../assets/svg/wordmark_white.svg'
@@ -15,6 +13,7 @@ import { useETHBalances } from '../../state/wallet/hooks'
 
 import { YellowCard } from '../Card'
 import Settings from '../Settings'
+import NetworkSelector from '../NetworkSelector'
 
 import Row, { RowBetween } from '../Row'
 import Web3Status from '../Web3Status'
@@ -41,12 +40,10 @@ const HeaderFrame = styled.div`
 const HeaderElement = styled.div`
   display: flex;
   align-items: center;
-`
 
-const StyledLogo = styled(Logo)<{ size: string }>`
-  width: ${({ size }) => size};
-  height: ${({ size }) => size};
-  margin-right: 10px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: none;
+  `};
 `
 
 const Title = styled.a`
@@ -57,6 +54,10 @@ const Title = styled.a`
   :hover {
     cursor: pointer;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: none;
+  `};
 `
 
 const TitleText = styled(Row)`
@@ -81,13 +82,6 @@ const AccountElement = styled.div<{ active: boolean }>`
   :focus {
     border: 1px solid blue;
   }
-`
-
-const TestnetWrapper = styled.div`
-  white-space: nowrap;
-  width: fit-content;
-  margin-left: 10px;
-  pointer-events: auto;
 `
 
 const NetworkCard = styled(YellowCard)`
@@ -120,11 +114,23 @@ const HeaderControls = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 10px;
+  flex: 1;
+  justify-content: flex-end;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    flex-direction: column;
-    align-items: flex-end;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    justify-content: space-between;
+    width: 100%;
   `};
+`
+
+const RightSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `
 
 const BalanceText = styled(Text)`
@@ -140,6 +146,16 @@ const NETWORK_IMAGE: { [chainId in ChainId]: string | null } = {
   [ChainId.WCHAIN_TESTNET]: '/images/networks/w-chain.webp',
   [ChainId.BNB]: '/images/networks/bsc.webp'
 }
+
+const NetworkSelectorWrapper = styled.div`
+  margin-right: 10px;
+  pointer-events: auto;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    margin-right: 0;
+    margin-left: 0;
+  `};
+`
 
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
@@ -161,12 +177,10 @@ export default function Header() {
           </Title>
         </HeaderElement>
         <HeaderControls>
-          <HeaderElement>
-            <TestnetWrapper>
-              {!isMobile && chainId && NETWORK_IMAGE[chainId] && (
-                <StyledLogo srcs={[NETWORK_IMAGE[chainId] ?? '']} size="32px" />
-              )}
-            </TestnetWrapper>
+          <NetworkSelectorWrapper>
+            <NetworkSelector />
+          </NetworkSelectorWrapper>
+          <RightSection>
             <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
               {account && userEthBalance ? (
                 <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={600}>
@@ -176,12 +190,7 @@ export default function Header() {
               <Web3Status />
             </AccountElement>
             <Settings />
-          </HeaderElement>
-          {/* <HeaderElementWrap>
-            <VersionSwitch />
-            <Settings />
-            <Menu />
-          </HeaderElementWrap> */}
+          </RightSection>
         </HeaderControls>
       </RowBetween>
     </HeaderFrame>
