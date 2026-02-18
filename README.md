@@ -24,16 +24,16 @@ graph TD
     UI --> Hooks[Custom Hooks]
     
     subgraph "Core Logic"
-        Hooks --> SDK[W Swap SDK (v2-sdk)]
+        Hooks --> SDK["W Swap SDK (v2-sdk)"]
         SDK --> Pricing[Pricing & Routing]
         SDK --> Entities[Token/Pair Entities]
     end
     
     subgraph "Blockchain Interaction"
-        Hooks --> Web3[Web3 Provider (ethers.js)]
-        Web3 --> WChain[W Chain (171717)]
-        Web3 --> BSC[BSC (56)]
-        Web3 --> Eth[Ethereum (1)]
+        Hooks --> Web3["Web3 Provider (ethers.js)"]
+        Web3 --> WChain["W Chain (171717)"]
+        Web3 --> BSC["BSC (56)"]
+        Web3 --> Eth["Ethereum (1)"]
     end
     
     Redux --> UI
