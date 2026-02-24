@@ -9,7 +9,7 @@
   ],
   "timestamp": "2025-08-10T04:25:31.123Z",
   "version": {
-    "major": 6,
+    "major": 7,
     "minor": 3,
     "patch": 0
   },
@@ -227,6 +227,14 @@
       "address": "0x4560d5EB0C32A05fA59Acd2E8D639F84A15A2414",
       "chainId": 171717,
       "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/xrp.webp"
+    },
+    {
+      "name": "PayPal USD",
+      "symbol": "PYUSD",
+      "decimals": 6,
+      "chainId": 1,
+      "address": "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8",
+      "logoURI": "https://etherscan.io/token/images/paypalusd.svg"
     }
   ]
 }
