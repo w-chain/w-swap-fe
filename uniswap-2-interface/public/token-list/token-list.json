@@ -9,7 +9,7 @@
   ],
   "timestamp": "2025-08-10T04:25:31.123Z",
   "version": {
-    "major": 7,
+    "major": 8,
     "minor": 3,
     "patch": 0
   },
@@ -19,6 +19,14 @@
       "decimals": 18,
       "symbol": "WWCO",
       "address": "0xEdB8008031141024d50cA2839A607B2f82C1c045",
+      "chainId": 171717,
+      "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/wco.webp"
+    },
+    {
+      "name": "WHB20270831",
+      "decimals": 18,
+      "symbol": "WHB20270831",
+      "address": "0x0B2d06C7f15eE665Ced0c4Fe913ad23cD119b7f2",
       "chainId": 171717,
       "logoURI": "https://w-chain-data.s3.eu-north-1.amazonaws.com/images/wco.webp"
     },
