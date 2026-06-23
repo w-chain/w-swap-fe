@@ -28,6 +28,7 @@ import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
+import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { Field } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
@@ -62,6 +63,7 @@ export default function Swap() {
   )
   
   const { account, chainId } = useActiveWeb3React()
+  const allTransactions = useAllTransactions()
   
   // Filter tokens that actually need warnings (not in official list and not WCO)
   const tokensRequiringWarning = useMemo(() => {
@@ -276,6 +278,16 @@ export default function Swap() {
   // warnings on slippage
   const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
 
+  const hasPendingRecentSwap = useMemo(() => {
+    if (!account) return false
+    const normalizedAccount = account.toLowerCase()
+    return Object.keys(allTransactions).some(hash => {
+      const tx = allTransactions[hash]
+      if (!tx || tx.receipt || !isTransactionRecent(tx)) return false
+      return tx.from.toLowerCase() === normalizedAccount && Boolean(tx.summary?.toLowerCase().startsWith('swap '))
+    })
+  }, [account, allTransactions])
+
   // show approve flow when: no error on inputs, not approved or pending, or approved in current session
   // never show if price impact is above threshold in non expert mode
   const showApproveFlow =
@@ -455,6 +467,7 @@ export default function Swap() {
                 </ButtonConfirmed>
                 <ButtonError
                   onClick={() => {
+                    if (hasPendingRecentSwap) return
                     if (isExpertMode) {
                       handleSwap()
                     } else {
@@ -470,12 +483,17 @@ export default function Swap() {
                   width="48%"
                   id="swap-button"
                   disabled={
-                    !isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)
+                    !isValid ||
+                    approval !== ApprovalState.APPROVED ||
+                    (priceImpactSeverity > 3 && !isExpertMode) ||
+                    hasPendingRecentSwap
                   }
                   error={isValid && priceImpactSeverity > 2}
                 >
                   <Text fontSize={16} fontWeight={500}>
-                    {priceImpactSeverity > 3 && !isExpertMode
+                    {hasPendingRecentSwap
+                      ? 'Pending swap in wallet'
+                      : priceImpactSeverity > 3 && !isExpertMode
                       ? `Price Impact High`
                       : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                   </Text>
@@ -484,6 +502,7 @@ export default function Swap() {
             ) : (
               <ButtonError
                 onClick={() => {
+                  if (hasPendingRecentSwap) return
                   if (isExpertMode) {
                     handleSwap()
                   } else {
@@ -497,18 +516,29 @@ export default function Swap() {
                   }
                 }}
                 id="swap-button"
-                disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
+                disabled={
+                  !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError || hasPendingRecentSwap
+                }
                 error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                 style={{
                   background:
-                    !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError ? '#044084b8' : '',
+                    !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError || hasPendingRecentSwap
+                      ? '#044084b8'
+                      : '',
                   cursor:
-                    !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError ? 'not-allowed' : '',
-                  color: !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError ? '#e6e6e6' : ''
+                    !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError || hasPendingRecentSwap
+                      ? 'not-allowed'
+                      : '',
+                  color:
+                    !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError || hasPendingRecentSwap
+                      ? '#e6e6e6'
+                      : ''
                 }}
               >
                 <Text fontSize={14} fontWeight={600}>
-                  {swapInputError
+                  {hasPendingRecentSwap
+                    ? 'Pending swap in wallet'
+                    : swapInputError
                     ? swapInputError
                     : priceImpactSeverity > 3 && !isExpertMode
                     ? `Price Impact Too High`
