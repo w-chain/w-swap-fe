@@ -53,7 +53,7 @@ export const CHAIN_CONFIG: { [chainId in ChainId]?: ChainConfig } = {
       symbol: 'W',
       decimals: 18
     },
-    rpcUrls: ['https://rpc.w-chain.com'],
+    rpcUrls: ['https://rpc2.w-chain.com'],
     blockExplorerUrls: ['https://explorer.w-chain.com']
   },
   [ChainId.WCHAIN_TESTNET]: {
