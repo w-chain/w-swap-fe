@@ -37,6 +37,35 @@ interface FailedCall {
 
 type EstimatedSwapCall = SuccessfulCall | FailedCall
 
+const FEE_BUMP_BIPS = BigNumber.from(1200) // 12%
+const BIPS_DENOMINATOR = BigNumber.from(10000)
+
+function bumpFee(value: BigNumber | null | undefined): BigNumber | undefined {
+  if (!value) return undefined
+  return value.mul(BIPS_DENOMINATOR.add(FEE_BUMP_BIPS)).div(BIPS_DENOMINATOR)
+}
+
+function isReplacementUnderpriced(error: any): boolean {
+  const message = `${error?.message ?? ''} ${error?.data?.message ?? ''}`
+  return /replacement\s+(transaction|tx)\s+underpriced/i.test(message)
+}
+
+function getBumpedFeeOverrides(feeData: any): {
+  gasPrice?: BigNumber
+  maxFeePerGas?: BigNumber
+  maxPriorityFeePerGas?: BigNumber
+} {
+  const maxFeePerGas = bumpFee(feeData?.maxFeePerGas)
+  const maxPriorityFeePerGas = bumpFee(feeData?.maxPriorityFeePerGas)
+
+  if (maxFeePerGas && maxPriorityFeePerGas) {
+    return { maxFeePerGas, maxPriorityFeePerGas }
+  }
+
+  const gasPrice = bumpFee(feeData?.gasPrice)
+  return gasPrice ? { gasPrice } : {}
+}
+
 /**
  * Returns the swap calls that can be used to make the trade
  * @param trade trade to execute
@@ -200,45 +229,70 @@ export function useSwapCallback(
           gasEstimate
         } = successfulEstimation
 
-        return contract[methodName](...args, {
+        const baseTxOptions = {
           gasLimit: calculateGasMargin(gasEstimate),
           ...(value && !isZero(value) ? { value, from: account } : { from: account })
-        })
-          .then((response: any) => {
-            const inputSymbol = getCurrencySymbol(trade.inputAmount.currency, chainId)
-            const outputSymbol = getCurrencySymbol(trade.outputAmount.currency, chainId)
-            const inputAmount = trade.inputAmount.toSignificant(3)
-            const outputAmount = trade.outputAmount.toSignificant(3)
+        }
 
-            const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
-            const withRecipient =
-              recipient === account
-                ? base
-                : `${base} to ${
-                    recipientAddressOrName && isAddress(recipientAddressOrName)
-                      ? shortenAddress(recipientAddressOrName)
-                      : recipientAddressOrName
-                  }`
+        const sendSwap = (overrides: any = {}) => contract[methodName](...args, { ...baseTxOptions, ...overrides })
 
-            const withVersion =
-              tradeVersion === Version.v2 ? withRecipient : `${withRecipient} on ${(tradeVersion as any).toUpperCase()}`
+        let response: any
+        try {
+          response = await sendSwap()
+        } catch (error: any) {
+          // if the user rejected the tx, pass this along
+          if (error?.code === 4001) {
+            throw new Error('Transaction rejected.')
+          }
 
-            addTransaction(response, {
-              summary: withVersion
-            })
-
-            return response.hash
-          })
-          .catch((error: any) => {
-            // if the user rejected the tx, pass this along
-            if (error?.code === 4001) {
-              throw new Error('Transaction rejected.')
-            } else {
-              // otherwise, the error was unexpected and we need to convey that
-              console.error(`Swap failed`, error, methodName, args, value)
-              throw new Error(`Swap failed: ${error.message}`)
+          // Some RPCs reject replacement tx unless fees are bumped enough; retry once with higher fees.
+          if (isReplacementUnderpriced(error)) {
+            try {
+              const bumpedFeeOverrides = getBumpedFeeOverrides(await library.getFeeData())
+              if (Object.keys(bumpedFeeOverrides).length > 0) {
+                response = await sendSwap(bumpedFeeOverrides)
+              } else {
+                throw error
+              }
+            } catch (retryError: any) {
+              if (retryError?.code === 4001) {
+                throw new Error('Transaction rejected.')
+              }
+              console.error(`Swap retry failed`, retryError, methodName, args, value)
+              throw new Error(
+                `Swap failed: ${retryError?.message ?? retryError}. If you have a pending swap, speed it up or cancel it in your wallet and retry.`
+              )
             }
-          })
+          } else {
+            // otherwise, the error was unexpected and we need to convey that
+            console.error(`Swap failed`, error, methodName, args, value)
+            throw new Error(`Swap failed: ${error.message}`)
+          }
+        }
+
+        const inputSymbol = getCurrencySymbol(trade.inputAmount.currency, chainId)
+        const outputSymbol = getCurrencySymbol(trade.outputAmount.currency, chainId)
+        const inputAmount = trade.inputAmount.toSignificant(3)
+        const outputAmount = trade.outputAmount.toSignificant(3)
+
+        const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
+        const withRecipient =
+          recipient === account
+            ? base
+            : `${base} to ${
+                recipientAddressOrName && isAddress(recipientAddressOrName)
+                  ? shortenAddress(recipientAddressOrName)
+                  : recipientAddressOrName
+              }`
+
+        const withVersion =
+          tradeVersion === Version.v2 ? withRecipient : `${withRecipient} on ${(tradeVersion as any).toUpperCase()}`
+
+        addTransaction(response, {
+          summary: withVersion
+        })
+
+        return response.hash
       },
       error: null
     }
