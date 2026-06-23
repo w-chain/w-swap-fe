@@ -29,20 +29,38 @@ async function fetchChunk(
   multicallContract: Contract,
   chunk: Call[],
   minBlockNumber: number
-): Promise<{ results: string[]; blockNumber: number }> {
+): Promise<{ results: Array<string | undefined>; blockNumber: number }> {
   console.debug('Fetching chunk', multicallContract, chunk, minBlockNumber)
   let resultsBlockNumber, returnData
   try {
     ;[resultsBlockNumber, returnData] = await multicallContract.aggregate(chunk.map(obj => [obj.address, obj.callData]))
   } catch (error) {
-    console.debug('Failed to fetch chunk inside retry', error)
-    throw error
+    // aggregate() fails the entire batch if a single call reverts.
+    // Fall back to individual eth_call so the rest of the chunk can still resolve.
+    console.debug('Failed to fetch chunk via aggregate, falling back to individual calls', error)
+    const provider = multicallContract.provider
+    returnData = await Promise.all(
+      chunk.map(async call => {
+        try {
+          return await provider.call({
+            to: call.address,
+            data: call.callData
+          })
+        } catch (callError) {
+          console.debug('Individual call failed in multicall fallback', call, callError)
+          return undefined
+        }
+      })
+    )
+    resultsBlockNumber = await provider.getBlockNumber()
   }
-  if (resultsBlockNumber.toNumber() < minBlockNumber) {
-    console.debug(`Fetched results for old block number: ${resultsBlockNumber.toString()} vs. ${minBlockNumber}`)
+  const resolvedBlockNumber =
+    typeof resultsBlockNumber === 'number' ? resultsBlockNumber : resultsBlockNumber.toNumber()
+  if (resolvedBlockNumber < minBlockNumber) {
+    console.debug(`Fetched results for old block number: ${resolvedBlockNumber} vs. ${minBlockNumber}`)
     throw new RetryableError('Fetched for old block number')
   }
-  return { results: returnData, blockNumber: resultsBlockNumber.toNumber() }
+  return { results: returnData, blockNumber: resolvedBlockNumber }
 }
 
 /**

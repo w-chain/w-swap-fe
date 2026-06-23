@@ -45,9 +45,42 @@ function bumpFee(value: BigNumber | null | undefined): BigNumber | undefined {
   return value.mul(BIPS_DENOMINATOR.add(FEE_BUMP_BIPS)).div(BIPS_DENOMINATOR)
 }
 
+function collectErrorMessages(error: any): string {
+  const fragments = [
+    error?.message,
+    error?.reason,
+    error?.data?.message,
+    error?.data?.reason,
+    error?.error?.message,
+    error?.error?.reason,
+    error?.error?.data?.message,
+    error?.error?.data?.reason,
+    error?.data?.originalError?.message,
+    error?.data?.originalError?.reason,
+    error?.error?.data?.originalError?.message,
+    error?.error?.data?.originalError?.reason
+  ].filter(Boolean)
+
+  return fragments.join(' | ')
+}
+
 function isReplacementUnderpriced(error: any): boolean {
-  const message = `${error?.message ?? ''} ${error?.data?.message ?? ''}`
+  const message = collectErrorMessages(error)
   return /replacement\s+(transaction|tx)\s+underpriced/i.test(message)
+}
+
+function isInternalJsonRpcError(error: any): boolean {
+  const message = collectErrorMessages(error)
+  return error?.code === -32603 || /internal json-rpc error/i.test(message)
+}
+
+function getDisplayErrorMessage(error: any): string {
+  const message = collectErrorMessages(error)
+  return message || `${error}`
+}
+
+function shouldRetryWithBumpedFee(error: any): boolean {
+  return isReplacementUnderpriced(error) || isInternalJsonRpcError(error)
 }
 
 function getBumpedFeeOverrides(feeData: any): {
@@ -245,8 +278,9 @@ export function useSwapCallback(
             throw new Error('Transaction rejected.')
           }
 
-          // Some RPCs reject replacement tx unless fees are bumped enough; retry once with higher fees.
-          if (isReplacementUnderpriced(error)) {
+          // Some wallets collapse node errors to -32603 "Internal JSON-RPC error".
+          // Retry once with a fee bump to recover replacement/nonce related failures.
+          if (shouldRetryWithBumpedFee(error)) {
             try {
               const bumpedFeeOverrides = getBumpedFeeOverrides(await library.getFeeData())
               if (Object.keys(bumpedFeeOverrides).length > 0) {
@@ -260,13 +294,15 @@ export function useSwapCallback(
               }
               console.error(`Swap retry failed`, retryError, methodName, args, value)
               throw new Error(
-                `Swap failed: ${retryError?.message ?? retryError}. If you have a pending swap, speed it up or cancel it in your wallet and retry.`
+                `Swap failed: ${getDisplayErrorMessage(
+                  retryError
+                )}. If you have a pending swap, speed it up or cancel it in your wallet and retry.`
               )
             }
           } else {
             // otherwise, the error was unexpected and we need to convey that
             console.error(`Swap failed`, error, methodName, args, value)
-            throw new Error(`Swap failed: ${error.message}`)
+            throw new Error(`Swap failed: ${getDisplayErrorMessage(error)}`)
           }
         }
 
