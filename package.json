@@ -7,10 +7,12 @@
     "uniswap-2-interface"
   ],
   "scripts": {
-    "build": "yarn workspaces run build",
-    "start": "yarn workspace uniswap-2-interface start",
-    "build:sdk": "yarn workspace @uniswap/sdk build",
-    "build:interface": "yarn workspace uniswap-2-interface build"
+    "build": "npm run build --workspaces --if-present",
+    "start": "npm run start:3002 --workspace=uniswap-2-interface",
+    "dev": "npm run build:sdk && npm run start:3002 --workspace=uniswap-2-interface",
+    "build:sdk": "npm run build --workspace=@uniswap/sdk",
+    "build:interface": "npm run build --workspace=uniswap-2-interface",
+    "preview": "npm run build:sdk && npm run build:interface && npx --yes serve -s uniswap-2-interface/build -l 3002"
   },
   "repository": "git@github.com:w-chain/w-swap-contracts.git",
   "license": "MIT",

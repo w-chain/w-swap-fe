@@ -87,6 +87,7 @@
   },
   "scripts": {
     "start": "NODE_OPTIONS='--openssl-legacy-provider' craco start",
+    "start:3002": "PORT=3002 NODE_OPTIONS='--openssl-legacy-provider' craco start",
     "build": "NODE_OPTIONS='--openssl-legacy-provider' craco build",
     "test": "NODE_OPTIONS='--openssl-legacy-provider' craco test --env=jsdom",
     "eject": "react-scripts eject",
