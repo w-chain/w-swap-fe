@@ -65,6 +65,36 @@ export const ButtonPrimary = styled(Base)`
   }
 `
 
+/** W-Swap ecosystem CTA: teal → blue gradient, dark label (enabled + disabled). */
+export const ButtonPrimaryGradient = styled(Base)`
+  background: linear-gradient(90deg, #12b39c 0%, #3b82f6 100%);
+  background-color: transparent;
+  color: #060a0d;
+  font-weight: 600;
+  border: none;
+
+  &:hover:not(:disabled) {
+    filter: brightness(0.97);
+  }
+  &:active:not(:disabled) {
+    filter: brightness(0.94);
+  }
+  &:disabled {
+    background: linear-gradient(90deg, rgba(18, 179, 156, 0.5) 0%, rgba(59, 130, 246, 0.5) 100%);
+    background-color: transparent;
+    color: #1a2430;
+    opacity: 1;
+    cursor: not-allowed;
+    border: none;
+    box-shadow: none;
+  }
+
+  &,
+  & * {
+    color: inherit;
+  }
+`
+
 export const ButtonPrimaryDark = styled(Base)`
   background-color: ${({ theme }) => theme.buttonBg2};
   color: white;
@@ -262,6 +292,7 @@ const ButtonConfirmedStyle = styled(Base)`
 
 const ButtonErrorStyle = styled(Base)`
   background-color: ${({ theme }) => theme.red1};
+  color: white;
   border: 1px solid ${({ theme }) => theme.red1};
 
   &:focus {
@@ -300,7 +331,7 @@ export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProp
   if (error) {
     return <ButtonErrorStyle {...rest} />
   } else {
-    return <ButtonPrimaryDark {...rest} />
+    return <ButtonPrimaryGradient {...rest} />
   }
 }
 

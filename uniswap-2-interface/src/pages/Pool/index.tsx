@@ -18,6 +18,7 @@ import { usePairs } from '../../data/Reserves'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import AppBody from '../AppBody'
 import { Dots } from '../../components/swap/styleds'
+import LiquidityOverview from '../../components/LiquidityAnalytics/LiquidityOverview'
 
 export default function Pool() {
   const { account } = useActiveWeb3React()
@@ -59,6 +60,10 @@ export default function Pool() {
           <EcosystemPrimaryButton id="join-pool-button" as={Link} to="/add/ETH">
             Add Liquidity
           </EcosystemPrimaryButton>
+
+          {account && allV2PairsWithLiquidity.length > 0 && !v2IsLoading ? (
+            <LiquidityOverview pairs={allV2PairsWithLiquidity} />
+          ) : null}
 
           <EcosystemSection>
             <RowBetween padding={'0 4px'}>

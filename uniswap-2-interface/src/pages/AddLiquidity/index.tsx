@@ -36,6 +36,7 @@ import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
 import { PoolPriceBar } from './PoolPriceBar'
+import AddLiquidityOracleStats from '../../components/LiquidityAnalytics/AddLiquidityOracleStats'
 import { getCurrencySymbol } from '../../utils/getNativeTokenSymbol'
 
 const ResponsiveText = styled(Text)`
@@ -411,6 +412,7 @@ export default function AddLiquidity({
                     />
                   </GreyCard>
                 </PurpleCard>
+                {pairState === PairState.EXISTS && pair ? <AddLiquidityOracleStats pair={pair} /> : null}
               </>
             )}
 
@@ -458,23 +460,6 @@ export default function AddLiquidity({
                   }}
                   disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
                   error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
-                  style={{
-                    background:
-                      (!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED) &&
-                      !(!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B])
-                        ? '#044084b8'
-                        : '',
-                    cursor:
-                      (!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED) &&
-                      !(!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B])
-                        ? 'not-allowed'
-                        : '',
-                    color:
-                      (!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED) &&
-                      !(!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B])
-                        ? '#e6e6e6'
-                        : ''
-                  }}
                 >
                   <Text fontSize={14} fontWeight={600}>
                     {error ?? 'Supply'}

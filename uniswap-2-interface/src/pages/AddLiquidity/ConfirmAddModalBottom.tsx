@@ -1,7 +1,8 @@
 import { Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk'
 import React from 'react'
 import { Text } from 'rebass'
-import { ButtonPrimary, ButtonPrimaryDark } from '../../components/Button'
+import { ButtonPrimary } from '../../components/Button'
+import { EcosystemPrimaryButton } from '../../components/ecosystem/styled'
 import { RowBetween, RowFixed } from '../../components/Row'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { Field } from '../../state/mint/actions'
@@ -67,11 +68,11 @@ export function ConfirmAddModalBottom({
         <TYPE.primary fontSize={14}>Share of Pool:</TYPE.primary>
         <TYPE.primary fontSize={14}>{noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}%</TYPE.primary>
       </RowBetween>
-      <ButtonPrimaryDark style={{ margin: '20px 0 0 0' }} onClick={onAdd}>
+      <EcosystemPrimaryButton style={{ margin: '20px 0 0 0' }} onClick={onAdd}>
         <Text fontWeight={600} fontSize={16}>
           {noLiquidity ? 'Create Pool & Supply' : 'Confirm Supply'}
         </Text>
-      </ButtonPrimaryDark>
+      </EcosystemPrimaryButton>
     </PurpleCard>
   )
 }

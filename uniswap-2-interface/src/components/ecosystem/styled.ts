@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { ButtonPrimaryDark } from '../Button'
+import { ButtonPrimaryGradient } from '../Button'
 
 export const FlipButton = styled.button`
   display: flex;
@@ -21,24 +21,11 @@ export const FlipButton = styled.button`
   }
 `
 
-export const EcosystemPrimaryButton = styled(ButtonPrimaryDark)`
+export const EcosystemPrimaryButton = styled(ButtonPrimaryGradient)`
   width: 100%;
   min-height: 42px;
   border-radius: 5px;
-  border: none;
-  color: #060a0d;
   font-size: 14px;
-  font-weight: 600;
-  background: linear-gradient(90deg, #12b39c 0%, #3b82f6 100%);
-
-  &:hover {
-    opacity: 0.9;
-  }
-
-  &:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
-  }
 `
 
 export const EcosystemSection = styled.div`

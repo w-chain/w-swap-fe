@@ -22,6 +22,8 @@ import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { Dots } from '../swap/styleds'
 import { getCurrencySymbol } from '../../utils/getNativeTokenSymbol'
 import { getPoolLink } from '../../utils'
+import { useLiquidityPositionAnalytics } from '../../hooks/useLiquidityPositionAnalytics'
+import { formatUsd } from '../../utils/formatUsd'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -136,23 +138,23 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
 
   const userPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
   const totalPoolTokens = useTotalSupply(pair.liquidityToken)
+  const {
+    poolShare,
+    poolTvlUsd,
+    positionValueUsd,
+    token0Deposited,
+    token1Deposited,
+    price,
+    valueSource,
+    vol24h,
+    feesUsd24h,
+    lpPriceInUsd,
+    oraclePairName,
+    latestOraclePrice,
+    oracle
+  } = useLiquidityPositionAnalytics(pair)
 
-  const poolTokenPercentage =
-    !!userPoolBalance && !!totalPoolTokens && JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
-      ? new Percent(userPoolBalance.raw, totalPoolTokens.raw)
-      : undefined
-
-  const [token0Deposited, token1Deposited] =
-    !!pair &&
-    !!totalPoolTokens &&
-    !!userPoolBalance &&
-    // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
-    JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
-      ? [
-          pair.getLiquidityValue(pair.token0, totalPoolTokens, userPoolBalance, false),
-          pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false)
-        ]
-      : [undefined, undefined]
+  const poolTokenPercentage = poolShare
 
   return (
     <HoverCard border={border}>
@@ -160,15 +162,23 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
         <FixedHeightRow onClick={() => setShowMore(!showMore)} style={{ cursor: 'pointer' }}>
           <RowFixed>
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
-            <Text fontWeight={600} fontSize={16} color={'#043F84'}>
+            <Text fontWeight={600} fontSize={16} color={'#1a2430'}>
               {!currency0 || !currency1 ? (
-                <Dots style={{ color: '#043F84', fontWeight: 500 }}>Loading</Dots>
+                <Dots style={{ color: '#5c6a78', fontWeight: 500 }}>Loading</Dots>
               ) : (
                 `${getCurrencySymbol(currency0, chainId)}/${getCurrencySymbol(currency1, chainId)}`
               )}
             </Text>
           </RowFixed>
           <RowFixed>
+            <AutoColumn gap="2px" style={{ alignItems: 'flex-end' }}>
+              <Text fontWeight={700} fontSize={14} color="#1a2430">
+                {formatUsd(positionValueUsd)}
+              </Text>
+              <Text fontWeight={500} fontSize={12} color="#5c6a78">
+                {poolTokenPercentage ? `${poolTokenPercentage.toFixed(2)}% pool` : '—'}
+              </Text>
+            </AutoColumn>
             {showMore ? (
               <ChevronUp size="20" style={{ marginLeft: '10px' }} strokeWidth={2} />
             ) : (
@@ -178,6 +188,71 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
         </FixedHeightRow>
         {showMore && (
           <AutoColumn gap="8px">
+            <FixedHeightRow>
+              <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                Est. position value
+              </Text>
+              <Text fontSize={14} fontWeight={700} color="#1a2430">
+                {formatUsd(positionValueUsd)}
+              </Text>
+            </FixedHeightRow>
+            <FixedHeightRow>
+              <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                Pool TVL {valueSource === 'oracle' ? '(oracle)' : '(est.)'}
+              </Text>
+              <Text fontSize={14} fontWeight={600} color="#1a2430">
+                {formatUsd(poolTvlUsd)}
+              </Text>
+            </FixedHeightRow>
+            {oracle && !oracle.loading && !oracle.error ? (
+              <>
+                <FixedHeightRow>
+                  <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                    24h volume
+                  </Text>
+                  <Text fontSize={14} fontWeight={600} color="#1a2430">
+                    {formatUsd(vol24h)}
+                  </Text>
+                </FixedHeightRow>
+                <FixedHeightRow>
+                  <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                    Est. your 24h fees
+                  </Text>
+                  <Text fontSize={14} fontWeight={600} color="#1a2430">
+                    {formatUsd(feesUsd24h)}
+                  </Text>
+                </FixedHeightRow>
+                <FixedHeightRow>
+                  <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                    LP token price
+                  </Text>
+                  <Text fontSize={14} fontWeight={600} color="#1a2430">
+                    {lpPriceInUsd ? formatUsd(lpPriceInUsd) : '—'}
+                  </Text>
+                </FixedHeightRow>
+                <FixedHeightRow>
+                  <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                    Oracle rate ({oraclePairName})
+                  </Text>
+                  <Text fontSize={14} fontWeight={600} color="#1a2430">
+                    {latestOraclePrice ? latestOraclePrice.toLocaleString(undefined, { maximumFractionDigits: 4 }) : '—'}
+                  </Text>
+                </FixedHeightRow>
+              </>
+            ) : null}
+            <FixedHeightRow>
+              <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                Rate (on-chain)
+              </Text>
+              <Text fontSize={14} fontWeight={600} color="#1a2430">
+                {price
+                  ? `1 ${getCurrencySymbol(currency0, chainId)} = ${price.toSignificant(4)} ${getCurrencySymbol(
+                      currency1,
+                      chainId
+                    )}`
+                  : '—'}
+              </Text>
+            </FixedHeightRow>
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={500}>

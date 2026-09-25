@@ -46,6 +46,8 @@ import Loader from '../../components/Loader'
 import { FlipButton, EcosystemPrimaryButton } from '../../components/ecosystem/styled'
 
 import { getTokensRequiringWarning } from '../../utils/tokenValidation'
+import WSwapPoolStatsCard from '../../components/LiquidityAnalytics/WSwapPoolStatsCard'
+import { useIndexedPairAddress } from '../../hooks/useIndexedPairAddress'
 
 export default function Swap() {
   const history = useHistory()
@@ -108,6 +110,7 @@ export default function Swap() {
   
   // Use only V2 trade
   const trade = showWrap ? undefined : v2Trade
+  const indexedPairAddress = useIndexedPairAddress(currencies[Field.INPUT], currencies[Field.OUTPUT], trade)
 
   // Function to update URL with current currency selection
   const updateURL = useCallback((inputCurrencyId?: string, outputCurrencyId?: string) => {
@@ -522,20 +525,6 @@ export default function Swap() {
                   !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError || hasPendingRecentSwap
                 }
                 error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
-                style={{
-                  background:
-                    !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError || hasPendingRecentSwap
-                      ? '#044084b8'
-                      : '',
-                  cursor:
-                    !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError || hasPendingRecentSwap
-                      ? 'not-allowed'
-                      : '',
-                  color:
-                    !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError || hasPendingRecentSwap
-                      ? '#e6e6e6'
-                      : ''
-                }}
               >
                 <Text fontSize={14} fontWeight={600}>
                   {hasPendingRecentSwap
@@ -551,6 +540,10 @@ export default function Swap() {
             {showApproveFlow && <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />}
             {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
           </BottomGrouping>
+
+          {!showWrap && indexedPairAddress ? (
+            <WSwapPoolStatsCard pairAddress={indexedPairAddress} title="Trading pool (W Oracle)" />
+          ) : null}
 
           <AdvancedSwapDetailsDropdown trade={wrapType === WrapType.WRAP ? undefined : trade} />
         </Wrapper>

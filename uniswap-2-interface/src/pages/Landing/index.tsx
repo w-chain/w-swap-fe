@@ -4,7 +4,7 @@ import { ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonPrimaryDark } from '../../components/Button'
+import { ButtonPrimaryGradient } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { AutoRow, RowBetween } from '../../components/Row'
@@ -542,19 +542,11 @@ const PriceRow = styled(RowBetween)`
   padding: 0 4px;
 `
 
-const LaunchButton = styled(ButtonPrimaryDark)`
+const LaunchButton = styled(ButtonPrimaryGradient)`
   width: 100%;
   min-height: 42px;
   border-radius: 5px;
-  border: none;
-  color: #060a0d;
   font-size: 14px;
-  font-weight: 600;
-  background: linear-gradient(90deg, #12b39c 0%, #3b82f6 100%);
-
-  &:hover {
-    opacity: 0.9;
-  }
 `
 
 const SurfaceBand = styled.div`
