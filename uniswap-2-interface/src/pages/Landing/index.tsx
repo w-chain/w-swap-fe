@@ -35,6 +35,57 @@ import FishIcon from '../../assets/svg/fish-icon.svg'
 import ConnectWithUs from '../../components/connectWithUs/ConnectWithUs'
 import { Footer } from '../../components/Footer'
 
+const STATS = [
+  { value: '240K+', label: 'Completed Txns' },
+  { value: '5K+', label: 'Active Wallets' },
+  { value: '<2s', label: 'Finality' }
+]
+
+const COST_COMPARISON = [
+  { title: 'W-SWAP DEX', gas: '~$0.0002', lpFee: '0.3% to liquidity providers', confirmation: '<2 sec' },
+  { title: 'Ethereum DEXes', gas: '~$5-$20', lpFee: '0.05%-1% by pool', confirmation: '~6 min' },
+  { title: 'Solana DEXes', gas: '~$0.001', lpFee: '~0.25%', confirmation: 'Seconds' },
+  { title: 'Polygon DEXes', gas: '~$0.02-$0.15', lpFee: '0.3% typical', confirmation: '~1-2 min' }
+]
+
+const FEATURES = [
+  {
+    title: 'Unified Liquidity',
+    body: 'Aggregated pools across the W Chain ecosystem deliver the best price on every swap.'
+  },
+  {
+    title: 'Sub-Second Routing',
+    body: 'Smart routing finds optimal paths in milliseconds for fast trade settlement.'
+  },
+  {
+    title: 'Multi-Validator Bridge',
+    body: 'Move assets from Ethereum, BNB Chain, Polygon and beyond into W-SWAP DEX.'
+  },
+  {
+    title: 'Audited & Non-Custodial',
+    body: 'Independently audited contracts. Your keys, your tokens, always.'
+  }
+]
+
+const STEPS = [
+  { title: 'Connect Wallet', body: 'MetaMask, WalletConnect, Trust Wallet - one click.' },
+  { title: 'Choose Tokens', body: 'Pick input and output tokens to route your trade.' },
+  { title: 'Confirm & Trade', body: 'Review quote and confirm. Most swaps settle in about 75 seconds.' }
+]
+
+const REVIEWS = [
+  {
+    body:
+      "W-SWAP DEX is more than a DEX - it's a gateway to financial empowerment with low-cost transactions and strong UX.",
+    author: 'X @cryptoperrix'
+  },
+  {
+    body:
+      "W-SWAP DEX launched smoothly and feels solid on desktop and mobile. Intuitive, reliable, and user-friendly.",
+    author: 'X @TheDavey92'
+  }
+]
+
 export default function Landing() {
   const theme = useContext(ThemeContext)
 
@@ -235,6 +286,83 @@ export default function Landing() {
           </Wrapper>
         </AppBody>
 
+        <MetricsSection>
+          {STATS.map(item => (
+            <MetricCard key={item.label}>
+              <h3>{item.value}</h3>
+              <p>{item.label}</p>
+            </MetricCard>
+          ))}
+        </MetricsSection>
+
+        <ContentSection>
+          <SectionTitle>What a swap actually costs</SectionTitle>
+          <SectionSubTitle>
+            Compare gas, pool fee, and confirmation time so traders can evaluate execution quality clearly.
+          </SectionSubTitle>
+          <ComparisonGrid>
+            {COST_COMPARISON.map(item => (
+              <ComparisonCard key={item.title}>
+                <h4>{item.title}</h4>
+                <label>Typical swap gas</label>
+                <ValueText>{item.gas}</ValueText>
+                <label>LP trading fee</label>
+                <ValueText>{item.lpFee}</ValueText>
+                <label>Trade confirmation</label>
+                <ValueText>{item.confirmation}</ValueText>
+              </ComparisonCard>
+            ))}
+          </ComparisonGrid>
+        </ContentSection>
+
+        <ContentSection>
+          <SectionTitle>A DEX engineered for payments-grade performance</SectionTitle>
+          <FeatureGrid>
+            {FEATURES.map(item => (
+              <FeatureCard key={item.title}>
+                <h4>{item.title}</h4>
+                <p>{item.body}</p>
+              </FeatureCard>
+            ))}
+          </FeatureGrid>
+        </ContentSection>
+
+        <ContentSection>
+          <SectionTitle>Swap in three steps</SectionTitle>
+          <StepGrid>
+            {STEPS.map((item, index) => (
+              <StepCard key={item.title}>
+                <span>{index + 1}</span>
+                <h4>{item.title}</h4>
+                <p>{item.body}</p>
+              </StepCard>
+            ))}
+          </StepGrid>
+        </ContentSection>
+
+        <ContentSection>
+          <SectionTitle>Community Reviews</SectionTitle>
+          <ReviewGrid>
+            {REVIEWS.map(item => (
+              <ReviewCard key={item.author}>
+                <p>{item.body}</p>
+                <strong>{item.author}</strong>
+              </ReviewCard>
+            ))}
+          </ReviewGrid>
+        </ContentSection>
+
+        <CtaSection>
+          <h3>Start trading on W-SWAP DEX</h3>
+          <p>Join thousands of traders moving value at payment speed.</p>
+          <CtaActions>
+            <ButtonPrimaryDark onClick={handleNavigateToSwap}>Launch W-SWAP DEX</ButtonPrimaryDark>
+            <DocsLink href="https://wchain.gitbook.io/wchain-hub/" target="_blank" rel="noopener noreferrer">
+              Read the docs
+            </DocsLink>
+          </CtaActions>
+        </CtaSection>
+
         <Marginer />
       </BodyWrapper>
 
@@ -263,6 +391,251 @@ const BodyWrapper = styled.div`
 
 const Marginer = styled.div`
   margin-top: 5rem;
+`
+
+const ContentSection = styled.section`
+  width: min(1100px, calc(100% - 32px));
+  margin-top: 56px;
+`
+
+const SectionTitle = styled.h2`
+  color: #043f84;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 0;
+`
+
+const SectionSubTitle = styled.p`
+  color: #4b5f7a;
+  text-align: center;
+  margin: 16px auto 0;
+  max-width: 760px;
+  line-height: 1.6;
+`
+
+const MetricsSection = styled.section`
+  width: min(1100px, calc(100% - 32px));
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`
+
+const MetricCard = styled.div`
+  background: #ffffff;
+  border: 1px solid #d9e9ff;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(4, 63, 132, 0.08);
+
+  h3 {
+    margin: 0;
+    color: #043f84;
+    font-size: 2rem;
+  }
+
+  p {
+    margin: 8px 0 0;
+    color: #5c6f89;
+    font-weight: 600;
+  }
+`
+
+const ComparisonGrid = styled.div`
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`
+
+const ComparisonCard = styled.div`
+  background: #f3f8ff;
+  border: 1px solid #cde2ff;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  h4 {
+    margin: 0 0 8px;
+    color: #043f84;
+    font-size: 1.15rem;
+  }
+
+  label {
+    color: #5f7392;
+    font-size: 0.84rem;
+    font-weight: 600;
+  }
+`
+
+const ValueText = styled.span`
+  color: #1f2d3d;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+`
+
+const FeatureGrid = styled.div`
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`
+
+const FeatureCard = styled.div`
+  background: #ffffff;
+  border: 1px solid #d8e9ff;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 6px 18px rgba(4, 63, 132, 0.07);
+
+  h4 {
+    margin: 0;
+    color: #043f84;
+  }
+
+  p {
+    margin: 10px 0 0;
+    color: #455a77;
+    line-height: 1.6;
+  }
+`
+
+const StepGrid = styled.div`
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+`
+
+const StepCard = styled.div`
+  background: #f3f8ff;
+  border: 1px solid #d4e5ff;
+  border-radius: 14px;
+  padding: 18px;
+
+  span {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    border-radius: 9999px;
+    align-items: center;
+    justify-content: center;
+    background: #043f84;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  h4 {
+    margin: 10px 0 0;
+    color: #043f84;
+  }
+
+  p {
+    margin: 10px 0 0;
+    color: #4f6380;
+    line-height: 1.6;
+  }
+`
+
+const ReviewGrid = styled.div`
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`
+
+const ReviewCard = styled.blockquote`
+  margin: 0;
+  background: #ffffff;
+  border: 1px solid #d8e9ff;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 6px 18px rgba(4, 63, 132, 0.07);
+
+  p {
+    margin: 0;
+    color: #425875;
+    line-height: 1.7;
+  }
+
+  strong {
+    display: block;
+    margin-top: 12px;
+    color: #043f84;
+    font-size: 0.95rem;
+  }
+`
+
+const CtaSection = styled.section`
+  width: min(980px, calc(100% - 32px));
+  margin-top: 56px;
+  background: linear-gradient(145deg, #0a4f95, #0a6fc8);
+  border-radius: 20px;
+  padding: 36px 24px;
+  text-align: center;
+  color: #ffffff;
+
+  h3 {
+    margin: 0;
+    font-size: 2rem;
+  }
+
+  p {
+    margin: 12px 0 0;
+    opacity: 0.95;
+  }
+`
+
+const CtaActions = styled.div`
+  margin-top: 20px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+`
+
+const DocsLink = styled.a`
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  padding: 10px 16px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
 `
 
 const SeamlessWrapper = styled.div`
