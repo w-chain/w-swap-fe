@@ -28,10 +28,11 @@ export const FixedHeightRow = styled(RowBetween)`
 `
 
 export const HoverCard = styled(Card)`
-  background: #95cbfe;
-  border: 1px solid rgba(4, 63, 132, 0.2);
+  background: #ffffff;
+  border: 1px solid #e4ddd2;
   border-radius: 12px;
   padding: 13px;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset, 0 8px 24px -20px rgba(26, 36, 48, 0.15);
 `
 
 interface PositionCardProps {

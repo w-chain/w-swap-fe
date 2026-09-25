@@ -1,9 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { ButtonPrimaryDark } from '../../components/Button'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { AutoRow } from '../../components/Row'
-import { ArrowWrapper, BottomGrouping, Wrapper } from '../../components/swap/styleds'
+import { BottomGrouping, Wrapper } from '../../components/swap/styleds'
+import {
+  EcosystemPrimaryButton,
+  EcosystemFeeRow,
+  EcosystemMutedLink,
+  FlipButton
+} from '../../components/ecosystem/styled'
 import { JSBI } from '@uniswap/sdk'
 import { parseUnits } from '@ethersproject/units'
 
@@ -11,7 +16,6 @@ import { useActiveWeb3React, useSwitchChain, SwitchChainError, SwitchChainErrorT
 import { useWalletModalToggle } from '../../state/application/hooks'
 import AppBody from '../AppBody'
 import { ChainId as SDKChainId } from '@uniswap/sdk'
-import FishIcon from '../../assets/svg/fish-icon.svg'
 import NetworkInputPanel from './components/NetworkInputPanel'
 import { useSelector } from 'react-redux'
 import { AppState } from '../../state'
@@ -26,17 +30,6 @@ import { getTokenBySymbol } from './shared/registry/tokens'
 import { useBridgeApproveCallback } from './stores/hooks/useBridgeApproveCallback'
 import { ApprovalState } from '../../hooks/useApproveCallback'
 import ConfirmBridgeModal from './components/ConfirmBridgeModal'
-
-const Link = styled.a`
-  color: #fff;
-  text-decoration: none;
-  font-size: 0.875rem;
-  font-weight: 500;
-  margin-bottom: 12px;
-  &:hover {
-    color: #e6f3ff;
-  }
-`
 
 export default function Bridge() {
   const { account, chainId } = useActiveWeb3React()
@@ -240,38 +233,17 @@ export default function Bridge() {
               onDismiss={handleConfirmDismiss}
             />
 
-            <AutoRow
-              gap={'sm'}
-              style={{
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                background: 'rgba(255, 255, 255, 0.2)',
-                borderRadius: '16px'
-              }}
-            >
-              <NetworkInputPanel
-                label="From"
-                id="from-chain"
-                direction="from"
-              />
-              <ArrowWrapper
-                clickable
-                style={{
-                  margin: 'auto auto 12px auto'
-                }}
+            <AutoRow gap={'sm'} style={{ alignItems: 'flex-end', justifyContent: 'space-between' }}>
+              <NetworkInputPanel label="From" id="from-chain" direction="from" />
+              <FlipButton
+                type="button"
+                aria-label="Swap networks"
+                style={{ marginBottom: '12px', flexShrink: 0 }}
+                onClick={() => swapNetworks()}
               >
-                <img
-                  src={FishIcon}
-                  alt="fish"
-                  onClick={() => swapNetworks()}
-                />
-              </ArrowWrapper>
-              <NetworkInputPanel
-                label="To"
-                id="to-chain"
-                direction="to"
-              />
-
+                ⇄
+              </FlipButton>
+              <NetworkInputPanel label="To" id="to-chain" direction="to" />
             </AutoRow>
 
             <br />
@@ -287,49 +259,33 @@ export default function Bridge() {
             />
 
             {/* Bridge Fee Display */}
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.2)',
-              borderRadius: '12px',
-              padding: '12px 16px',
-              marginTop: '8px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}>
-              <span style={{ fontSize: '14px', fontWeight: '500' }}>
-                Bridge Fee:
-              </span>
-              <span style={{ fontSize: '14px', fontWeight: '600' }}>
+            <EcosystemFeeRow>
+              <span style={{ fontWeight: 500 }}>Bridge Fee:</span>
+              <span style={{ fontWeight: 600, color: '#5c6a78' }}>
                 {feeLoading ? 'Loading...' : feeInEth ? `${feeInEth} ${currentNetworkETHName}` : 'N/A'}
               </span>
-            </div>
+            </EcosystemFeeRow>
 
             <BottomGrouping>
               {!account ? (
-                <ButtonPrimaryDark onClick={toggleWalletModal}>Connect Wallet</ButtonPrimaryDark>
+                <EcosystemPrimaryButton onClick={toggleWalletModal}>Connect Wallet</EcosystemPrimaryButton>
               ) : (
-                <ButtonPrimaryDark
-                  disabled={disabled}
-                  onClick={handleBridge}
-                >
+                <EcosystemPrimaryButton disabled={disabled} onClick={handleBridge}>
                   {buttonLabel()}
-                </ButtonPrimaryDark>
+                </EcosystemPrimaryButton>
               )}
             </BottomGrouping>
 
             <BottomGrouping style={{ display: 'flex', justifyContent: 'center' }}>
-              <Link
-                href="https://bridge.w-chain.com"
-                target="_blank"
-              >
+              <EcosystemMutedLink href="https://bridge.w-chain.com" target="_blank" rel="noopener noreferrer">
                 Powered by W Bridge
-              </Link>
+              </EcosystemMutedLink>
             </BottomGrouping>
           </Wrapper>
         )}
       </AppBody>
 
-      <StyledBridgeHistoryLink onClick={toggleHistory}>
+      <StyledBridgeHistoryLink type="button" aria-label="Bridge history" onClick={toggleHistory}>
         {!openHistory ? 
           <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -375,17 +331,27 @@ export default function Bridge() {
   )
 }
 
-const StyledBridgeHistoryLink = styled.div`
-  background: #d9ebff;
-  box-shadow: 4px 4px 4px rgba(4, 63, 132, 0.25);
-  border-radius: 15px;
-  width: 90px;
-  height: 57px;
+const StyledBridgeHistoryLink = styled.button`
+  background: #ffffff;
+  border: 1px solid #e4ddd2;
+  box-shadow: 0 8px 24px -16px rgba(26, 36, 48, 0.2);
+  border-radius: 12px;
+  width: 52px;
+  height: 52px;
   display: flex;
   align-items: center;
-  justify-content: end;
-  padding-right: 15px;
+  justify-content: center;
   position: absolute;
-  top: 60px;
-  right: -65px;
+  top: 72px;
+  right: max(-56px, -8vw);
+  cursor: pointer;
+  padding: 0;
+
+  svg path {
+    fill: #0e9a86;
+  }
+
+  &:hover {
+    border-color: #0e9a86;
+  }
 `

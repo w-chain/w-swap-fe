@@ -15,13 +15,15 @@ const NetworkButton = styled(ButtonLight)`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-radius: 8px;
+  border-radius: 5px;
   font-size: 14px;
   font-weight: 600;
   transition: all 0.2s ease-in-out;
-  padding-left: 16px;
-  background-color: ${({ theme }) => theme.buttonBg1};
-  padding: 4px 8px;
+  padding: 8px 12px;
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #e4ddd2;
+  color: #1a2430;
 
   &:disabled {
     opacity: 0.5;

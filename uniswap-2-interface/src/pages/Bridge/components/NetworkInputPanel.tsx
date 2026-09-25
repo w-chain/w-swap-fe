@@ -33,6 +33,9 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
 
 const Container = styled.div<{ hideInput: boolean }>`
   border-radius: 12px;
+  background-color: #ffffff;
+  border: 1px solid #e4ddd2;
+  padding: 4px 0;
 `
 
 interface NetworkInputPanelProps {
@@ -51,7 +54,7 @@ export default function NetworkInputPanel({
       <Container hideInput={false}>
         <LabelRow>
           <RowBetween>
-            <TYPE.body color={'#000'} fontWeight={600} fontSize={14}>
+            <TYPE.body color={'#5c6a78'} fontWeight={500} fontSize={14}>
               {label}
             </TYPE.body>
           </RowBetween>
