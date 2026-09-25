@@ -220,7 +220,7 @@ export default function Bridge() {
 
   return (
     <div style={{ position: 'relative' }}>
-      <AppBody>
+      <AppBody card>
         <SwapPoolTabs active={'bridge'} />
 
         {openHistory ? (

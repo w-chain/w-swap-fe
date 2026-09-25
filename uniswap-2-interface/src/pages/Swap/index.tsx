@@ -6,7 +6,7 @@ import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { useHistory, useLocation } from 'react-router-dom'
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonError, ButtonConfirmed, ButtonPrimaryDark } from '../../components/Button'
+import { ButtonError, ButtonConfirmed } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
@@ -43,7 +43,7 @@ import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
-import FishIcon from '../../assets/svg/fish-icon.svg'
+import { FlipButton, EcosystemPrimaryButton } from '../../components/ecosystem/styled'
 
 import { getTokensRequiringWarning } from '../../utils/tokenValidation'
 
@@ -332,7 +332,7 @@ export default function Swap() {
         tokens={tokensRequiringWarning}
         onConfirm={handleConfirmTokenWarning}
       />
-      <AppBody>
+      <AppBody card>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
           <ConfirmSwapModal
@@ -360,19 +360,20 @@ export default function Swap() {
               onCurrencySelect={handleInputSelect}
               otherCurrency={currencies[Field.OUTPUT]}
               id="swap-currency-input"
+              variant="light"
             />
             <AutoColumn justify="space-between">
-              <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '4px 1rem 0 1rem' }}>
-                <ArrowWrapper clickable>
-                  <img
-                    src={FishIcon}
-                    alt="fish"
-                    onClick={() => {
-                      setApprovalSubmitted(false) // reset 2 step UI for approvals
-                      onSwitchTokens()
-                    }}
-                  />
-                </ArrowWrapper>
+              <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '4px 0' }}>
+                <FlipButton
+                  type="button"
+                  aria-label="Flip tokens"
+                  onClick={() => {
+                    setApprovalSubmitted(false)
+                    onSwitchTokens()
+                  }}
+                >
+                  ⇄
+                </FlipButton>
                 {recipient === null && !showWrap && isExpertMode ? (
                   <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
                     + Add a send (optional)
@@ -389,6 +390,7 @@ export default function Swap() {
               onCurrencySelect={handleOutputSelect}
               otherCurrency={currencies[Field.INPUT]}
               id="swap-currency-output"
+              variant="light"
             />
 
             {recipient !== null && !showWrap ? (
@@ -436,12 +438,12 @@ export default function Swap() {
           </AutoColumn>
           <BottomGrouping>
             {!account ? (
-              <ButtonPrimaryDark onClick={toggleWalletModal}>Connect Wallet</ButtonPrimaryDark>
+              <EcosystemPrimaryButton onClick={toggleWalletModal}>Connect Wallet</EcosystemPrimaryButton>
             ) : showWrap ? (
-              <ButtonPrimaryDark disabled={Boolean(wrapInputError)} onClick={onWrap}>
+              <EcosystemPrimaryButton disabled={Boolean(wrapInputError)} onClick={onWrap}>
                 {wrapInputError ??
                   (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
-              </ButtonPrimaryDark>
+              </EcosystemPrimaryButton>
             ) : noRoute && userHasSpecifiedInputOutput ? (
               <GreyCard style={{ textAlign: 'center', background: 'transparent' }}>
                 <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>

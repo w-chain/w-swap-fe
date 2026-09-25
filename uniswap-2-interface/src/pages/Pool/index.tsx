@@ -58,7 +58,7 @@ export default function Pool() {
 
   return (
     <>
-      <AppBody>
+      <AppBody card>
         <SwapPoolTabs active={'pool'} />
         <AutoColumn gap="lg" justify="center">
           <ButtonPrimaryDark id="join-pool-button" as={Link} to="/add/ETH" padding={'16px'}>

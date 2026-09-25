@@ -24,6 +24,7 @@ import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Bridge from './Bridge'
 import Landing from './Landing'
 import FishComponent from '../components/FishComponent'
+import { usesEcosystemTheme } from '../utils/ecosystemTheme'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -94,12 +95,13 @@ const BodyWrapper = styled.div<{ $landing?: boolean }>`
 function AppRoutes() {
   const { pathname } = useLocation()
   const isLanding = pathname === '/'
+  const ecosystemTheme = usesEcosystemTheme(pathname)
 
   return (
-    <BodyWrapper $landing={isLanding}>
+    <BodyWrapper $landing={isLanding || ecosystemTheme}>
       <Popups />
-      <AppBg $landing={isLanding} />
-      {isLanding ? <LandingHeroGlow /> : <SeamlessGradient />}
+      <AppBg $ecosystem={ecosystemTheme} />
+      {ecosystemTheme ? <LandingHeroGlow /> : <SeamlessGradient />}
 
       <Web3ReactManager>
         <Switch>
@@ -147,13 +149,13 @@ export default function App() {
   )
 }
 
-const AppBg = styled.div<{ $landing?: boolean }>`
+const AppBg = styled.div<{ $ecosystem?: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: ${({ $landing }) => ($landing ? '#f6f3ec' : '#fff')};
+  background: ${({ $ecosystem }) => ($ecosystem ? '#f6f3ec' : '#fff')};
   overflow: hidden;
 `
 

@@ -1,6 +1,7 @@
 import { ChainId } from '@uniswap/sdk'
 import React from 'react'
 import { useLocation } from 'react-router-dom'
+import { usesEcosystemTheme } from '../../utils/ecosystemTheme'
 import { Text } from 'rebass'
 
 import styled from 'styled-components'
@@ -164,7 +165,7 @@ const NetworkSelectorWrapper = styled.div`
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { pathname } = useLocation()
-  const isLanding = pathname === '/'
+  const isLanding = usesEcosystemTheme(pathname)
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
