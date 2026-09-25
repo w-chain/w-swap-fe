@@ -86,10 +86,10 @@
     "@types/react": "^16.9.34"
   },
   "scripts": {
-    "start": "NODE_OPTIONS='--openssl-legacy-provider' craco start",
-    "start:3002": "PORT=3002 NODE_OPTIONS='--openssl-legacy-provider' craco start",
-    "build": "NODE_OPTIONS='--openssl-legacy-provider' craco build",
-    "test": "NODE_OPTIONS='--openssl-legacy-provider' craco test --env=jsdom",
+    "start": "node scripts/run-craco.js start",
+    "start:3002": "PORT=3002 node scripts/run-craco.js start",
+    "build": "node scripts/run-craco.js build",
+    "test": "node scripts/run-craco.js test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
     "copy-token-list": "node scripts/copy-token-list.js",

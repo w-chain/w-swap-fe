@@ -9,7 +9,7 @@
   "scripts": {
     "build": "npm run build --workspaces --if-present",
     "start": "npm run start:3002 --workspace=uniswap-2-interface",
-    "dev": "npm run build:sdk && npm run start:3002 --workspace=uniswap-2-interface",
+    "dev": "bash scripts/dev.sh",
     "build:sdk": "npm run build --workspace=@uniswap/sdk",
     "build:interface": "npm run build --workspace=uniswap-2-interface",
     "preview": "npm run build:sdk && npm run build:interface && npx --yes serve -s uniswap-2-interface/build -l 3002"
