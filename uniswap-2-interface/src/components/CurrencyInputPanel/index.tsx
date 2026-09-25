@@ -21,24 +21,24 @@ const InputRow = styled.div<{ selected: boolean }>`
   padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
 `
 
-const CurrencySelect = styled.button<{ selected: boolean }>`
+const CurrencySelect = styled.button<{ selected: boolean; variant?: 'default' | 'light' }>`
   align-items: center;
   height: 2.2rem;
   font-size: 0.8rem;
   font-weight: 600;
-  background-color: ${({ theme }) => theme.buttonBg1};
-  color: #043f84;
+  background-color: ${({ theme, variant }) => (variant === 'light' ? '#ffffff' : theme.buttonBg1)};
+  color: ${({ variant }) => (variant === 'light' ? '#8a929c' : '#043f84')};
+  border: ${({ variant }) => (variant === 'light' ? '1px solid #ddd8ce' : 'none')};
   border-radius: 12px;
   /* box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')}; */
   outline: none;
   cursor: pointer;
   user-select: none;
-  border: none;
   padding: 0 0.5rem;
 
   :focus,
   :hover {
-    background-color: ${({ theme }) => theme.buttonHoverBg1};
+    background-color: ${({ theme, variant }) => (variant === 'light' ? '#ffffff' : theme.buttonHoverBg1)};
   }
 `
 
@@ -65,17 +65,18 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   margin: 0 0.25rem 0 0.5rem;
 `
 
-const InputPanel = styled.div<{ hideInput?: boolean }>`
+const InputPanel = styled.div<{ hideInput?: boolean; variant?: 'default' | 'light' }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
   border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme, variant }) => (variant === 'light' ? '#ffffff' : theme.bg2)};
   z-index: 1;
 `
 
-const Container = styled.div<{ hideInput: boolean }>`
+const Container = styled.div<{ hideInput: boolean; variant?: 'default' | 'light' }>`
   border-radius: 12px;
-  background-color: #b4dafe;
+  background-color: ${({ variant }) => (variant === 'light' ? '#ffffff' : '#b4dafe')};
+  border: ${({ variant }) => (variant === 'light' ? '1px solid #ddd8ce' : 'none')};
 `
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
@@ -132,6 +133,7 @@ interface CurrencyInputPanelProps {
   otherCurrency?: Currency | null
   id: string
   showCommonBases?: boolean
+  variant?: 'default' | 'light'
 }
 
 export default function CurrencyInputPanel({
@@ -148,7 +150,8 @@ export default function CurrencyInputPanel({
   hideInput = false,
   otherCurrency,
   id,
-  showCommonBases
+  showCommonBases,
+  variant = 'default'
 }: CurrencyInputPanelProps) {
   const { chainId } = useActiveWeb3React()
   const { t } = useTranslation()
@@ -165,8 +168,8 @@ export default function CurrencyInputPanel({
   const currencySymbol = getCurrencySymbol(currency, chainId)
 
   return (
-    <InputPanel id={id}>
-      <Container hideInput={hideInput}>
+    <InputPanel id={id} variant={variant}>
+      <Container hideInput={hideInput} variant={variant}>
         {!hideInput && (
           <LabelRow>
             <RowBetween>
@@ -206,6 +209,7 @@ export default function CurrencyInputPanel({
           )}
           <CurrencySelect
             selected={!!currency}
+            variant={variant}
             className="open-currency-select-button"
             onClick={() => {
               if (!disableCurrencySelect) {

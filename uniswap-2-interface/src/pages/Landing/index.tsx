@@ -5,35 +5,29 @@ import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonPrimaryDark } from '../../components/Button'
-import Card from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { AutoRow, RowBetween } from '../../components/Row'
 import { ArrowWrapper, BottomGrouping, Wrapper } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
 import { useHistory } from 'react-router-dom'
 
-import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
-import { useCurrency } from '../../hooks/Tokens'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
-import { useToggleSettingsMenu } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import {
-  useDefaultsFromURLSearch,
   useDerivedSwapInfo,
   useSwapActionHandlers,
   useSwapState
 } from '../../state/swap/hooks'
-import { useExpertModeManager, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
+import { useExpertModeManager } from '../../state/user/hooks'
 import { LinkStyledButton } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
-import { ClickableText } from '../Pool/styleds'
 import FishIcon from '../../assets/svg/fish-icon.svg'
 import ConnectWithUs from '../../components/connectWithUs/ConnectWithUs'
 import { Footer } from '../../components/Footer'
+import ReviewCards from '../../components/ReviewCards/ReviewCards'
 
 const STATS = [
   { value: '240K+', label: 'Completed Txns' },
@@ -73,27 +67,11 @@ const STEPS = [
   { title: 'Confirm & Trade', body: 'Review quote and confirm. Most swaps settle in about 75 seconds.' }
 ]
 
-const REVIEWS = [
-  {
-    body:
-      "W-SWAP DEX is more than a DEX - it's a gateway to financial empowerment with low-cost transactions and strong UX.",
-    author: 'X @cryptoperrix'
-  },
-  {
-    body:
-      "W-SWAP DEX launched smoothly and feels solid on desktop and mobile. Intuitive, reliable, and user-friendly.",
-    author: 'X @TheDavey92'
-  }
-]
-
 export default function Landing() {
   const theme = useContext(ThemeContext)
 
   // for expert mode
-  const toggleSettings = useToggleSettingsMenu()
   const [isExpertMode] = useExpertModeManager()
-
-  const [allowedSlippage] = useUserSlippageTolerance()
 
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
@@ -102,14 +80,9 @@ export default function Landing() {
     v2Trade,
     currencyBalances,
     parsedAmount,
-    currencies,
-    inputError: swapInputError
+    currencies
   } = useDerivedSwapInfo()
-  const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
-    currencies[Field.INPUT],
-    currencies[Field.OUTPUT],
-    typedValue
-  )
+  const { wrapType } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const toggledVersion = useToggledVersion()
   const trade = showWrap
@@ -158,9 +131,6 @@ export default function Landing() {
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
-  // errors
-  const [showInverted, setShowInverted] = useState<boolean>(false)
-
   const handleInputSelect = useCallback(
     inputCurrency => {
       setApprovalSubmitted(false) // reset 2 step UI for approvals
@@ -190,12 +160,15 @@ export default function Landing() {
           <p>Seamless Swaps. Unified Liquidity.</p>
           <p>Built for Utility​​ ​Tokens.​​​</p>
         </SeamlessWrapper>
-        <br />
-        <br />
         <AppBody>
-          <SwapPoolTabs active={'swap'} landing={true} />
-          <Wrapper id="swap-page">
-            <AutoColumn gap={'sm'}>
+          <TradingCard>
+            <LandingTabs>
+              <TabPill active>SWAP</TabPill>
+              <TabPill>POOL</TabPill>
+              <TabPill>BRIDGE</TabPill>
+            </LandingTabs>
+            <Wrapper id="swap-page">
+              <AutoColumn gap={'sm'}>
               <CurrencyInputPanel
                 label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'}
                 value={formattedAmounts[Field.INPUT]}
@@ -206,6 +179,7 @@ export default function Landing() {
                 onCurrencySelect={handleInputSelect}
                 otherCurrency={currencies[Field.OUTPUT]}
                 id="swap-currency-input"
+                variant="light"
               />
               <AutoColumn justify="space-between">
                 <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '4px 1rem 0 1rem' }}>
@@ -235,6 +209,7 @@ export default function Landing() {
                 onCurrencySelect={handleOutputSelect}
                 otherCurrency={currencies[Field.INPUT]}
                 id="swap-currency-output"
+                variant="light"
               />
 
               {recipient !== null && !showWrap ? (
@@ -252,38 +227,19 @@ export default function Landing() {
               ) : null}
 
               {showWrap ? null : (
-                <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
-                  <AutoColumn gap="4px">
-                    {Boolean(trade) && (
-                      <RowBetween align="center">
-                        <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                          Price
-                        </Text>
-                        <TradePrice
-                          price={trade?.executionPrice}
-                          showInverted={showInverted}
-                          setShowInverted={setShowInverted}
-                        />
-                      </RowBetween>
-                    )}
-                    {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
-                      <RowBetween align="center">
-                        <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                          Slippage Tolerance
-                        </ClickableText>
-                        <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                          {allowedSlippage / 100}%
-                        </ClickableText>
-                      </RowBetween>
-                    )}
-                  </AutoColumn>
-                </Card>
+                <PriceRow>
+                  <Text fontWeight={500} fontSize={14} color="#172539">
+                    Price
+                  </Text>
+                  <TradePrice price={trade?.executionPrice} showInverted={false} setShowInverted={() => undefined} />
+                </PriceRow>
               )}
-            </AutoColumn>
-            <BottomGrouping>
-              <ButtonPrimaryDark onClick={handleNavigateToSwap}>Get Started</ButtonPrimaryDark>
-            </BottomGrouping>
-          </Wrapper>
+              </AutoColumn>
+              <BottomGrouping>
+                <LaunchButton onClick={handleNavigateToSwap}>Get Started</LaunchButton>
+              </BottomGrouping>
+            </Wrapper>
+          </TradingCard>
         </AppBody>
 
         <MetricsSection>
@@ -340,28 +296,7 @@ export default function Landing() {
           </StepGrid>
         </ContentSection>
 
-        <ContentSection>
-          <SectionTitle>Community Reviews</SectionTitle>
-          <ReviewGrid>
-            {REVIEWS.map(item => (
-              <ReviewCard key={item.author}>
-                <p>{item.body}</p>
-                <strong>{item.author}</strong>
-              </ReviewCard>
-            ))}
-          </ReviewGrid>
-        </ContentSection>
-
-        <CtaSection>
-          <h3>Start trading on W-SWAP DEX</h3>
-          <p>Join thousands of traders moving value at payment speed.</p>
-          <CtaActions>
-            <ButtonPrimaryDark onClick={handleNavigateToSwap}>Launch W-SWAP DEX</ButtonPrimaryDark>
-            <DocsLink href="https://wchain.gitbook.io/wchain-hub/" target="_blank" rel="noopener noreferrer">
-              Read the docs
-            </DocsLink>
-          </CtaActions>
-        </CtaSection>
+        <ReviewCards />
 
         <Marginer />
       </BodyWrapper>
@@ -393,13 +328,61 @@ const Marginer = styled.div`
   margin-top: 5rem;
 `
 
+const TradingCard = styled.div`
+  width: min(860px, calc(100vw - 40px));
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #e6e2d8;
+  border-radius: 22px;
+  padding: 26px 24px 28px;
+  box-shadow: 0 14px 44px rgba(26, 36, 48, 0.08);
+`
+
+const LandingTabs = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 22px;
+`
+
+const TabPill = styled.button<{ active?: boolean }>`
+  border-radius: 9999px;
+  border: 1px solid ${({ active }) => (active ? '#43baa8' : '#d9d7d0')};
+  color: ${({ active }) => (active ? '#2ba491' : '#6f747a')};
+  background: #fff;
+  padding: 8px 28px;
+  font-size: 1.5rem;
+  font-weight: 500;
+  cursor: default;
+`
+
+const PriceRow = styled(RowBetween)`
+  margin-top: 14px;
+  padding: 0 8px;
+`
+
+const LaunchButton = styled(ButtonPrimaryDark)`
+  width: 100%;
+  min-height: 54px;
+  border-radius: 10px;
+  border: none;
+  color: #101b2d;
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #18b3a8 0%, #4485e9 100%);
+
+  &:hover {
+    opacity: 0.95;
+  }
+`
+
 const ContentSection = styled.section`
   width: min(1100px, calc(100% - 32px));
   margin-top: 56px;
 `
 
 const SectionTitle = styled.h2`
-  color: #043f84;
+  color: #12365f;
   font-size: 2rem;
   font-weight: 700;
   text-align: center;
@@ -407,7 +390,7 @@ const SectionTitle = styled.h2`
 `
 
 const SectionSubTitle = styled.p`
-  color: #4b5f7a;
+  color: #4f627a;
   text-align: center;
   margin: 16px auto 0;
   max-width: 760px;
@@ -428,21 +411,21 @@ const MetricsSection = styled.section`
 
 const MetricCard = styled.div`
   background: #ffffff;
-  border: 1px solid #d9e9ff;
+  border: 1px solid #e2ebf7;
   border-radius: 16px;
   padding: 20px;
   text-align: center;
-  box-shadow: 0 8px 20px rgba(4, 63, 132, 0.08);
+  box-shadow: 0 8px 20px rgba(18, 54, 95, 0.06);
 
   h3 {
     margin: 0;
-    color: #043f84;
+    color: #12365f;
     font-size: 2rem;
   }
 
   p {
     margin: 8px 0 0;
-    color: #5c6f89;
+    color: #5f6f84;
     font-weight: 600;
   }
 `
@@ -463,8 +446,8 @@ const ComparisonGrid = styled.div`
 `
 
 const ComparisonCard = styled.div`
-  background: #f3f8ff;
-  border: 1px solid #cde2ff;
+  background: #ffffff;
+  border: 1px solid #e3ecf8;
   border-radius: 14px;
   padding: 18px;
   display: flex;
@@ -473,19 +456,19 @@ const ComparisonCard = styled.div`
 
   h4 {
     margin: 0 0 8px;
-    color: #043f84;
+    color: #12365f;
     font-size: 1.15rem;
   }
 
   label {
-    color: #5f7392;
+    color: #60748f;
     font-size: 0.84rem;
     font-weight: 600;
   }
 `
 
 const ValueText = styled.span`
-  color: #1f2d3d;
+  color: #213247;
   font-size: 0.95rem;
   font-weight: 700;
   margin-bottom: 6px;
@@ -504,19 +487,19 @@ const FeatureGrid = styled.div`
 
 const FeatureCard = styled.div`
   background: #ffffff;
-  border: 1px solid #d8e9ff;
+  border: 1px solid #e3ecf8;
   border-radius: 14px;
   padding: 18px;
-  box-shadow: 0 6px 18px rgba(4, 63, 132, 0.07);
+  box-shadow: 0 6px 18px rgba(18, 54, 95, 0.06);
 
   h4 {
     margin: 0;
-    color: #043f84;
+    color: #12365f;
   }
 
   p {
     margin: 10px 0 0;
-    color: #455a77;
+    color: #4e6079;
     line-height: 1.6;
   }
 `
@@ -533,8 +516,8 @@ const StepGrid = styled.div`
 `
 
 const StepCard = styled.div`
-  background: #f3f8ff;
-  border: 1px solid #d4e5ff;
+  background: #ffffff;
+  border: 1px solid #e3ecf8;
   border-radius: 14px;
   padding: 18px;
 
@@ -545,7 +528,7 @@ const StepCard = styled.div`
     border-radius: 9999px;
     align-items: center;
     justify-content: center;
-    background: #043f84;
+    background: #12365f;
     color: #fff;
     font-size: 0.9rem;
     font-weight: 700;
@@ -553,88 +536,13 @@ const StepCard = styled.div`
 
   h4 {
     margin: 10px 0 0;
-    color: #043f84;
+    color: #12365f;
   }
 
   p {
     margin: 10px 0 0;
-    color: #4f6380;
+    color: #52667f;
     line-height: 1.6;
-  }
-`
-
-const ReviewGrid = styled.div`
-  margin-top: 24px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-`
-
-const ReviewCard = styled.blockquote`
-  margin: 0;
-  background: #ffffff;
-  border: 1px solid #d8e9ff;
-  border-radius: 14px;
-  padding: 18px;
-  box-shadow: 0 6px 18px rgba(4, 63, 132, 0.07);
-
-  p {
-    margin: 0;
-    color: #425875;
-    line-height: 1.7;
-  }
-
-  strong {
-    display: block;
-    margin-top: 12px;
-    color: #043f84;
-    font-size: 0.95rem;
-  }
-`
-
-const CtaSection = styled.section`
-  width: min(980px, calc(100% - 32px));
-  margin-top: 56px;
-  background: linear-gradient(145deg, #0a4f95, #0a6fc8);
-  border-radius: 20px;
-  padding: 36px 24px;
-  text-align: center;
-  color: #ffffff;
-
-  h3 {
-    margin: 0;
-    font-size: 2rem;
-  }
-
-  p {
-    margin: 12px 0 0;
-    opacity: 0.95;
-  }
-`
-
-const CtaActions = styled.div`
-  margin-top: 20px;
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-`
-
-const DocsLink = styled.a`
-  color: #ffffff;
-  font-weight: 700;
-  text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 10px;
-  padding: 10px 16px;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.12);
   }
 `
 
