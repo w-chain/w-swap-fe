@@ -86,3 +86,82 @@ export const EcosystemMutedLink = styled.a`
     text-decoration: underline;
   }
 `
+
+export const EcosystemModalBody = styled.div`
+  width: 100%;
+  background: #ffffff;
+`
+
+export const EcosystemModalHeader = styled.div`
+  padding: 24px 24px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+`
+
+export const EcosystemModalTitle = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a2430;
+`
+
+export const EcosystemModalSubtitle = styled.div`
+  font-size: 14px;
+  color: #5c6a78;
+  margin-top: 4px;
+  margin-bottom: 16px;
+  font-weight: 500;
+  line-height: 1.45;
+`
+
+export const EcosystemModalClose = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 4px;
+  margin-left: 8px;
+  color: #5c6a78;
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 400;
+
+  &:hover {
+    color: #1a2430;
+  }
+`
+
+export const EcosystemModalDivider = styled.div`
+  height: 1px;
+  background: #e4ddd2;
+  margin: 0 24px;
+`
+
+export const EcosystemModalList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 24px 24px;
+`
+
+export const EcosystemPickButton = styled.button<{ $selected?: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid ${({ $selected }) => ($selected ? 'rgba(14, 154, 134, 0.45)' : '#e4ddd2')};
+  background: ${({ $selected }) => ($selected ? '#faf8f4' : '#ffffff')};
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a2430;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  width: 100%;
+  text-align: left;
+  box-shadow: ${({ $selected }) => ($selected ? '0 0 0 1px rgba(14, 154, 134, 0.12)' : 'none')};
+
+  &:hover {
+    border-color: #0e9a86;
+    background: #faf8f4;
+  }
+`

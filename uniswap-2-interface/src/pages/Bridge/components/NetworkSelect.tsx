@@ -5,8 +5,16 @@ import { getNetworkImage } from '../shared/utils/network'
 import { AppDispatch, AppState } from '../../../state'
 import Modal from '../../../components/Modal'
 import { ButtonLight } from '../../../components/Button'
-import { X } from 'react-feather'
 import styled from 'styled-components'
+import {
+  EcosystemModalBody,
+  EcosystemModalClose,
+  EcosystemModalHeader,
+  EcosystemModalList,
+  EcosystemModalSubtitle,
+  EcosystemModalTitle,
+  EcosystemPickButton
+} from '../../../components/ecosystem/styled'
 import { setFromNetwork, setToNetwork } from '../stores/BridgeStates'
 import { ReactComponent as DropDown } from '../../../assets/images/dropdown.svg'
 import type { BridgeState } from '../stores/BridgeStates'
@@ -40,117 +48,8 @@ const NetworkImage = styled.img`
   margin-right: 12px;
 `
 
-const NetworkList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  background: #fff;
-  width: 100%;
-  padding: 16px;
-`
-
-const NetworkListItem = styled.li`
-  width: 100%;
-`
-
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   margin: 0 0.25rem 0 0.5rem;
-`
-
-// Modal Card styling
-const ModalCard = styled.div`
-  background: #D9EBFF;
-  border-radius: 15px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-  padding: 0;
-  width: 100%;
-  position: relative;
-`
-
-const ModalHeader = styled.div`
-  padding: 24px 24px 0 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-`
-
-const ModalTitle = styled.div`
-  font-size: 18px;
-  font-weight: 600;
-  color: #043F84;
-`
-
-const ModalSubtitle = styled.div`
-  font-size: 14px;
-  color: #585858;
-  margin-top: 4px;
-  margin-bottom: 16px;
-  font-weight: 600;
-`
-
-const CloseButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  margin-left: 8px;
-  color: #888;
-  font-size: 20px;
-`
-
-const StyledNetworkList = styled(NetworkList)`
-  padding: 0 24px 24px 24px;
-  gap: 0;
-  background: #D9EBFF;
-`
-
-const StyledNetworkListItem = styled(NetworkListItem)<{ selected: boolean; disabled: boolean }>`
-  margin-bottom: 8px;
-  border-radius: 8px;
-  transition: background 0.15s;
-  background: ${({ selected }) => (selected ? '#f6f7fa' : 'transparent')};
-  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
-  &:hover {
-    background: ${({ disabled, selected }) => (!disabled && !selected ? '#f0f2f5' : '')};
-  }
-`
-
-const StyledNetworkButton = styled.button`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  border: none;
-  background: transparent;
-  box-shadow: none;
-  padding: 12px 0 12px 16px;
-  font-size: 18px;
-  font-weight: 600;
-  color: #043F83;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: background 0.15s, color 0.15s;
-
-  &:hover:not(:disabled) {
-    background: #f0f2f5;
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #e0e0e0;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.8;
-    background: transparent;
-  }
-
-  span {
-    margin-left: 12px;
-  }
 `
 
 interface NetworkSelectProps {
@@ -213,32 +112,37 @@ export default function NetworkSelect({ direction }: NetworkSelectProps) {
       </NetworkButton>
 
       <Modal isOpen={isOpen} onDismiss={() => setIsOpen(false)} maxHeight={400}>
-        <ModalCard>
-          <ModalHeader>
+        <EcosystemModalBody>
+          <EcosystemModalHeader>
             <div>
-              <ModalTitle>Select Network</ModalTitle>
-              <ModalSubtitle>Select Network you want to transfer from</ModalSubtitle>
+              <EcosystemModalTitle>Select Network</EcosystemModalTitle>
+              <EcosystemModalSubtitle>Select Network you want to transfer from</EcosystemModalSubtitle>
             </div>
-            <CloseButton onClick={() => setIsOpen(false)}>
-              <X size={20} />
-            </CloseButton>
-          </ModalHeader>
+            <EcosystemModalClose type="button" aria-label="Close" onClick={() => setIsOpen(false)}>
+              ×
+            </EcosystemModalClose>
+          </EcosystemModalHeader>
 
-          <StyledNetworkList>
+          <EcosystemModalList>
             {networks.map(network_ => {
               const selected = network === network_
               const disabled = isNetworkDisabled(network_)
               return (
-                <StyledNetworkListItem key={network_} selected={selected} disabled={disabled}>
-                  <StyledNetworkButton onClick={() => handleSelect(network_)} disabled={disabled}>
-                    <NetworkImage src={getNetworkImage(network_)} alt={`${network_} logo`} />
-                    <span>{network_}</span>
-                  </StyledNetworkButton>
-                </StyledNetworkListItem>
+                <EcosystemPickButton
+                  key={network_}
+                  type="button"
+                  $selected={selected}
+                  disabled={disabled}
+                  onClick={() => handleSelect(network_)}
+                  style={{ opacity: disabled ? 0.5 : 1, cursor: disabled ? 'not-allowed' : 'pointer' }}
+                >
+                  <NetworkImage src={getNetworkImage(network_)} alt={`${network_} logo`} />
+                  {network_}
+                </EcosystemPickButton>
               )
             })}
-          </StyledNetworkList>
-        </ModalCard>
+          </EcosystemModalList>
+        </EcosystemModalBody>
       </Modal>
     </>
   )

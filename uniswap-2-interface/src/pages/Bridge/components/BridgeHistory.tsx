@@ -22,25 +22,25 @@ const Section = styled.div`
 const SectionTitle = styled.h2`
   font-size: 0.9rem;
   font-weight: 600;
-  color: #043f84;
+  color: #1a2430;
   margin-bottom: 12px;
   margin-top: 0;
 `
 const EmptyText = styled.div`
   text-align: center;
-  color: #585858;
+  color: #5c6a78;
   padding: 16px 0;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
 `
 const ClearButton = styled.button`
-  border: 1px solid #1976d2;
-  background: none;
-  color: #1976d2;
-  border-radius: 6px;
+  border: 1px solid #e4ddd2;
+  background: #ffffff;
+  color: #0e9a86;
+  border-radius: 8px;
   padding: 4px 12px;
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   margin-left: 8px;
   margin-bottom: 12px;
@@ -49,26 +49,31 @@ const ClearButton = styled.button`
     opacity: 0.5;
     cursor: not-allowed;
   }
+  &:hover:not(:disabled) {
+    border-color: #0e9a86;
+  }
 `
 
 const Divider = styled.div`
   height: 1px;
-  background: #c7e0fa;
+  background: #e4ddd2;
   margin: 16px 0;
 `
 
 const TxCard = styled.div`
-  background: #c7e0fa;
+  background: #ffffff;
+  border: 1px solid #e4ddd2;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(4, 63, 132, 0.08);
+  box-shadow: 0 8px 24px -20px rgba(26, 36, 48, 0.15);
   padding: 16px;
   margin-bottom: 16px;
-  transition: box-shadow 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
   display: flex;
   flex-direction: column;
   gap: 8px;
   &:hover {
-    box-shadow: 0 6px 24px rgba(4, 63, 132, 0.16);
+    border-color: rgba(14, 154, 134, 0.35);
+    box-shadow: 0 12px 28px -18px rgba(26, 36, 48, 0.2);
   }
 `
 
@@ -92,7 +97,7 @@ const StatusRow = styled.div`
 const Arrow = styled.span`
   font-size: 16px;
   margin: 0 4px;
-  color: #043f84;
+  color: #1a2430;
   flex-shrink: 0;
 `
 
@@ -395,10 +400,10 @@ export default function BridgeHistory() {
                 <TxRow>
                   <div style={{ display: 'flex', alignItems: 'center', flex: 1, minWidth: 0 }}>
                     <TokenIcon src={getNetworkImage(getNetworkFromChainId(tx.fromChainId))} alt={tx.tokenSymbol} /> 
-                    <span style={{ fontWeight: 600, color: '#043f84', fontSize: '13px', marginRight: '4px' }}>From: {getNetworkFromChainId(tx.fromChainId)}</span>
+                    <span style={{ fontWeight: 600, color: '#1a2430', fontSize: '13px', marginRight: '4px' }}>From: {getNetworkFromChainId(tx.fromChainId)}</span>
                     <Arrow>→</Arrow>
                     <TokenIcon src={getNetworkImage(getNetworkFromChainId(tx.toChainId))} alt={tx.tokenSymbol} /> 
-                    <span style={{ fontWeight: 600, color: '#043f84', fontSize: '13px' }}>To: {getNetworkFromChainId(tx.toChainId)}</span>
+                    <span style={{ fontWeight: 600, color: '#1a2430', fontSize: '13px' }}>To: {getNetworkFromChainId(tx.toChainId)}</span>
                   </div>
                 </TxRow>
                 <TxDetails>
@@ -454,10 +459,10 @@ export default function BridgeHistory() {
                   <TxRow>
                     <div style={{ display: 'flex', alignItems: 'center', flex: 1, minWidth: 0 }}>
                       <TokenIcon src={getNetworkImage(getNetworkFromChainId(tx.fromChainId))} alt={tx.tokenSymbol} /> 
-                      <span style={{ fontWeight: 600, color: '#043f84', fontSize: '13px', marginRight: '4px' }}>From: {getNetworkFromChainId(tx.fromChainId)}</span>
+                      <span style={{ fontWeight: 600, color: '#1a2430', fontSize: '13px', marginRight: '4px' }}>From: {getNetworkFromChainId(tx.fromChainId)}</span>
                       <Arrow>→</Arrow>
                       <TokenIcon src={getNetworkImage(getNetworkFromChainId(tx.toChainId))} alt={tx.tokenSymbol} /> 
-                      <span style={{ fontWeight: 600, color: '#043f84', fontSize: '13px' }}>To: {getNetworkFromChainId(tx.toChainId)}</span>
+                      <span style={{ fontWeight: 600, color: '#1a2430', fontSize: '13px' }}>To: {getNetworkFromChainId(tx.toChainId)}</span>
                     </div>
                   </TxRow>
                   <TxDetails>

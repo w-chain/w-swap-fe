@@ -138,17 +138,17 @@ export function CurrencySearch({
   const selectedListInfo = useSelectedListInfo()
 
   return (
-    <Column style={{ width: '100%', flex: '1 1', background: '#D9EBFF' }}>
+    <Column style={{ width: '100%', flex: '1 1', background: '#ffffff' }}>
       <PaddedColumn gap="6px">
         <RowBetween>
-          <Text fontWeight={600} fontSize={18} color={'#043F84'}>
+          <Text fontWeight={600} fontSize={18} color={'#1a2430'}>
             Select token
             <QuestionHelper text="Find a token by searching for its name or symbol or by pasting its address below." />
           </Text>
-          <CloseIcon onClick={onDismiss} size={18} strokeWidth={2.5} color={'#043F84'} />
+          <CloseIcon onClick={onDismiss} size={18} strokeWidth={2.5} color={'#5c6a78'} />
         </RowBetween>
 
-        <TYPE.darkGray color={'#585858'} style={{ fontSize: '14px' }} fontWeight={600} width={'100%'}>
+        <TYPE.darkGray color={'#5c6a78'} style={{ fontSize: '14px' }} fontWeight={500} width={'100%'}>
           Select the token you want to move from Source Chain.
         </TYPE.darkGray>
         {/* <SearchInput
@@ -169,7 +169,7 @@ export function CurrencySearch({
           </Text>
           <SortButton ascending={invertSearchOrder} toggleSortOrder={() => setInvertSearchOrder(iso => !iso)} />
         </RowBetween> */}
-        <SeparatorDark style={{ background: '#043F83', marginTop: '10px' }} />
+        <SeparatorDark style={{ background: '#e4ddd2', marginTop: '10px' }} />
       </PaddedColumn>
 
       <div style={{ flex: '1' }}>
@@ -190,7 +190,7 @@ export function CurrencySearch({
 
       {/** NOTE: WADZ-specific */}
       <Card>
-        <Separator style={{ background: '#043F83', marginBottom: '10px' }} />
+        <Separator style={{ background: '#e4ddd2', marginBottom: '10px' }} />
 
         <RowBetween>
           {selectedListInfo.current ? (
