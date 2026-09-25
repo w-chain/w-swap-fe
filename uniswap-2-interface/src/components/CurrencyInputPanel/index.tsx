@@ -27,8 +27,9 @@ const CurrencySelect = styled.button<{ selected: boolean; variant?: 'default' | 
   font-size: 0.8rem;
   font-weight: 600;
   background-color: ${({ theme, variant }) => (variant === 'light' ? '#ffffff' : theme.buttonBg1)};
-  color: ${({ variant }) => (variant === 'light' ? '#8a929c' : '#043f84')};
-  border: ${({ variant }) => (variant === 'light' ? '1px solid #ddd8ce' : 'none')};
+  color: ${({ variant }) => (variant === 'light' ? '#5c6a78' : '#043f84')};
+  border: ${({ variant }) => (variant === 'light' ? '1px solid #e4ddd2' : 'none')};
+  border-radius: ${({ variant }) => (variant === 'light' ? '5px' : '12px')};
   border-radius: 12px;
   /* box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')}; */
   outline: none;
@@ -69,14 +70,15 @@ const InputPanel = styled.div<{ hideInput?: boolean; variant?: 'default' | 'ligh
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
   border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
-  background-color: ${({ theme, variant }) => (variant === 'light' ? '#ffffff' : theme.bg2)};
+  background-color: ${({ theme, variant }) => (variant === 'light' ? 'transparent' : theme.bg2)};
   z-index: 1;
 `
 
 const Container = styled.div<{ hideInput: boolean; variant?: 'default' | 'light' }>`
-  border-radius: 12px;
+  border-radius: ${({ variant }) => (variant === 'light' ? '12px' : '12px')};
   background-color: ${({ variant }) => (variant === 'light' ? '#ffffff' : '#b4dafe')};
-  border: ${({ variant }) => (variant === 'light' ? '1px solid #ddd8ce' : 'none')};
+  border: ${({ variant }) => (variant === 'light' ? '1px solid #e4ddd2' : 'none')};
+  padding: ${({ variant }) => (variant === 'light' ? '4px 0' : '0')};
 `
 
 const StyledTokenName = styled.span<{ active?: boolean }>`

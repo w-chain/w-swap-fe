@@ -1,5 +1,6 @@
 import { ChainId } from '@uniswap/sdk'
 import React from 'react'
+import { useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 
 import styled from 'styled-components'
@@ -20,7 +21,7 @@ import Web3Status from '../Web3Status'
 import { getNativeTokenSymbol } from '../../utils/getNativeTokenSymbol'
 
 
-const HeaderFrame = styled.div`
+const HeaderFrame = styled.div<{ $landing?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -30,6 +31,9 @@ const HeaderFrame = styled.div`
   position: sticky;
   z-index: 10;
   padding-bottom: 0.5rem;
+  background: ${({ $landing }) => ($landing ? 'rgba(246, 243, 236, 0.82)' : 'transparent')};
+  backdrop-filter: ${({ $landing }) => ($landing ? 'blur(18px) saturate(140%)' : 'none')};
+  -webkit-backdrop-filter: ${({ $landing }) => ($landing ? 'blur(18px) saturate(140%)' : 'none')};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     padding: 5px 0 0 0;
     width: calc(100%);
@@ -159,12 +163,14 @@ const NetworkSelectorWrapper = styled.div`
 
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
+  const { pathname } = useLocation()
+  const isLanding = pathname === '/'
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
 
   return (
-    <HeaderFrame>
+    <HeaderFrame $landing={isLanding}>
       <RowBetween style={{ alignItems: 'flex-start' }} padding="1rem 1rem 0 1rem">
         <HeaderElement>
           <Title href=".">

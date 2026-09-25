@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { HashRouter, Route, Switch } from 'react-router-dom'
+import { HashRouter, Route, Switch, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Header from '../components/Header'
@@ -46,11 +46,11 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
 `
 
-const BodyWrapper = styled.div`
+const BodyWrapper = styled.div<{ $landing?: boolean }>`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-top: 120px;
+  padding-top: ${({ $landing }) => ($landing ? '88px' : '120px')};
   align-items: center;
   flex: 1;
   overflow-y: auto;
@@ -91,6 +91,43 @@ const BodyWrapper = styled.div`
   }
 `
 
+function AppRoutes() {
+  const { pathname } = useLocation()
+  const isLanding = pathname === '/'
+
+  return (
+    <BodyWrapper $landing={isLanding}>
+      <Popups />
+      <AppBg $landing={isLanding} />
+      {isLanding ? <LandingHeroGlow /> : <SeamlessGradient />}
+
+      <Web3ReactManager>
+        <Switch>
+          <Route exact strict path="/" component={Landing} />
+          <Route exact strict path="/swap" component={Swap} />
+          <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
+          <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
+          <Route exact strict path="/find" component={PoolFinder} />
+          <Route exact strict path="/pool" component={Pool} />
+          <Route exact strict path="/bridge" component={Bridge} />
+          <Route exact strict path="/create" component={RedirectToAddLiquidity} />
+          <Route exact path="/add" component={AddLiquidity} />
+          <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
+          <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
+          <Route exact strict path="/remove/v1/:address" component={RemoveV1Exchange} />
+          <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
+          <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
+          {/* <Route exact strict path="/migrate/v1" component={MigrateV1} />
+          <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} /> */}
+          <Route component={RedirectPathToSwapOnly} />
+        </Switch>
+      </Web3ReactManager>
+
+      <FishComponent />
+    </BodyWrapper>
+  )
+}
+
 export default function App() {
   return (
     <Suspense fallback={null}>
@@ -102,35 +139,7 @@ export default function App() {
             <HeaderWrapper>
               <Header />
             </HeaderWrapper>
-            <BodyWrapper>
-              <Popups />
-              <AppBg />
-              <SeamlessGradient />
-
-              <Web3ReactManager>
-                <Switch>
-                  <Route exact strict path="/" component={Landing} />
-                  <Route exact strict path="/swap" component={Swap} />
-                  <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
-                  <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
-                  <Route exact strict path="/find" component={PoolFinder} />
-                  <Route exact strict path="/pool" component={Pool} />
-                  <Route exact strict path="/bridge" component={Bridge} />
-                  <Route exact strict path="/create" component={RedirectToAddLiquidity} />
-                  <Route exact path="/add" component={AddLiquidity} />
-                  <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
-                  <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-                  <Route exact strict path="/remove/v1/:address" component={RemoveV1Exchange} />
-                  <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
-                  <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-                  {/* <Route exact strict path="/migrate/v1" component={MigrateV1} />
-                  <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} /> */}
-                  <Route component={RedirectPathToSwapOnly} />
-                </Switch>
-              </Web3ReactManager>
-
-              <FishComponent />
-            </BodyWrapper>
+            <AppRoutes />
           </HeadBodyWrapper>
         </AppWrapper>
       </HashRouter>
@@ -138,14 +147,37 @@ export default function App() {
   )
 }
 
-const AppBg = styled.div`
+const AppBg = styled.div<{ $landing?: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: #fff;
+  background: ${({ $landing }) => ($landing ? '#f6f3ec' : '#fff')};
   overflow: hidden;
+`
+
+const LandingHeroGlow = styled.div`
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 520px;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    left: -10%;
+    width: 450px;
+    height: 450px;
+    border-radius: 50%;
+    opacity: 0.4;
+    filter: blur(64px);
+    background: linear-gradient(135deg, #1faeff, #043f83);
+  }
 `
 
 const SeamlessGradient = styled.div`

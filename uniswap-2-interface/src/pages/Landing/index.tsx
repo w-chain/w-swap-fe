@@ -24,11 +24,7 @@ import { useExpertModeManager } from '../../state/user/hooks'
 import { LinkStyledButton } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
-import FishIcon from '../../assets/svg/fish-icon.svg'
-import ConnectWithUs from '../../components/connectWithUs/ConnectWithUs'
 import { Footer } from '../../components/Footer'
-import ReviewCards from '../../components/ReviewCards/ReviewCards'
-
 const STATS = [
   { value: '240K+', label: 'Completed Txns' },
   { value: '5K+', label: 'Active Wallets' },
@@ -45,27 +41,33 @@ const COST_COMPARISON = [
 const FEATURES = [
   {
     title: 'Unified Liquidity',
-    body: 'Aggregated pools across the W Chain ecosystem deliver the best price on every swap.'
+    body:
+      'Aggregated pools across the W Chain ecosystem deliver the best price on every swap, with zero fragmentation.'
   },
   {
     title: 'Sub-Second Routing',
-    body: 'Smart routing finds optimal paths in milliseconds for fast trade settlement.'
+    body: 'Smart routing engine finds optimal paths in milliseconds — settle your trade in under 75 seconds.'
   },
   {
     title: 'Multi-Validator Bridge',
-    body: 'Move assets from Ethereum, BNB Chain, Polygon and beyond into W-SWAP DEX.'
+    body:
+      'Move assets natively from Ethereum, BNB Chain, Polygon and beyond into W-SWAP DEX with audited security.'
   },
   {
     title: 'Audited & Non-Custodial',
-    body: 'Independently audited contracts. Your keys, your tokens, always.'
+    body:
+      'Independently audited smart contracts. Your keys, your tokens — always. No custodian, no intermediaries.'
   }
 ]
 
 const STEPS = [
   { title: 'Connect Wallet', body: 'MetaMask, WalletConnect, Trust Wallet - one click.' },
-  { title: 'Choose Tokens', body: 'Pick input and output tokens to route your trade.' },
-  { title: 'Confirm & Trade', body: 'Review quote and confirm. Most swaps settle in about 75 seconds.' }
+  { title: 'Confirm & Trade', body: 'Smart router finds best price across pools.' },
+  { title: 'Choose Tokens', body: 'Settles in ~75 sec with near-zero fees.' }
 ]
+
+const COMPARISON_INTRO =
+  'W-SWAP DEX is an AMM DEX: you trade against liquidity pools, LPs earn 0.3% on every swap, and the trade settles on W Chain. Compare the numbers a trader feels — gas to execute the swap, the pool fee, and how fast the trade confirms.'
 
 export default function Landing() {
   const theme = useContext(ThemeContext)
@@ -156,20 +158,44 @@ export default function Landing() {
   return (
     <>
       <BodyWrapper>
-        <SeamlessWrapper>
-          <p>Seamless Swaps. Unified Liquidity.</p>
-          <p>Built for Utility​​ ​Tokens.​​​</p>
-        </SeamlessWrapper>
-        <AppBody>
-          <TradingCard>
-            <LandingTabs>
-              <TabPill active>SWAP</TabPill>
-              <TabPill>POOL</TabPill>
-              <TabPill>BRIDGE</TabPill>
-            </LandingTabs>
-            <Wrapper id="swap-page">
-              <AutoColumn gap={'sm'}>
-              <CurrencyInputPanel
+        <HeroSection>
+          <HeroInner>
+            <HeroCopy>
+              <PillBadge>
+                <BadgeDot />
+                W-SWAP DEX
+              </PillBadge>
+              <HeroTitle>
+                <span>Seamless Swaps,</span>
+                <span>Unified Liquidity</span>
+              </HeroTitle>
+              <HeroStats>
+                {STATS.map(item => (
+                  <HeroStat key={item.label}>
+                    <strong>{item.value}</strong>
+                    <span>{item.label}</span>
+                  </HeroStat>
+                ))}
+              </HeroStats>
+            </HeroCopy>
+
+            <WidgetColumn id="swap-widget">
+              <AppBody plain>
+                <TradingCard>
+                  <LandingTabs>
+                    <TabPill active type="button">
+                      swap
+                    </TabPill>
+                    <TabPill type="button" onClick={() => history.push('/pool')}>
+                      pool
+                    </TabPill>
+                    <TabPill type="button" onClick={() => history.push('/bridge')}>
+                      bridge
+                    </TabPill>
+                  </LandingTabs>
+                  <Wrapper id="swap-page">
+                    <AutoColumn gap={'sm'}>
+                      <CurrencyInputPanel
                 label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'}
                 value={formattedAmounts[Field.INPUT]}
                 showMaxButton={!atMaxAmountInput}
@@ -181,18 +207,18 @@ export default function Landing() {
                 id="swap-currency-input"
                 variant="light"
               />
-              <AutoColumn justify="space-between">
-                <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '4px 1rem 0 1rem' }}>
-                  <ArrowWrapper clickable>
-                    <img
-                      src={FishIcon}
-                      alt="fish"
-                      onClick={() => {
-                        setApprovalSubmitted(false) // reset 2 step UI for approvals
-                        onSwitchTokens()
-                      }}
-                    />
-                  </ArrowWrapper>
+                      <AutoColumn justify="space-between">
+                        <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '4px 0' }}>
+                          <FlipButton
+                            type="button"
+                            aria-label="Flip tokens"
+                            onClick={() => {
+                              setApprovalSubmitted(false)
+                              onSwitchTokens()
+                            }}
+                          >
+                            ⇄
+                          </FlipButton>
                   {recipient === null && !showWrap && isExpertMode ? (
                     <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
                       + Add a send (optional)
@@ -226,39 +252,38 @@ export default function Landing() {
                 </>
               ) : null}
 
-              {showWrap ? null : (
-                <PriceRow>
-                  <Text fontWeight={500} fontSize={14} color="#172539">
-                    Price
-                  </Text>
-                  <TradePrice price={trade?.executionPrice} showInverted={false} setShowInverted={() => undefined} />
-                </PriceRow>
-              )}
-              </AutoColumn>
-              <BottomGrouping>
-                <LaunchButton onClick={handleNavigateToSwap}>Get Started</LaunchButton>
-              </BottomGrouping>
-            </Wrapper>
-          </TradingCard>
-        </AppBody>
+                      {showWrap ? null : (
+                        <PriceRow>
+                          <Text fontWeight={400} fontSize={14} color="#1a2430">
+                            Price
+                          </Text>
+                          <TradePrice
+                            price={trade?.executionPrice}
+                            showInverted={false}
+                            setShowInverted={() => undefined}
+                          />
+                        </PriceRow>
+                      )}
+                    </AutoColumn>
+                    <BottomGrouping>
+                      <LaunchButton onClick={handleNavigateToSwap}>
+                        Get Started <span aria-hidden>→</span>
+                      </LaunchButton>
+                    </BottomGrouping>
+                  </Wrapper>
+                </TradingCard>
+              </AppBody>
+            </WidgetColumn>
+          </HeroInner>
+        </HeroSection>
 
-        <MetricsSection>
-          {STATS.map(item => (
-            <MetricCard key={item.label}>
-              <h3>{item.value}</h3>
-              <p>{item.label}</p>
-            </MetricCard>
-          ))}
-        </MetricsSection>
-
-        <ContentSection>
-          <SectionTitle>What a swap actually costs</SectionTitle>
-          <SectionSubTitle>
-            Compare gas, pool fee, and confirmation time so traders can evaluate execution quality clearly.
-          </SectionSubTitle>
+        <SurfaceBand>
+          <ContentSection>
+            <SectionTitle>What a swap actually costs</SectionTitle>
+            <SectionSubTitle>{COMPARISON_INTRO}</SectionSubTitle>
           <ComparisonGrid>
             {COST_COMPARISON.map(item => (
-              <ComparisonCard key={item.title}>
+              <ComparisonCard key={item.title} $highlight={item.title === 'W-SWAP DEX'}>
                 <h4>{item.title}</h4>
                 <label>Typical swap gas</label>
                 <ValueText>{item.gas}</ValueText>
@@ -269,10 +294,15 @@ export default function Landing() {
               </ComparisonCard>
             ))}
           </ComparisonGrid>
-        </ContentSection>
+          </ContentSection>
+        </SurfaceBand>
 
-        <ContentSection>
-          <SectionTitle>A DEX engineered for payments-grade performance</SectionTitle>
+        <ContentSection style={{ marginTop: '56px', marginBottom: '56px' }}>
+          <SectionTitle>
+            A DEX engineered for
+            <br />
+            payments-grade performance
+          </SectionTitle>
           <FeatureGrid>
             {FEATURES.map(item => (
               <FeatureCard key={item.title}>
@@ -283,25 +313,36 @@ export default function Landing() {
           </FeatureGrid>
         </ContentSection>
 
-        <ContentSection>
-          <SectionTitle>Swap in three steps</SectionTitle>
-          <StepGrid>
-            {STEPS.map((item, index) => (
-              <StepCard key={item.title}>
-                <span>{index + 1}</span>
-                <h4>{item.title}</h4>
-                <p>{item.body}</p>
-              </StepCard>
-            ))}
-          </StepGrid>
-        </ContentSection>
+        <StepsBand>
+          <ContentSection>
+            <SectionTitle>Swap in three steps</SectionTitle>
+            <StepGrid>
+              {STEPS.map(item => (
+                <StepCard key={item.title}>
+                  <h4>{item.title}</h4>
+                  <p>{item.body}</p>
+                </StepCard>
+              ))}
+            </StepGrid>
+          </ContentSection>
+        </StepsBand>
 
-        <ReviewCards />
-
-        <Marginer />
+        <CtaSection>
+          <CtaCard>
+            <SectionTitle>Start trading on W-SWAP DEX</SectionTitle>
+            <SectionSubTitle>
+              Join thousands of traders moving value at the speed of payments - not the speed of blocks.
+            </SectionSubTitle>
+            <CtaActions>
+              <CtaPrimary href="#swap-widget">Launch W-SWAP DEX →</CtaPrimary>
+              <CtaOutline href="https://docs.w-chain.com/" target="_blank" rel="noopener noreferrer">
+                Read the docs →
+              </CtaOutline>
+            </CtaActions>
+          </CtaCard>
+        </CtaSection>
       </BodyWrapper>
 
-      <ConnectWithUs />
       <Footer />
     </>
   )
@@ -324,110 +365,231 @@ const BodyWrapper = styled.div`
   z-index: 1;
 `
 
-const Marginer = styled.div`
-  margin-top: 5rem;
+const HeroSection = styled.section`
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 24px 20px 48px;
+`
+
+const HeroInner = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  width: min(1240px, 100%);
+  margin: 0 auto;
+
+  @media (min-width: 1024px) {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 0 24px;
+  }
+`
+
+const HeroCopy = styled.div`
+  width: 100%;
+  max-width: 599px;
+
+  @media (min-width: 1024px) {
+    margin-top: 40px;
+  }
+`
+
+const PillBadge = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  padding: 0 14px;
+  border-radius: 9999px;
+  border: 1px solid #e4ddd2;
+  background: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #5c6a78;
+  margin-bottom: 24px;
+`
+
+const BadgeDot = styled.span`
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #12b39c, #3b82f6);
+  flex-shrink: 0;
+`
+
+const HeroTitle = styled.h1`
+  margin: 0;
+  font-size: clamp(2.25rem, 5vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: #1a2430;
+
+  span {
+    display: block;
+  }
+`
+
+const HeroStats = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px 48px;
+  margin-top: 48px;
+
+  @media (min-width: 1024px) {
+    margin-top: 100px;
+  }
+`
+
+const HeroStat = styled.div`
+  strong {
+    display: block;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a2430;
+  }
+
+  span {
+    display: block;
+    margin-top: 4px;
+    font-size: 14px;
+    color: #5c6a78;
+  }
+`
+
+const WidgetColumn = styled.div`
+  width: 100%;
+  max-width: 500px;
+  flex-shrink: 0;
+  scroll-margin-top: 96px;
+
+  @media (min-width: 1024px) {
+    margin-left: auto;
+  }
 `
 
 const TradingCard = styled.div`
-  width: min(860px, calc(100vw - 40px));
+  width: 100%;
   margin: 0 auto;
   background: #ffffff;
-  border: 1px solid #e6e2d8;
-  border-radius: 22px;
-  padding: 26px 24px 28px;
-  box-shadow: 0 14px 44px rgba(26, 36, 48, 0.08);
+  border: 1px solid #e4ddd2;
+  border-radius: 16px;
+  padding: 35px 35px 50px;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset, 0 18px 40px -28px rgba(26, 36, 48, 0.18);
 `
 
 const LandingTabs = styled.div`
   display: flex;
   justify-content: center;
-  gap: 24px;
-  margin-bottom: 22px;
+  gap: 16px;
+  margin-bottom: 24px;
 `
 
 const TabPill = styled.button<{ active?: boolean }>`
-  border-radius: 9999px;
-  border: 1px solid ${({ active }) => (active ? '#43baa8' : '#d9d7d0')};
-  color: ${({ active }) => (active ? '#2ba491' : '#6f747a')};
-  background: #fff;
-  padding: 8px 28px;
-  font-size: 1.5rem;
-  font-weight: 500;
-  cursor: default;
+  width: 80px;
+  height: 24px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0;
+  ${({ active }) =>
+    active
+      ? `
+    border: 1px solid transparent;
+    background-image: linear-gradient(#fff, #fff), linear-gradient(135deg, #12b39c, #2f6fed);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    color: #0e9a86;
+  `
+      : `
+    border: 1px solid #e4ddd2;
+    background: #fff;
+    color: #5c6a78;
+  `}
+`
+
+const FlipButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid #e4ddd2;
+  background: #ffffff;
+  color: #9ca3af;
+  font-size: 18px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    border-color: #22d3ee;
+    color: #1a2430;
+  }
 `
 
 const PriceRow = styled(RowBetween)`
-  margin-top: 14px;
-  padding: 0 8px;
+  margin-top: 28px;
+  padding: 0 4px;
 `
 
 const LaunchButton = styled(ButtonPrimaryDark)`
   width: 100%;
-  min-height: 54px;
-  border-radius: 10px;
+  min-height: 42px;
+  border-radius: 5px;
   border: none;
-  color: #101b2d;
-  font-size: 2rem;
-  font-weight: 700;
-  background: linear-gradient(90deg, #18b3a8 0%, #4485e9 100%);
+  color: #060a0d;
+  font-size: 14px;
+  font-weight: 600;
+  background: linear-gradient(90deg, #12b39c 0%, #3b82f6 100%);
 
   &:hover {
-    opacity: 0.95;
+    opacity: 0.9;
   }
+`
+
+const SurfaceBand = styled.div`
+  width: 100%;
+  background: #ffffff;
+  padding: 56px 0 72px;
+`
+
+const StepsBand = styled.div`
+  width: 100%;
+  background: #f6f3ec;
+  padding: 56px 0 72px;
 `
 
 const ContentSection = styled.section`
   width: min(1100px, calc(100% - 32px));
-  margin-top: 56px;
+  margin: 0 auto;
 `
 
 const SectionTitle = styled.h2`
-  color: #12365f;
-  font-size: 2rem;
+  color: #1a2430;
+  font-size: clamp(1.75rem, 4vw, 3rem);
   font-weight: 700;
   text-align: center;
   margin: 0;
+  line-height: 1.15;
 `
 
 const SectionSubTitle = styled.p`
-  color: #4f627a;
+  color: #85919a;
   text-align: center;
   margin: 16px auto 0;
   max-width: 760px;
   line-height: 1.6;
-`
-
-const MetricsSection = styled.section`
-  width: min(1100px, calc(100% - 32px));
-  margin-top: 40px;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-`
-
-const MetricCard = styled.div`
-  background: #ffffff;
-  border: 1px solid #e2ebf7;
-  border-radius: 16px;
-  padding: 20px;
-  text-align: center;
-  box-shadow: 0 8px 20px rgba(18, 54, 95, 0.06);
-
-  h3 {
-    margin: 0;
-    color: #12365f;
-    font-size: 2rem;
-  }
-
-  p {
-    margin: 8px 0 0;
-    color: #5f6f84;
-    font-weight: 600;
-  }
+  font-size: 14px;
 `
 
 const ComparisonGrid = styled.div`
@@ -445,40 +607,47 @@ const ComparisonGrid = styled.div`
   }
 `
 
-const ComparisonCard = styled.div`
+const ComparisonCard = styled.div<{ $highlight?: boolean }>`
   background: #ffffff;
-  border: 1px solid #e3ecf8;
-  border-radius: 14px;
-  padding: 18px;
+  border: 1px solid #e4ddd2;
+  border-radius: 16px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-height: 320px;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset, 0 18px 40px -28px rgba(26, 36, 48, 0.12);
+  ${({ $highlight }) => $highlight && 'box-shadow: 0 0 0 1px rgba(14, 154, 134, 0.3);'}
 
   h4 {
     margin: 0 0 8px;
-    color: #12365f;
-    font-size: 1.15rem;
+    color: #1a2430;
+    font-size: 1.125rem;
+    font-weight: 600;
   }
 
   label {
-    color: #60748f;
-    font-size: 0.84rem;
-    font-weight: 600;
+    color: #1a2430;
+    font-size: 0.875rem;
+    font-weight: 500;
   }
 `
 
 const ValueText = styled.span`
-  color: #213247;
-  font-size: 0.95rem;
-  font-weight: 700;
-  margin-bottom: 6px;
+  color: #85919a;
+  font-size: 0.875rem;
+  font-weight: 400;
+  margin-bottom: 8px;
 `
 
 const FeatureGrid = styled.div`
-  margin-top: 24px;
+  margin-top: 48px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: 24px 40px;
+  max-width: 808px;
+  margin-left: auto;
+  margin-right: auto;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -487,28 +656,33 @@ const FeatureGrid = styled.div`
 
 const FeatureCard = styled.div`
   background: #ffffff;
-  border: 1px solid #e3ecf8;
-  border-radius: 14px;
-  padding: 18px;
-  box-shadow: 0 6px 18px rgba(18, 54, 95, 0.06);
+  border: 1px solid #e4ddd2;
+  border-radius: 16px;
+  padding: 28px;
+  min-height: 192px;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset, 0 18px 40px -28px rgba(26, 36, 48, 0.12);
 
   h4 {
     margin: 0;
-    color: #12365f;
+    color: #1a2430;
+    font-size: 1rem;
+    font-weight: 600;
   }
 
   p {
-    margin: 10px 0 0;
-    color: #4e6079;
+    margin: 8px 0 0;
+    color: #5c6a78;
     line-height: 1.6;
+    font-size: 0.875rem;
   }
 `
 
 const StepGrid = styled.div`
-  margin-top: 24px;
+  margin-top: 48px;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  gap: 24px;
+  text-align: center;
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
@@ -516,65 +690,80 @@ const StepGrid = styled.div`
 `
 
 const StepCard = styled.div`
-  background: #ffffff;
-  border: 1px solid #e3ecf8;
-  border-radius: 14px;
-  padding: 18px;
-
-  span {
-    display: inline-flex;
-    width: 28px;
-    height: 28px;
-    border-radius: 9999px;
-    align-items: center;
-    justify-content: center;
-    background: #12365f;
-    color: #fff;
-    font-size: 0.9rem;
-    font-weight: 700;
-  }
-
   h4 {
-    margin: 10px 0 0;
-    color: #12365f;
+    margin: 0;
+    color: #1a2430;
+    font-size: 1rem;
+    font-weight: 600;
   }
 
   p {
-    margin: 10px 0 0;
-    color: #52667f;
-    line-height: 1.6;
+    margin: 14px auto 0;
+    max-width: 200px;
+    color: #9ca3af;
+    line-height: 1.5;
+    font-size: 0.875rem;
   }
 `
 
-const SeamlessWrapper = styled.div`
+const CtaSection = styled.section`
+  width: 100%;
+  padding: 56px 20px 80px;
+`
+
+const CtaCard = styled.div`
+  width: min(1240px, 100%);
+  margin: 0 auto;
+  padding: 64px 24px;
+  border-radius: 16px;
+  border: 1px solid #e4ddd2;
+  background: #ffffff;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset, 0 18px 40px -28px rgba(26, 36, 48, 0.18);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  height: fit-content;
-  z-index: 100;
-  margin-top: -5px;
+`
 
-  p {
-    font-family: Montserrat;
-    font-weight: 600;
-    font-size: 2.5rem;
-    margin: 0;
-    line-height: 1.2;
-    color: #fff;
+const CtaActions = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 40px;
+`
+
+const ctaButtonBase = `
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 176px;
+  height: 40px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+`
+
+const CtaPrimary = styled.a`
+  ${ctaButtonBase}
+  color: #fff;
+  background: linear-gradient(90deg, #2f6fed, #1e4fd8);
+  border: none;
+
+  &:hover {
+    opacity: 0.92;
   }
+`
 
-  @media (max-width: 1024px) {
-    p {
-      font-size: 2rem;
-      text-align: center;
-    }
-  }
+const CtaOutline = styled.a`
+  ${ctaButtonBase}
+  color: #1a2430;
+  border: 1px solid #cfc6b8;
+  background: transparent;
 
-  @media (max-width: 768px) {
-    p {
-      font-size: 1.8rem;
-      text-align: center;
-    }
+  &:hover {
+    transform: translateY(-2px);
+    border-color: #0e9a86;
   }
 `

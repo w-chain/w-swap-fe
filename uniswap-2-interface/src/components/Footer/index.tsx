@@ -3,26 +3,28 @@ import styled from 'styled-components'
 import { FaDiscord, FaLinkedin, FaTelegramPlane } from 'react-icons/fa'
 
 const MAIN_TEXT =
-  'W Swap is a next-generation decentralized exchange (DEX) on the W Chain ecosystem, delivering lightning-fast, secure, and cost-efficient crypto swaps.'
+  'A cutting-edge hybrid blockchain, built for payments, speed, and scalability.'
 
 const FooterWrapper = styled.footer`
   position: relative;
   min-height: 60px;
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
-  gap: 32px;
+  gap: 0;
   width: 100%;
-  background: linear-gradient(180deg, #004c99 0%, #00264d 100%);
-  color: #fff;
-  align-items: center;
-  margin-top: 3rem;
+  background: #ffffff;
+  color: #1a2430;
+  border-top: 1px solid #e4ddd2;
+  margin-top: 0;
 `
 
 const Description = styled.p`
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 1.5;
+  color: #5c6a78;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.6;
+  max-width: 220px;
 `
 
 // Try to import FaXTwitter from fa6
@@ -53,7 +55,7 @@ const socialLinks = [
 const FooterGrid = styled.div`
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  padding: 42px 52px;
+  padding: 64px 52px 48px;
   gap: 48px;
   width: 100%;
   align-items: flex-start;
@@ -86,31 +88,25 @@ const Section = styled.div`
 `
 
 const SectionTitle = styled.div`
-  font-weight: 700;
-  font-size: 20px;
-  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 12px;
+  margin-bottom: 12px;
+  color: #1a2430;
 `
 
 const SectionLine = styled.div`
-  width: 100%;
-  max-width: 180px;
-  height: 2px;
-  background: #e6f3ff;
-  margin-bottom: 16px;
-
-  @media (max-width: 768px) {
-    margin: 0 auto 16px;
-  }
+  display: none;
 `
 
 const SectionLink = styled.a`
-  color: #fff;
+  color: #5c6a78;
   text-decoration: none;
-  font-size: 0.875rem;
-  font-weight: 500;
-  margin-bottom: 12px;
+  font-size: 0.75rem;
+  font-weight: 400;
+  margin-bottom: 8px;
+  line-height: 1.25rem;
   &:hover {
-    color: #e6f3ff;
+    color: #0e9a86;
   }
 `
 
@@ -144,14 +140,14 @@ const SocialIconBox = styled.a`
 
 const BottomBar = styled.div`
   width: 100%;
-  background: #00264d;
-  color: #e6f3ff;
+  background: #ffffff;
+  color: #5c6a78;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 32px;
-  border-radius: 0 0 24px 24px;
-  font-size: 15px;
+  justify-content: center;
+  padding: 24px 32px;
+  border-top: 1px solid #e4ddd2;
+  font-size: 12px;
   margin-top: 0;
 
   @media (max-width: 768px) {
@@ -251,7 +247,7 @@ export function Footer() {
         </Section>
       </FooterGrid>
       <BottomBar>
-        <span>© Copyright 2025 WP Worldwide. All Rights Reserved.</span>
+        <span>© 2026 W Chain. Infrastructure for builders.</span>
       </BottomBar>
     </FooterWrapper>
   )
