@@ -23,7 +23,9 @@ import { Dots } from '../swap/styleds'
 import { getCurrencySymbol } from '../../utils/getNativeTokenSymbol'
 import { getPoolLink } from '../../utils'
 import { useLiquidityPositionAnalytics } from '../../hooks/useLiquidityPositionAnalytics'
+import { usePositionPnlPercent } from '../../hooks/usePortfolioTotalPnl'
 import { formatUsd } from '../../utils/formatUsd'
+import PnlPercentBadge from '../Portfolio/PnlPercentBadge'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -41,6 +43,8 @@ interface PositionCardProps {
   pair: Pair
   showUnwrapped?: boolean
   border?: string
+  /** Show ~24h P/L % (portfolio page; uses local value history). */
+  showPnl?: boolean
 }
 
 export function MinimalPositionCard({ pair, showUnwrapped = false, border }: PositionCardProps) {
@@ -128,7 +132,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
   )
 }
 
-export default function FullPositionCard({ pair, border }: PositionCardProps) {
+export default function FullPositionCard({ pair, border, showPnl }: PositionCardProps) {
   const { account, chainId } = useActiveWeb3React()
 
   const currency0 = unwrappedToken(pair.token0)
@@ -153,6 +157,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
     latestOraclePrice,
     oracle
   } = useLiquidityPositionAnalytics(pair)
+  const { percent: pnlPercent } = usePositionPnlPercent(pair, showPnl ? positionValueUsd : undefined)
 
   const poolTokenPercentage = poolShare
 
@@ -178,6 +183,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
               <Text fontWeight={500} fontSize={12} color="#5c6a78">
                 {poolTokenPercentage ? `${poolTokenPercentage.toFixed(2)}% pool` : '—'}
               </Text>
+              {showPnl ? <PnlPercentBadge percent={pnlPercent} suffix=" (24h)" /> : null}
             </AutoColumn>
             {showMore ? (
               <ChevronUp size="20" style={{ marginLeft: '10px' }} strokeWidth={2} />
@@ -196,6 +202,14 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                 {formatUsd(positionValueUsd)}
               </Text>
             </FixedHeightRow>
+            {showPnl ? (
+              <FixedHeightRow>
+                <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                  P/L (24h est.)
+                </Text>
+                <PnlPercentBadge percent={pnlPercent} suffix="" />
+              </FixedHeightRow>
+            ) : null}
             <FixedHeightRow>
               <Text fontSize={14} fontWeight={600} color="#5c6a78">
                 Pool TVL {valueSource === 'oracle' ? '(oracle)' : '(est.)'}

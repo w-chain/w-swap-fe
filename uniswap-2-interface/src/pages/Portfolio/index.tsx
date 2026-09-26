@@ -36,7 +36,7 @@ export default function Portfolio() {
           <Text color="#1a2430" fontWeight={700} fontSize={20}>
             Portfolio
           </Text>
-          <Question text="Your W-Swap portfolio: wallet balances, liquidity positions, oracle analytics, and recent transactions from this browser." />
+          <Question text="Portfolio P/L (24h) compares current LP value to snapshots saved in this browser (~24h ago). Green ▲ is gain, red ▼ is loss." />
         </RowBetween>
 
         <PortfolioQuickActions />
@@ -47,7 +47,7 @@ export default function Portfolio() {
           <>
             <PortfolioWalletSummary pairs={pairs} />
             <PortfolioMarketPrices />
-            {pairs.length > 0 && !isLoading ? <LiquidityOverview pairs={pairs} /> : null}
+            {pairs.length > 0 && !isLoading ? <LiquidityOverview pairs={pairs} showPnl /> : null}
             <PortfolioTokenBalances />
           </>
         )}
@@ -67,7 +67,9 @@ export default function Portfolio() {
               <Dots style={{ color: '#5c6a78', fontWeight: 500 }}>Loading</Dots>
             </EcosystemMessageCard>
           ) : pairs.length > 0 ? (
-            pairs.map(pair => <FullPositionCard key={pair.liquidityToken.address} pair={pair} />)
+            pairs.map(pair => (
+              <FullPositionCard key={pair.liquidityToken.address} pair={pair} showPnl />
+            ))
           ) : (
             <EcosystemMessageCard>
               No liquidity positions yet.{' '}

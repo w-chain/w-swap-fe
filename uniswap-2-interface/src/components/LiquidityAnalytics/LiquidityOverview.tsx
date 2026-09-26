@@ -5,8 +5,10 @@ import styled from 'styled-components'
 import { RowBetween } from '../Row'
 import { EcosystemSection } from '../ecosystem/styled'
 import { useLiquidityPortfolioAnalytics } from '../../hooks/useLiquidityPortfolioAnalytics'
+import { usePortfolioTotalPnl } from '../../hooks/usePortfolioTotalPnl'
 import { formatUsd } from '../../utils/formatUsd'
 import Question from '../QuestionHelper'
+import PnlPercentBadge from '../Portfolio/PnlPercentBadge'
 
 const StatGrid = styled.div`
   display: grid;
@@ -49,9 +51,11 @@ const Note = styled.p`
 
 interface LiquidityOverviewProps {
   pairs: Pair[]
+  showPnl?: boolean
 }
 
-export default function LiquidityOverview({ pairs }: LiquidityOverviewProps) {
+export default function LiquidityOverview({ pairs, showPnl }: LiquidityOverviewProps) {
+  const totalPnl = usePortfolioTotalPnl(pairs)
   const {
     positionCount,
     totalPositionValueUsd,
@@ -80,6 +84,11 @@ export default function LiquidityOverview({ pairs }: LiquidityOverviewProps) {
         <StatCard>
           <StatLabel>Your positions (est.)</StatLabel>
           <StatValue>{loading ? '…' : formatUsd(totalPositionValueUsd)}</StatValue>
+          {showPnl && !loading ? (
+            <div style={{ marginTop: 6 }}>
+              <PnlPercentBadge percent={totalPnl.percent} loading={totalPnl.loading && !totalPnl.ready} suffix=" (24h)" />
+            </div>
+          ) : null}
         </StatCard>
         <StatCard>
           <StatLabel>Active pools</StatLabel>

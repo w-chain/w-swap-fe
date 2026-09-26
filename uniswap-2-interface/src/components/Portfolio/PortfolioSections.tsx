@@ -7,6 +7,8 @@ import { fetchOracleTokenPrice } from '../../data/wSwapOracle'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
 import { useLiquidityPortfolioAnalytics } from '../../hooks/useLiquidityPortfolioAnalytics'
+import { usePortfolioTotalPnl } from '../../hooks/usePortfolioTotalPnl'
+import PnlPercentBadge from './PnlPercentBadge'
 import { useAllTokenBalances, useETHBalances } from '../../state/wallet/hooks'
 import { useAllTransactions } from '../../state/transactions/hooks'
 import { getEtherscanLink, shortenAddress } from '../../utils'
@@ -53,6 +55,7 @@ export function PortfolioWalletSummary({ pairs }: { pairs: Pair[] }) {
   const { account, chainId } = useActiveWeb3React()
   const ethBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const analytics = useLiquidityPortfolioAnalytics(pairs)
+  const totalPnl = usePortfolioTotalPnl(pairs)
 
   if (!account) {
     return <EcosystemMessageCard>Connect your wallet to view portfolio summary.</EcosystemMessageCard>
@@ -84,6 +87,18 @@ export function PortfolioWalletSummary({ pairs }: { pairs: Pair[] }) {
           <Text fontSize={18} fontWeight={700} color="#1a2430" mt="4px">
             {analytics.loading ? '…' : formatUsd(analytics.totalPositionValueUsd)}
           </Text>
+        </StatCard>
+        <StatCard>
+          <Text fontSize={11} fontWeight={600} color="#5c6a78">
+            LP P/L (24H)
+          </Text>
+          <div style={{ marginTop: 8 }}>
+            <PnlPercentBadge
+              percent={totalPnl.percent}
+              loading={totalPnl.loading && !totalPnl.ready}
+              suffix=""
+            />
+          </div>
         </StatCard>
         <StatCard>
           <Text fontSize={11} fontWeight={600} color="#5c6a78">
