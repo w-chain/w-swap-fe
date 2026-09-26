@@ -20,6 +20,7 @@ import NetworkSelector from '../NetworkSelector'
 import Row, { RowBetween } from '../Row'
 import Web3Status from '../Web3Status'
 import { getNativeTokenSymbol } from '../../utils/getNativeTokenSymbol'
+import AppNav from './AppNav'
 
 
 const HeaderFrame = styled.div<{ $landing?: boolean }>`
@@ -45,10 +46,9 @@ const HeaderFrame = styled.div<{ $landing?: boolean }>`
 const HeaderElement = styled.div`
   display: flex;
   align-items: center;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
 `
 
 const Title = styled.a`
@@ -68,7 +68,7 @@ const Title = styled.a`
 const TitleText = styled(Row)`
   width: fit-content;
   white-space: nowrap;
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
   `};
 `
@@ -182,6 +182,7 @@ export default function Header() {
               <img style={{ marginLeft: '4px', marginTop: '4px' }} src={isDark ? WordmarkDark : Wordmark} alt="logo" />
             </TitleText>
           </Title>
+          <AppNav />
         </HeaderElement>
         <HeaderControls>
           <NetworkSelectorWrapper>

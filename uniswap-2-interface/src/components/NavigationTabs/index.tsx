@@ -28,7 +28,9 @@ const StyledNavLink = styled(NavLink).attrs({
   outline: none;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   text-decoration: none;
-  width: 80px;
+  width: auto;
+  min-width: 72px;
+  padding: 0 10px;
   height: 24px;
   border-radius: 20px;
   font-size: 10px;
@@ -64,16 +66,30 @@ const StyledArrowLeft = styled(ArrowLeft)`
   color: ${({ theme }) => theme.text1};
 `
 
-export function SwapPoolTabs({ active, landing }: { active: 'swap' | 'pool' | 'bridge'; landing?: boolean }) {
+export function SwapPoolTabs({
+  active,
+  landing
+}: {
+  active: 'swap' | 'pool' | 'portfolio' | 'bridge'
+  landing?: boolean
+}) {
   const { t } = useTranslation()
   return (
     <div style={{ position: 'relative' }}>
-      <Tabs style={{ marginBottom: '24px', zIndex: 2 }}>
+      <Tabs style={{ marginBottom: '24px', zIndex: 2, flexWrap: 'wrap', gap: 8 }}>
         <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => active === 'swap'} disabled={landing}>
           {t('swap')}
         </StyledNavLink>
         <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={() => active === 'pool'} disabled={landing}>
           {t('pool')}
+        </StyledNavLink>
+        <StyledNavLink
+          id={`portfolio-nav-link`}
+          to={'/portfolio'}
+          isActive={() => active === 'portfolio'}
+          disabled={landing}
+        >
+          {t('portfolio')}
         </StyledNavLink>
         <StyledNavLink id={`bridge-nav-link`} to={'/bridge'} isActive={() => active === 'bridge'} disabled={landing}>
           {t('bridge')}

@@ -11,6 +11,7 @@ import { AutoRow, RowBetween } from '../../components/Row'
 import { ArrowWrapper, BottomGrouping, Wrapper } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
 import { useHistory } from 'react-router-dom'
+import { WAVE_FARM_URL, WCO_ECOSYSTEM_URL } from '../../constants/ecosystemLinks'
 
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
@@ -189,9 +190,18 @@ export default function Landing() {
                     <TabPill type="button" onClick={() => history.push('/pool')}>
                       pool
                     </TabPill>
+                    <TabPill type="button" onClick={() => history.push('/portfolio')}>
+                      portfolio
+                    </TabPill>
                     <TabPill type="button" onClick={() => history.push('/bridge')}>
                       bridge
                     </TabPill>
+                    <TabLink href={WCO_ECOSYSTEM_URL} target="_blank" rel="noopener noreferrer">
+                      wco
+                    </TabLink>
+                    <TabLink href={WAVE_FARM_URL} target="_blank" rel="noopener noreferrer">
+                      wave farm
+                    </TabLink>
                   </LandingTabs>
                   <Wrapper id="swap-page">
                     <AutoColumn gap={'sm'}>
@@ -487,8 +497,32 @@ const TradingCard = styled.div`
 const LandingTabs = styled.div`
   display: flex;
   justify-content: center;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-bottom: 24px;
+`
+
+const TabLink = styled.a`
+  min-width: 72px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0 8px;
+  text-decoration: none;
+  border: 1px solid #e4ddd2;
+  background: #fff;
+  color: #5c6a78;
+
+  &:hover {
+    color: #0e9a86;
+  }
 `
 
 const TabPill = styled.button<{ active?: boolean }>`
