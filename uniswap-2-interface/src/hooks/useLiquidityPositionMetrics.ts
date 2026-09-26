@@ -5,6 +5,7 @@ import { useActiveWeb3React } from '../hooks'
 import { useOracleNativeUsdPrice } from './useOracleNativeUsdPrice'
 import { useStableUsdPrice } from './useStableUsdPrice'
 import { useTokenBalance } from '../state/wallet/hooks'
+import { useUserTotalLpBalance } from './useWaveFarmStakedLp'
 import { estimatePairTvlUsd, estimatePositionValueUsd } from '../utils/estimateLiquidityUsd'
 import { unwrappedToken } from '../utils/wrappedCurrency'
 
@@ -42,7 +43,8 @@ export function useLiquidityPositionMetrics(pair: Pair): LiquidityPositionMetric
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)
 
-  const userPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
+  const walletPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
+  const { total: userPoolBalance } = useUserTotalLpBalance(pair.liquidityToken, walletPoolBalance)
   const totalPoolTokens = useTotalSupply(pair.liquidityToken)
 
   const price0 = useStableUsdPrice(currency0)

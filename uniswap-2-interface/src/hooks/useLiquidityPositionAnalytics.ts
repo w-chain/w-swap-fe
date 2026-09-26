@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { useTotalSupply } from '../data/TotalSupply'
 import { useActiveWeb3React } from '../hooks'
 import { useTokenBalance } from '../state/wallet/hooks'
+import { useUserTotalLpBalance } from './useWaveFarmStakedLp'
 import { useLiquidityPositionMetrics } from './useLiquidityPositionMetrics'
 import { estimateLpFeesUsd24h, useWSwapPairOracle } from './useWSwapPairOracle'
 
@@ -11,7 +12,8 @@ export function useLiquidityPositionAnalytics(pair: Pair) {
   const onChain = useLiquidityPositionMetrics(pair)
   const oracle = useWSwapPairOracle(pair.liquidityToken.address)
 
-  const userPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
+  const walletPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
+  const { total: userPoolBalance } = useUserTotalLpBalance(pair.liquidityToken, walletPoolBalance)
   const totalPoolTokens = useTotalSupply(pair.liquidityToken)
 
   return useMemo(() => {

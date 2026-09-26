@@ -9,6 +9,7 @@ import { estimatePairTvlUsd, estimatePositionValueUsd } from '../utils/estimateL
 import { useOracleNativeUsdPrice } from './useOracleNativeUsdPrice'
 import { useStableUsdPrice } from './useStableUsdPrice'
 import { estimateLpFeesUsd24h, useWSwapPairsOracle } from './useWSwapPairOracle'
+import { useWaveFarmStakedLp } from './useWaveFarmStakedLp'
 
 export function useLiquidityPortfolioAnalytics(pairs: Pair[]) {
   const { account, chainId } = useActiveWeb3React()
@@ -20,6 +21,7 @@ export function useLiquidityPortfolioAnalytics(pairs: Pair[]) {
 
   const liquidityTokens = useMemo(() => pairs.map(p => p.liquidityToken), [pairs])
   const [balances, balancesLoading] = useTokenBalancesWithLoadingIndicator(account ?? undefined, liquidityTokens)
+  const { stakedRawByLpAddress, loading: farmLoading } = useWaveFarmStakedLp()
 
   const lpAddresses = useMemo(() => pairs.map(p => p.liquidityToken.address), [pairs])
   const supplyResults = useMultipleContractSingleData(lpAddresses, ERC20_INTERFACE, 'totalSupply')
@@ -38,7 +40,15 @@ export function useLiquidityPortfolioAnalytics(pairs: Pair[]) {
 
     pairs.forEach((pair, i) => {
       const oracle = byPairAddress[pair.liquidityToken.address.toLowerCase()]
-      const userBal = balances[pair.liquidityToken.address]
+      const walletBal = balances[pair.liquidityToken.address]
+      const farmRaw = stakedRawByLpAddress[pair.liquidityToken.address.toLowerCase()]
+      const userBal =
+        walletBal || farmRaw
+          ? new TokenAmount(
+              pair.liquidityToken,
+              JSBI.add(walletBal?.raw ?? JSBI.BigInt(0), farmRaw ?? JSBI.BigInt(0))
+            )
+          : undefined
       const supplyRaw = supplyResults[i]?.result?.[0]
       const totalSupply = supplyRaw ? new TokenAmount(pair.liquidityToken, supplyRaw.toString()) : undefined
 
@@ -96,7 +106,7 @@ export function useLiquidityPortfolioAnalytics(pairs: Pair[]) {
       totalPoolTvlUsd: hasTvl ? totalPoolTvlUsd : undefined,
       totalVol24h: hasVol ? totalVol24h : undefined,
       totalFeesUsd24h: hasFees ? totalFeesUsd24h : undefined,
-      loading: balancesLoading || suppliesLoading || oracleLoading,
+      loading: balancesLoading || farmLoading || suppliesLoading || oracleLoading,
       oracleSupported
     }
   }, [
@@ -106,6 +116,8 @@ export function useLiquidityPortfolioAnalytics(pairs: Pair[]) {
     chainId,
     wethUsd,
     balancesLoading,
+    farmLoading,
+    stakedRawByLpAddress,
     suppliesLoading,
     byPairAddress,
     oracleLoading,
