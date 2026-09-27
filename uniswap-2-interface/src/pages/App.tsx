@@ -64,7 +64,7 @@ const BodyWrapper = styled.div<{ $landing?: boolean; $portfolio?: boolean }>`
   z-index: 1;
 
   ${({ theme, $landing, $portfolio }) => theme.mediaWidth.upToSmall`
-    padding: ${$portfolio ? '88px' : $landing ? '84px' : '96px'} 12px 24px;
+    padding: ${$portfolio ? '88px' : $landing ? '68px' : '96px'} 12px 24px;
   `};
 
   ${({ theme, $landing, $portfolio }) => theme.mediaWidth.upToMedium`

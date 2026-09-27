@@ -184,8 +184,8 @@ const BodyWrapper = styled.div`
   overflow-x: hidden;
   z-index: 10;
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-      padding: 16px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 0 12px 16px;
   `};
 
   z-index: 1;
@@ -195,9 +195,13 @@ const HeroSection = styled.section`
   position: relative;
   width: 100%;
   overflow: hidden;
-  padding: 16px 12px 40px;
+  padding: 4px 0 28px;
 
   @media (min-width: 768px) {
+    padding: 16px 12px 40px;
+  }
+
+  @media (min-width: 1024px) {
     padding: 24px 20px 48px;
   }
 `
@@ -206,9 +210,13 @@ const HeroInner = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px;
+  gap: 28px;
   width: min(1240px, 100%);
   margin: 0 auto;
+
+  @media (min-width: 768px) {
+    gap: 36px;
+  }
 
   @media (min-width: 1024px) {
     flex-direction: row;
@@ -231,18 +239,27 @@ const HeroCopy = styled.div`
 const PillBadge = styled.div`
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  height: 28px;
-  padding: 0 14px;
+  gap: 6px;
+  height: 24px;
+  padding: 0 10px;
   border-radius: 9999px;
   border: 1px solid #e4ddd2;
   background: #ffffff;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #5c6a78;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
+
+  @media (min-width: 768px) {
+    gap: 8px;
+    height: 28px;
+    padding: 0 14px;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    margin-bottom: 24px;
+  }
 `
 
 const BadgeDot = styled.span`
@@ -255,26 +272,48 @@ const BadgeDot = styled.span`
 
 const HeroTitle = styled.h1`
   margin: 0;
-  font-size: clamp(2.25rem, 5vw, 4.5rem);
+  font-size: clamp(1.65rem, 7.5vw, 2.15rem);
   font-weight: 700;
-  line-height: 1.12;
+  line-height: 1.15;
   letter-spacing: -0.02em;
   color: #1a2430;
 
   span {
     display: block;
   }
+
+  @media (min-width: 768px) {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+  }
+
+  @media (min-width: 1024px) {
+    font-size: clamp(2.25rem, 5vw, 4.5rem);
+  }
 `
 
 const HeroStats = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px 32px;
-  margin-top: 32px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 0;
+  margin-top: 16px;
+  width: 100%;
+  padding: 10px 4px;
+  border-radius: 12px;
+  border: 1px solid #e4ddd2;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.8) inset;
 
   @media (min-width: 768px) {
+    display: flex;
+    flex-wrap: wrap;
     gap: 32px 48px;
     margin-top: 48px;
+    width: auto;
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
   }
 
   @media (min-width: 1024px) {
@@ -283,18 +322,50 @@ const HeroStats = styled.div`
 `
 
 const HeroStat = styled.div`
+  text-align: center;
+  padding: 0 4px;
+  min-width: 0;
+
+  &:not(:last-child) {
+    border-right: 1px solid #e8e2d8;
+  }
+
   strong {
     display: block;
-    font-size: 28px;
+    font-size: clamp(1rem, 4.2vw, 1.25rem);
     font-weight: 700;
     color: #1a2430;
+    line-height: 1.2;
+    white-space: nowrap;
   }
 
   span {
     display: block;
-    margin-top: 4px;
-    font-size: 14px;
+    margin-top: 2px;
+    font-size: 9px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: 0.02em;
     color: #5c6a78;
+  }
+
+  @media (min-width: 768px) {
+    text-align: left;
+    padding: 0;
+
+    &:not(:last-child) {
+      border-right: none;
+    }
+
+    strong {
+      font-size: 28px;
+      white-space: normal;
+    }
+
+    span {
+      margin-top: 4px;
+      font-size: 14px;
+    }
   }
 `
 

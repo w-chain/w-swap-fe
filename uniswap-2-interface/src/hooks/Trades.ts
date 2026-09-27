@@ -8,7 +8,7 @@ import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 import { useActiveWeb3React } from './index'
 
-function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
+function useAllCommonPairsState(currencyA?: Currency, currencyB?: Currency): { pairs: Pair[]; loading: boolean } {
   const { chainId } = useActiveWeb3React()
 
   const bases: Token[] = chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []
@@ -61,8 +61,15 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
 
   const allPairs = usePairs(allPairCombinations)
 
+  const loading = useMemo(() => {
+    if (!tokenA || !tokenB || allPairCombinations.length === 0) {
+      return false
+    }
+    return allPairs.some(([state]) => state === PairState.LOADING)
+  }, [allPairs, allPairCombinations.length, tokenA, tokenB])
+
   // only pass along valid pairs, non-duplicated pairs
-  return useMemo(
+  const pairs = useMemo(
     () =>
       Object.values(
         allPairs
@@ -76,6 +83,17 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
       ),
     [allPairs]
   )
+
+  return { pairs, loading }
+}
+
+function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
+  return useAllCommonPairsState(currencyA, currencyB).pairs
+}
+
+/** True while on-chain pair reserves for a potential swap route are still loading. */
+export function useSwapRouteLoading(currencyA?: Currency, currencyB?: Currency): boolean {
+  return useAllCommonPairsState(currencyA, currencyB).loading
 }
 
 /**

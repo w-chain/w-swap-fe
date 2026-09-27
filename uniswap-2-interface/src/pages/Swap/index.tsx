@@ -15,7 +15,7 @@ import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { AutoRow, RowBetween } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
@@ -97,7 +97,8 @@ export default function Swap({ embedded = false }: { embedded?: boolean }) {
     currencyBalances,
     parsedAmount,
     currencies,
-    inputError: swapInputError
+    inputError: swapInputError,
+    swapRouteLoading
   } = useDerivedSwapInfo()
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
     currencies[Field.INPUT],
@@ -441,6 +442,13 @@ export default function Swap({ embedded = false }: { embedded?: boolean }) {
                 {wrapInputError ??
                   (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
               </EcosystemPrimaryButton>
+            ) : swapRouteLoading && userHasSpecifiedInputOutput ? (
+              <GreyCard style={{ textAlign: 'center', background: 'transparent' }}>
+                <TYPE.main mb="4px" color="#5c6a78" fontWeight={500}>
+                  Fetching best route
+                  <Dots />
+                </TYPE.main>
+              </GreyCard>
             ) : noRoute && userHasSpecifiedInputOutput ? (
               <GreyCard style={{ textAlign: 'center', background: 'transparent' }}>
                 <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
