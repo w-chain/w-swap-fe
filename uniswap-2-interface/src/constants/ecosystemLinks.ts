@@ -4,3 +4,7 @@ export const WCO_ECOSYSTEM_URL =
 
 export const WAVE_FARM_URL =
   process.env.REACT_APP_WAVE_FARM_URL?.replace(/\/$/, '') ?? 'https://wave.w-chain.com/farm'
+
+/** Validator / history API for in-app bridge (same service as bridge.w-chain.com unless overridden). */
+export const BRIDGE_API_BASE =
+  process.env.REACT_APP_BRIDGE_API_URL?.replace(/\/$/, '') ?? 'https://bridge.w-chain.com'

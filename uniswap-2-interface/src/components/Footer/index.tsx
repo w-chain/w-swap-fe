@@ -178,7 +178,6 @@ const wcnLinks = [
     href:
       'https://scan.w-chain.com/?_gl=1*10f265a*_ga*ODgzMzM5NzEyLjE3NDY2MjgxMDU.*_ga_SNV30L8084*czE3NDk4MTM5MjAkbzQkZzEkdDE3NDk4MTUzNzckajYwJGwwJGgw'
   },
-  { text: 'W Bridge', href: 'https://bridge.w-chain.com/' }
 ]
 
 const companyLinks = [

@@ -5,6 +5,7 @@ import { AppState, AppDispatch } from '../../../state'
 import { clearCompletedTransactions, initializeTransactions, updateTransactionStatus } from '../stores/Transaction'
 import { TransactionStatus, Networks } from '../shared/types/enums'
 import { BridgeTransaction } from '../shared/types/transaction'
+import { BRIDGE_API_BASE } from '../../../constants/ecosystemLinks'
 import { getTokenImage, getNetworkImage, getNetworkFromChainId, getExplorerTxUrl } from '../shared/utils'
 
 const ModalCard = styled.div`
@@ -225,7 +226,7 @@ async function getProposal(fromChainId: number, toChainId: number, data: string,
       data
     })
 
-    const response = await fetch(`https://bridge.w-chain.com/api/validator/proposal?${queryParams}`)
+    const response = await fetch(`${BRIDGE_API_BASE}/api/validator/proposal?${queryParams}`)
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }

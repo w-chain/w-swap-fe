@@ -2,12 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { BottomGrouping, Wrapper } from '../../components/swap/styleds'
-import {
-  EcosystemPrimaryButton,
-  EcosystemFeeRow,
-  EcosystemMutedLink,
-  FlipButton
-} from '../../components/ecosystem/styled'
+import { EcosystemPrimaryButton, EcosystemFeeRow, FlipButton } from '../../components/ecosystem/styled'
 import { JSBI } from '@uniswap/sdk'
 import { parseUnits } from '@ethersproject/units'
 
@@ -266,12 +261,6 @@ export default function Bridge() {
                   {buttonLabel()}
                 </EcosystemPrimaryButton>
               )}
-            </BottomGrouping>
-
-            <BottomGrouping style={{ display: 'flex', justifyContent: 'center' }}>
-              <EcosystemMutedLink href="https://bridge.w-chain.com" target="_blank" rel="noopener noreferrer">
-                Powered by W Bridge
-              </EcosystemMutedLink>
             </BottomGrouping>
           </Wrapper>
         )}
