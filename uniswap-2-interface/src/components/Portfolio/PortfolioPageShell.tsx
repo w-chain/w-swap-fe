@@ -50,6 +50,14 @@ export const PortfolioPageSubtitle = styled.p`
   color: #5c6a78;
 `
 
+/** Vertical stack for wallet, analytics, and main grid sections */
+export const PortfolioStack = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+`
+
 export const PortfolioMainGrid = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);

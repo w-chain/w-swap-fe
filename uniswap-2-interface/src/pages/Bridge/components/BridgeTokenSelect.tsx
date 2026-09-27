@@ -1,5 +1,7 @@
 import React, { useState, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
+import { RowBetween } from '../../../components/Row'
+import { TYPE } from '../../../theme'
 import { Input as NumericalInput } from '../../../components/NumericalInput'
 import { TokenSymbols } from '../shared/types'
 import BridgeTokenSearchModal from './BridgeTokenSearchModal'
@@ -15,11 +17,17 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
   z-index: 1;
 `
 
+const LabelRow = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items: center;
+  padding: 12px 14px 0 14px;
+`
+
 const Container = styled.div<{ hideInput: boolean }>`
   border-radius: 12px;
   background-color: #ffffff;
   border: 1px solid #e4ddd2;
-  padding: 4px 0;
+  padding: 0 0 10px;
 `
 
 const StyledInput = styled(NumericalInput)`
@@ -97,7 +105,14 @@ export default function BridgeTokenInputPanel({
   return (
     <InputPanel id={id}>
       <Container hideInput={false}>
-      <div style={{ display: 'flex', alignItems: 'center', padding: '1rem' }}>
+        <LabelRow>
+          <RowBetween style={{ width: '100%' }}>
+            <TYPE.body color="#5c6a78" fontWeight={500} fontSize={14}>
+              Amount
+            </TYPE.body>
+          </RowBetween>
+        </LabelRow>
+        <div style={{ display: 'flex', alignItems: 'center', padding: '10px 12px 0' }}>
         <StyledInput
           className="token-amount-input"
           value={value === undefined ? '' : value}
@@ -114,11 +129,11 @@ export default function BridgeTokenInputPanel({
       </div>
       <div
         style={{
-          padding: '0 1rem 1rem',
-          fontSize: '14px',
+          padding: '8px 14px 0',
+          fontSize: 13,
           fontWeight: 600,
-          color: '#000',
-          justifySelf: 'flex-end'
+          color: '#5c6a78',
+          textAlign: 'right'
         }}
       >
         {balance ? `Balance: ${balance.toSignificant(6)}` : "Balance: 0.00"}

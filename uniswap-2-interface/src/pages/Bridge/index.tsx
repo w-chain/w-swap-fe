@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
+import { AutoColumn } from '../../components/Column'
 import { BottomGrouping, Wrapper } from '../../components/swap/styleds'
-import { EcosystemPrimaryButton, EcosystemFeeRow, FlipButton } from '../../components/ecosystem/styled'
+import { EcosystemPrimaryButton, EcosystemFeeRow, EcosystemSection, FlipButton } from '../../components/ecosystem/styled'
 import { JSBI } from '@uniswap/sdk'
 import { parseUnits } from '@ethersproject/units'
 
@@ -227,33 +228,35 @@ export default function Bridge() {
               onDismiss={handleConfirmDismiss}
             />
 
-            <BridgeNetworkRow>
-              <NetworkInputPanel label="From" id="from-chain" direction="from" />
-              <FlipButton type="button" aria-label="Swap networks" onClick={() => swapNetworks()}>
-                ⇄
-              </FlipButton>
-              <NetworkInputPanel label="To" id="to-chain" direction="to" />
-            </BridgeNetworkRow>
+            <AutoColumn gap="md">
+              <EcosystemSection style={{ gap: 14, padding: '16px' }}>
+                <BridgeNetworkRow style={{ marginBottom: 0 }}>
+                  <NetworkInputPanel label="From" id="from-chain" direction="from" />
+                  <FlipButton type="button" aria-label="Swap networks" onClick={() => swapNetworks()}>
+                    ⇄
+                  </FlipButton>
+                  <NetworkInputPanel label="To" id="to-chain" direction="to" />
+                </BridgeNetworkRow>
 
-            <BridgeTokenInputPanel
-              value={inputValue}
-              onUserInput={handleTypeInput}
-              onTokenSelect={handleFromTokenSelect}
-              availableTokens={availableFromTokens}
-              selectedToken={bridgeState.fromToken}
-              id="bridge-token-input"
-              balance={selectedTokenBalance}
-            />
+                <BridgeTokenInputPanel
+                  value={inputValue}
+                  onUserInput={handleTypeInput}
+                  onTokenSelect={handleFromTokenSelect}
+                  availableTokens={availableFromTokens}
+                  selectedToken={bridgeState.fromToken}
+                  id="bridge-token-input"
+                  balance={selectedTokenBalance}
+                />
 
-            {/* Bridge Fee Display */}
-            <EcosystemFeeRow>
-              <span style={{ fontWeight: 500 }}>Bridge Fee:</span>
-              <span style={{ fontWeight: 600, color: '#5c6a78' }}>
-                {feeLoading ? 'Loading...' : feeInEth ? `${feeInEth} ${currentNetworkETHName}` : 'N/A'}
-              </span>
-            </EcosystemFeeRow>
+                <EcosystemFeeRow style={{ marginTop: 0 }}>
+                  <span style={{ fontWeight: 500 }}>Bridge Fee:</span>
+                  <span style={{ fontWeight: 600, color: '#5c6a78' }}>
+                    {feeLoading ? 'Loading...' : feeInEth ? `${feeInEth} ${currentNetworkETHName}` : 'N/A'}
+                  </span>
+                </EcosystemFeeRow>
+              </EcosystemSection>
 
-            <BottomGrouping>
+              <BottomGrouping style={{ marginTop: 0 }}>
               {!account ? (
                 <EcosystemPrimaryButton onClick={toggleWalletModal}>Connect Wallet</EcosystemPrimaryButton>
               ) : (
@@ -261,7 +264,8 @@ export default function Bridge() {
                   {buttonLabel()}
                 </EcosystemPrimaryButton>
               )}
-            </BottomGrouping>
+              </BottomGrouping>
+            </AutoColumn>
           </Wrapper>
         )}
       </AppBody>

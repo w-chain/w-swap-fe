@@ -23,6 +23,7 @@ import {
   PortfolioSectionHeading,
   PortfolioSectionTitle,
   PortfolioSideColumn,
+  PortfolioStack,
   PortfolioTitleBlock
 } from '../../components/Portfolio/PortfolioPageShell'
 import { EcosystemMessageCard, EcosystemSection } from '../../components/ecosystem/styled'
@@ -62,7 +63,7 @@ export default function Portfolio() {
             </EcosystemPrimaryButton>
           </PortfolioConnectHero>
         ) : (
-          <>
+          <PortfolioStack>
             <PortfolioWalletSummary pairs={pairs} />
             {pairs.length > 0 && !isLoading ? <LiquidityOverview pairs={pairs} showPnl /> : null}
 
@@ -106,7 +107,7 @@ export default function Portfolio() {
                 <PortfolioActivity />
               </PortfolioSideColumn>
             </PortfolioMainGrid>
-          </>
+          </PortfolioStack>
         )}
       </PortfolioPageShell>
     </AppBody>
