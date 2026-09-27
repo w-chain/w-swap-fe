@@ -61,19 +61,15 @@ const BodyWrapper = styled.div<{ $landing?: boolean; $portfolio?: boolean }>`
   z-index: 10;
   min-height: calc(100vh - 120px);
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-      padding: 16px;
-  `};
-
   z-index: 1;
 
-  @media (max-width: 768px) {
-    padding-top: 80px;
-  }
+  ${({ theme, $landing, $portfolio }) => theme.mediaWidth.upToSmall`
+    padding: ${$portfolio ? '88px' : $landing ? '84px' : '96px'} 12px 24px;
+  `};
 
-  @media (max-width: 1024px) {
-    padding-top: 100px;
-  }
+  ${({ theme, $landing, $portfolio }) => theme.mediaWidth.upToMedium`
+    padding-top: ${$portfolio ? '92px' : $landing ? '88px' : '104px'};
+  `};
 
   .fish-bottom-right {
     position: fixed;

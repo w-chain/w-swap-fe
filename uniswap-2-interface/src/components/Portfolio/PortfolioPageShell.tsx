@@ -118,9 +118,17 @@ export const PortfolioConnectHero = styled.div`
 /** Responsive stat tiles for portfolio summary row */
 export const PortfolioStatGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  grid-template-columns: 1fr;
+  gap: 10px;
   width: 100%;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    gap: 8px;
+  `};
+
+  @media (min-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
   @media (min-width: 640px) {
     grid-template-columns: repeat(3, 1fr);

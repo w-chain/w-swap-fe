@@ -371,6 +371,8 @@ const StyledBridgeHistoryLink = styled.button`
   border-radius: 12px;
   width: 52px;
   height: 52px;
+  min-width: 48px;
+  min-height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -379,6 +381,7 @@ const StyledBridgeHistoryLink = styled.button`
   right: max(-56px, -8vw);
   cursor: pointer;
   padding: 0;
+  touch-action: manipulation;
 
   svg path {
     fill: #0e9a86;
@@ -387,4 +390,10 @@ const StyledBridgeHistoryLink = styled.button`
   &:hover {
     border-color: #0e9a86;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    position: static;
+    margin: 0 0 12px auto;
+    display: flex;
+  `};
 `

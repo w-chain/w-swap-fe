@@ -31,15 +31,18 @@ export const BodyWrapper = styled.div<{ $plain?: boolean; $card?: boolean; $wide
 
   ${({ $card, $wideCard }) => $card && ($wideCard ? cardWideStyles : cardStyles)}
 
-  @media (max-width: 768px) {
-    padding: ${({ $plain, $card }) => ($plain ? '0' : $card ? '0' : '1rem 1.2rem 1.2rem 1.2rem')};
-    ${({ $card, $wideCard }) =>
-      $card &&
-      css`
-        max-width: calc(100vw - 24px);
-        padding: ${$wideCard ? '24px 20px 32px' : '22px 18px 28px'};
-      `}
-  }
+  ${({ theme, $plain, $card }) => theme.mediaWidth.upToSmall`
+    padding: ${$plain ? '0' : $card ? '0' : '1rem 12px 1.25rem'};
+  `};
+
+  ${({ theme, $card, $wideCard }) =>
+    $card &&
+    theme.mediaWidth.upToSmall`
+      max-width: calc(100vw - 16px);
+      margin-left: auto;
+      margin-right: auto;
+      padding: ${$wideCard ? '20px 16px 28px' : '18px 14px 24px'};
+    `}
 `
 
 /**

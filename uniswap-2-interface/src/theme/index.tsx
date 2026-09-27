@@ -192,6 +192,14 @@ export const FixedGlobalStyle = createGlobalStyle`
   body {
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  body {
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
+    padding-bottom: env(safe-area-inset-bottom, 0);
   }
 
   * {

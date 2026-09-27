@@ -30,10 +30,19 @@ const StyledNavLink = styled(NavLink).attrs({
   text-decoration: none;
   width: auto;
   min-width: 72px;
-  padding: 0 10px;
-  height: 24px;
+  padding: 0 14px;
+  min-height: 36px;
+  height: auto;
   border-radius: 20px;
-  font-size: 10px;
+  font-size: 11px;
+  touch-action: manipulation;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    min-height: 44px;
+    min-width: 80px;
+    font-size: 12px;
+    padding: 0 16px;
+  `};
   font-weight: 400;
   letter-spacing: 0.06em;
   text-transform: uppercase;

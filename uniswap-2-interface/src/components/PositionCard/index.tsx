@@ -31,7 +31,12 @@ import Question from '../QuestionHelper'
 import { useUserTotalLpBalance } from '../../hooks/useWaveFarmStakedLp'
 
 export const FixedHeightRow = styled(RowBetween)`
-  height: 24px;
+  min-height: 28px;
+  height: auto;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  row-gap: 8px;
 `
 
 export const HoverCard = styled(Card)`

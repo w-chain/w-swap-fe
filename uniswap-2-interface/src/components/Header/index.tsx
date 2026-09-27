@@ -25,30 +25,70 @@ import AppNav from './AppNav'
 
 const HeaderFrame = styled.div<{ $landing?: boolean }>`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
   flex-direction: column;
   width: 100%;
   top: 0;
   position: sticky;
   z-index: 10;
   padding-bottom: 0.5rem;
-  background: ${({ $landing }) => ($landing ? 'rgba(246, 243, 236, 0.82)' : 'transparent')};
-  backdrop-filter: ${({ $landing }) => ($landing ? 'blur(18px) saturate(140%)' : 'none')};
-  -webkit-backdrop-filter: ${({ $landing }) => ($landing ? 'blur(18px) saturate(140%)' : 'none')};
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    padding: 5px 0 0 0;
-    width: calc(100%);
-    position: relative;
+  padding-top: env(safe-area-inset-top, 0);
+  background: ${({ $landing }) => ($landing ? 'rgba(246, 243, 236, 0.92)' : 'rgba(255, 255, 255, 0.92)')};
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border-bottom: 1px solid rgba(228, 221, 210, 0.65);
+`
+
+const HeaderInner = styled.div`
+  display: grid;
+  width: 100%;
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 0;
+  padding: 0.65rem 12px 10px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: 'logo nav controls';
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'logo controls'
+      'nav nav';
+    row-gap: 10px;
+    padding-top: 0.65rem;
+    border-bottom: none;
+  `};
+
+  @media (min-width: 961px) {
+    padding: 0.75rem 1rem 10px;
+  }
+`
+
+const LogoArea = styled.div`
+  grid-area: logo;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+`
+
+const NavArea = styled.div`
+  grid-area: nav;
+  min-width: 0;
+  overflow: hidden;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    border-top: 1px solid rgba(228, 221, 210, 0.5);
+    padding-top: 10px;
+    overflow: visible;
   `};
 `
 
-const HeaderElement = styled.div`
+const ControlsArea = styled.div`
+  grid-area: controls;
   display: flex;
   align-items: center;
-  flex: 1;
+  justify-content: flex-end;
+  gap: 8px;
   min-width: 0;
-  overflow: hidden;
 `
 
 const Title = styled.a`
@@ -60,9 +100,6 @@ const Title = styled.a`
     cursor: pointer;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
 `
 
 const TitleText = styled(Row)`
@@ -115,23 +152,6 @@ const UniIcon = styled.div`
   }
 `
 
-const HeaderControls = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  flex: 1;
-  justify-content: flex-end;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
-    justify-content: space-between;
-    width: 100%;
-  `};
-`
-
 const RightSection = styled.div`
   display: flex;
   align-items: center;
@@ -178,8 +198,8 @@ export default function Header() {
 
   return (
     <HeaderFrame $landing={isLanding}>
-      <RowBetween style={{ alignItems: 'flex-start' }} padding="1rem 1rem 0 1rem">
-        <HeaderElement>
+      <HeaderInner>
+        <LogoArea>
           <Title href=".">
             <UniIcon>
               <img src={WChainLogo} alt="logo" />
@@ -188,11 +208,13 @@ export default function Header() {
               <img style={{ marginLeft: '4px', marginTop: '4px' }} src={isDark ? WordmarkDark : Wordmark} alt="logo" />
             </TitleText>
           </Title>
+        </LogoArea>
+        <NavArea>
           <AppNav />
-        </HeaderElement>
-        <HeaderControls>
+        </NavArea>
+        <ControlsArea>
           <NetworkSelectorWrapper>
-            <NetworkSelector />
+            <NetworkSelector compactOnMobile />
           </NetworkSelectorWrapper>
           <RightSection>
             {ecosystemTheme ? (
@@ -216,8 +238,8 @@ export default function Header() {
             )}
             <Settings ecosystem={ecosystemTheme} />
           </RightSection>
-        </HeaderControls>
-      </RowBetween>
+        </ControlsArea>
+      </HeaderInner>
     </HeaderFrame>
   )
 }

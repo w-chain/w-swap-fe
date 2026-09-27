@@ -7,7 +7,7 @@ import { SELECTABLE_CHAINS, getNetworkInfo } from '../../constants/chains'
 import { useSwitchChain, SwitchChainError, SwitchChainErrorType } from '../../hooks/useSwitchChain'
 import { useActiveWeb3React } from '../../hooks'
 
-const NetworkSelectorButton = styled.button`
+const NetworkSelectorButton = styled.button<{ $compact?: boolean }>`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -15,11 +15,13 @@ const NetworkSelectorButton = styled.button`
   border: 1px solid ${({ theme }) => theme.bg2};
   border-radius: 12px;
   padding: 8px 12px;
+  min-height: 44px;
   cursor: pointer;
   font-weight: 600;
   font-size: 14px;
   color: ${({ theme }) => theme.text1};
   transition: all 0.2s ease;
+  touch-action: manipulation;
 
   &:hover {
     background-color: ${({ theme }) => theme.bg2};
@@ -30,6 +32,15 @@ const NetworkSelectorButton = styled.button`
     opacity: 0.6;
     cursor: not-allowed;
   }
+
+  ${({ $compact, theme }) =>
+    $compact &&
+    theme.mediaWidth.upToSmall`
+      padding: 8px 10px;
+      gap: 0;
+      min-width: 44px;
+      justify-content: center;
+    `};
 `
 
 const NetworkIcon = styled.img`
@@ -39,15 +50,27 @@ const NetworkIcon = styled.img`
   background: white;
 `
 
-const NetworkName = styled.span`
+const NetworkName = styled.span<{ $hideOnMobile?: boolean }>`
   white-space: nowrap;
+
+  ${({ $hideOnMobile, theme }) =>
+    $hideOnMobile &&
+    theme.mediaWidth.upToSmall`
+      display: none;
+    `};
 `
 
-const DropdownIcon = styled(ChevronDown)<{ isOpen: boolean }>`
+const DropdownIcon = styled(ChevronDown)<{ isOpen: boolean; $hideOnMobile?: boolean }>`
   width: 16px;
   height: 16px;
   transition: transform 0.2s ease;
   transform: ${({ isOpen }) => (isOpen ? 'rotate(180deg)' : 'rotate(0)')};
+
+  ${({ $hideOnMobile, theme }) =>
+    $hideOnMobile &&
+    theme.mediaWidth.upToSmall`
+      display: none;
+    `};
 `
 
 const ModalCard = styled.div`
@@ -159,7 +182,7 @@ const ErrorMessage = styled.div`
   font-size: 13px;
 `
 
-export default function NetworkSelector() {
+export default function NetworkSelector({ compactOnMobile = false }: { compactOnMobile?: boolean }) {
   const [isOpen, setIsOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isSwitching, setIsSwitching] = useState(false)
@@ -212,10 +235,10 @@ export default function NetworkSelector() {
 
   return (
     <>
-      <NetworkSelectorButton onClick={handleOpen} disabled={isSwitching}>
+      <NetworkSelectorButton $compact={compactOnMobile} onClick={handleOpen} disabled={isSwitching} aria-label="Select network">
         {currentNetwork && <NetworkIcon src={currentNetwork.icon} alt={currentNetwork.name} />}
-        <NetworkName>{currentNetwork?.shortName || 'Select Network'}</NetworkName>
-        <DropdownIcon isOpen={isOpen} />
+        <NetworkName $hideOnMobile={compactOnMobile}>{currentNetwork?.shortName || 'Select Network'}</NetworkName>
+        <DropdownIcon isOpen={isOpen} $hideOnMobile={compactOnMobile} />
       </NetworkSelectorButton>
 
       <Modal isOpen={isOpen} onDismiss={handleClose} maxHeight={60}>

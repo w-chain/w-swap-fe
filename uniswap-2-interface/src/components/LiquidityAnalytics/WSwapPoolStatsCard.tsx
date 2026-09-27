@@ -50,6 +50,10 @@ const Muted = styled.p`
   color: #5c6a78;
 `
 
+const StatsSection = styled(EcosystemSection)`
+  margin-top: 20px;
+`
+
 export interface WSwapPoolStatsCardProps {
   pairAddress?: string
   title?: string
@@ -85,7 +89,7 @@ export default function WSwapPoolStatsCard({
     oracle && !oracle.loading && !oracle.error ? estimateLpFeesUsd24h(oracle.vol24h, poolShare) : undefined
 
   return (
-    <EcosystemSection className={className}>
+    <StatsSection className={className}>
       <RowBetween padding="0 4px">
         <Text color="#1a2430" fontWeight={600} fontSize={14}>
           {title}
@@ -126,6 +130,6 @@ export default function WSwapPoolStatsCard({
           {oracle.latestPrice.toLocaleString(undefined, { maximumFractionDigits: 4 })} · Updates ~every 60s
         </Muted>
       ) : null}
-    </EcosystemSection>
+    </StatsSection>
   )
 }

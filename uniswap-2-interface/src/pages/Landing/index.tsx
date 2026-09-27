@@ -195,7 +195,11 @@ const HeroSection = styled.section`
   position: relative;
   width: 100%;
   overflow: hidden;
-  padding: 24px 20px 48px;
+  padding: 16px 12px 40px;
+
+  @media (min-width: 768px) {
+    padding: 24px 20px 48px;
+  }
 `
 
 const HeroInner = styled.div`
@@ -265,8 +269,13 @@ const HeroTitle = styled.h1`
 const HeroStats = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 32px 48px;
-  margin-top: 48px;
+  gap: 24px 32px;
+  margin-top: 32px;
+
+  @media (min-width: 768px) {
+    gap: 32px 48px;
+    margin-top: 48px;
+  }
 
   @media (min-width: 1024px) {
     margin-top: 100px;
@@ -291,12 +300,13 @@ const HeroStat = styled.div`
 
 const WidgetColumn = styled.div<{ $wide?: boolean }>`
   width: 100%;
-  max-width: ${({ $wide }) => ($wide ? '600px' : '500px')};
+  max-width: ${({ $wide }) => ($wide ? 'min(600px, 100%)' : 'min(500px, 100%)')};
   flex-shrink: 0;
-  scroll-margin-top: 96px;
+  scroll-margin-top: 120px;
 
   @media (min-width: 1024px) {
     margin-left: auto;
+    scroll-margin-top: 96px;
   }
 `
 
@@ -306,8 +316,12 @@ const TradingCard = styled.div<{ $compact?: boolean }>`
   background: #ffffff;
   border: 1px solid #e4ddd2;
   border-radius: 16px;
-  padding: ${({ $compact }) => ($compact ? '35px 35px 40px' : '35px 35px 50px')};
+  padding: ${({ $compact }) => ($compact ? '20px 16px 28px' : '20px 16px 36px')};
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset, 0 18px 40px -28px rgba(26, 36, 48, 0.18);
+
+  @media (min-width: 768px) {
+    padding: ${({ $compact }) => ($compact ? '28px 28px 36px' : '35px 35px 50px')};
+  }
 `
 
 const LandingWidgetScroll = styled.div<{ $tall?: boolean }>`
@@ -320,20 +334,27 @@ const LandingWidgetScroll = styled.div<{ $tall?: boolean }>`
 const LandingTabs = styled.div`
   display: flex;
   justify-content: center;
-  gap: 16px;
-  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+
+  @media (min-width: 768px) {
+    gap: 16px;
+    margin-bottom: 24px;
+  }
 `
 
 const TabPill = styled.button<{ active?: boolean }>`
-  width: 80px;
-  height: 24px;
+  min-width: 88px;
+  min-height: 44px;
+  padding: 0 16px;
   border-radius: 20px;
-  font-size: 10px;
-  font-weight: 400;
+  font-size: 12px;
+  font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
-  padding: 0;
+  touch-action: manipulation;
   ${({ active }) =>
     active
       ? `
@@ -353,13 +374,21 @@ const TabPill = styled.button<{ active?: boolean }>`
 const SurfaceBand = styled.div`
   width: 100%;
   background: #ffffff;
-  padding: 56px 0 72px;
+  padding: 40px 0 48px;
+
+  @media (min-width: 768px) {
+    padding: 56px 0 72px;
+  }
 `
 
 const StepsBand = styled.div`
   width: 100%;
   background: #f6f3ec;
-  padding: 56px 0 72px;
+  padding: 40px 0 48px;
+
+  @media (min-width: 768px) {
+    padding: 56px 0 72px;
+  }
 `
 
 const ContentSection = styled.section`
@@ -404,11 +433,16 @@ const ComparisonCard = styled.div<{ $highlight?: boolean }>`
   background: #ffffff;
   border: 1px solid #e4ddd2;
   border-radius: 16px;
-  padding: 24px;
+  padding: 20px 16px;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  min-height: 320px;
+  min-height: 0;
+
+  @media (min-width: 768px) {
+    padding: 24px;
+    min-height: 320px;
+  }
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset, 0 18px 40px -28px rgba(26, 36, 48, 0.12);
   ${({ $highlight }) => $highlight && 'box-shadow: 0 0 0 1px rgba(14, 154, 134, 0.3);'}
 

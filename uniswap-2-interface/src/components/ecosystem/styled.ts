@@ -25,9 +25,10 @@ export const FlipButton = styled.button`
 
 export const EcosystemPrimaryButton = styled(ButtonPrimaryGradient)`
   width: 100%;
-  min-height: 42px;
-  border-radius: 5px;
-  font-size: 14px;
+  min-height: 48px;
+  border-radius: 8px;
+  font-size: 15px;
+  touch-action: manipulation;
 `
 
 export const EcosystemSection = styled.div`
@@ -144,7 +145,14 @@ export const HeaderAccountShell = styled.div`
   border-radius: 12px;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset, 0 8px 24px -20px rgba(26, 36, 48, 0.12);
   white-space: nowrap;
-  width: 100%;
+  width: auto;
+  max-width: min(240px, 42vw);
+  min-height: 44px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding-left: 8px;
+    max-width: min(200px, 48vw);
+  `};
 `
 
 export const HeaderBalanceText = styled.span`
@@ -164,8 +172,9 @@ export const HeaderSettingsButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
   margin: 0;
   padding: 0;
   border: 1px solid #e4ddd2;

@@ -7,32 +7,39 @@ import { WAVE_FARM_URL, WCO_ECOSYSTEM_URL } from '../../constants/ecosystemLinks
 const Nav = styled.nav`
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-left: 16px;
+  gap: 8px;
+  margin-left: 0;
   flex-wrap: nowrap;
   overflow-x: auto;
-  max-width: min(720px, 55vw);
+  width: 100%;
+  max-width: 100%;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  scroll-padding: 12px;
+  padding: 2px 4px 4px;
 
   &::-webkit-scrollbar {
     display: none;
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin-left: 8px;
-    max-width: calc(100vw - 180px);
+    gap: 10px;
+    padding-bottom: 6px;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    max-width: calc(100vw - 120px);
+    mask-image: linear-gradient(to right, transparent, #000 12px, #000 calc(100% - 12px), transparent);
   `};
 `
 
 const navPillCss = `
-  padding: 6px 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 14px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -42,10 +49,16 @@ const navPillCss = `
   color: #5c6a78;
   white-space: nowrap;
   flex-shrink: 0;
+  touch-action: manipulation;
 
   &:hover,
   &:focus {
     color: #0e9a86;
+  }
+
+  @media (pointer: coarse) {
+    min-height: 44px;
+    padding: 10px 16px;
   }
 `
 
