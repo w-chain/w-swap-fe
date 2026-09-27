@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react'
+import React, { useState, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { AppState, AppDispatch } from '../../../state'
@@ -7,6 +7,7 @@ import { TransactionStatus, Networks } from '../shared/types/enums'
 import { BridgeTransaction } from '../shared/types/transaction'
 import { BRIDGE_API_BASE } from '../../../constants/ecosystemLinks'
 import { getTokenImage, getNetworkImage, getNetworkFromChainId, getExplorerTxUrl } from '../shared/utils'
+import { Dots } from '../../../components/swap/styleds'
 
 const ModalCard = styled.div`
   padding: 0;
@@ -248,12 +249,10 @@ export default function BridgeHistory() {
   const [clearLoading, setClearLoading] = useState(false)
   const intervalRefs = useRef<Map<string, NodeJS.Timeout>>(new Map())
 
-  // Initialize transactions from localStorage on component mount
-  useEffect(() => {
-    if (!initialized) {
-      dispatch(initializeTransactions())
-    }
-  }, [dispatch, initialized])
+  // Reload from localStorage whenever history is opened (before paint to avoid stuck loading UI)
+  useLayoutEffect(() => {
+    dispatch(initializeTransactions())
+  }, [dispatch])
 
   // Auto-save transactions when they change (backup mechanism)
   useEffect(() => {
@@ -375,7 +374,10 @@ export default function BridgeHistory() {
   if (!initialized) {
     return (
       <ModalCard>
-        <EmptyText>Loading transaction history...</EmptyText>
+        <EmptyText>
+          Loading transaction history
+          <Dots />
+        </EmptyText>
       </ModalCard>
     )
   }

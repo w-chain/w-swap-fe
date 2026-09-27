@@ -18,14 +18,25 @@ const loadStoredTransactions = (): BridgeTransaction[] => {
       // Validate that the stored data is an array
       if (Array.isArray(transactions)) {
         // Filter out any invalid transactions and ensure they have required fields
-        return transactions.filter(tx => 
-          tx && 
-          typeof tx === 'object' && 
-          tx.txHash && 
-          tx.fromChainId && 
-          tx.toChainId && 
-          tx.status
-        )
+        return transactions
+          .filter(
+            tx =>
+              tx &&
+              typeof tx === 'object' &&
+              tx.txHash &&
+              tx.fromChainId &&
+              tx.toChainId &&
+              tx.status
+          )
+          .map(tx => ({
+            ...tx,
+            timestamp:
+              typeof tx.timestamp === 'string'
+                ? Date.parse(tx.timestamp) || Date.now()
+                : typeof tx.timestamp === 'number'
+                ? tx.timestamp
+                : Date.now()
+          }))
       }
     }
   } catch (error) {
@@ -71,9 +82,9 @@ const saveTransactionsToStorage = (transactions: BridgeTransaction[]) => {
 }
 
 const initialState: TransactionState = {
-  transactions: loadStoredTransactions(),
+  transactions: [],
   loading: false,
-  initialized: true
+  initialized: false
 }
 
 const transactionSlice = createSlice({
@@ -113,10 +124,9 @@ const transactionSlice = createSlice({
       state.loading = action.payload
     },
     initializeTransactions: (state) => {
-      if (!state.initialized) {
-        state.transactions = loadStoredTransactions()
-        state.initialized = true
-      }
+      state.transactions = loadStoredTransactions()
+      state.initialized = true
+      state.loading = false
     }
   }
 })
