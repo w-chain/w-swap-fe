@@ -1,252 +1,243 @@
 import React from 'react'
 import styled from 'styled-components'
-import { FaDiscord, FaLinkedin, FaTelegramPlane } from 'react-icons/fa'
+import { W_CHAIN_SITE_URL } from '../../constants/ecosystemLinks'
 
-const MAIN_TEXT =
+const TAGLINE =
   'A cutting-edge hybrid blockchain, built for payments, speed, and scalability.'
+
+const FOOTER_COLUMNS: {
+  title: string
+  links: { label: string; href: string; external?: boolean }[]
+}[] = [
+  {
+    title: 'Ecosystem',
+    links: [
+      { label: 'Overview', href: `${W_CHAIN_SITE_URL}/ecosystem` },
+      { label: 'WCO', href: `${W_CHAIN_SITE_URL}/ecosystem/wco` },
+      { label: 'WAVE (Farm)', href: `${W_CHAIN_SITE_URL}/ecosystem/wave` },
+      { label: 'W-SWAP DEX', href: `${W_CHAIN_SITE_URL}/ecosystem/w-swap` },
+      { label: 'Bridge', href: `${W_CHAIN_SITE_URL}/ecosystem#bridge` },
+      { label: 'W+ Premium', href: `${W_CHAIN_SITE_URL}/ecosystem#premium` },
+      { label: 'W Builders', href: `${W_CHAIN_SITE_URL}/developers#builders` },
+      { label: 'WayFinders', href: `${W_CHAIN_SITE_URL}/community#wayfinders` },
+      { label: 'Builder Academy', href: `${W_CHAIN_SITE_URL}/w-chain-builder-academy` },
+      { label: 'Tokenomics', href: `${W_CHAIN_SITE_URL}/ecosystem/wco#tokenomics` }
+    ]
+  },
+  {
+    title: 'Developers',
+    links: [
+      { label: 'Docs Hub', href: 'https://docs.w-chain.com/', external: true },
+      { label: 'W Builders', href: `${W_CHAIN_SITE_URL}/developers#builders` },
+      { label: 'Run a Node', href: `${W_CHAIN_SITE_URL}/developers#nodes` },
+      { label: 'Mainnet Explorer', href: 'https://scan.w-chain.com/', external: true },
+      { label: 'Testnet Explorer', href: 'https://scan-testnet.w-chain.com/', external: true },
+      { label: 'Testnet Faucet', href: 'https://faucet-testnet.w-chain.com/', external: true }
+    ]
+  },
+  {
+    title: 'About',
+    links: [
+      { label: 'Our story', href: `${W_CHAIN_SITE_URL}/about` },
+      { label: 'Roadmap', href: `${W_CHAIN_SITE_URL}/about#roadmap` },
+      { label: 'Partners', href: `${W_CHAIN_SITE_URL}/about#partners` },
+      { label: 'FAQ', href: `${W_CHAIN_SITE_URL}/about#faq` },
+      { label: 'Brand kit', href: `${W_CHAIN_SITE_URL}/about#brand` }
+    ]
+  },
+  {
+    title: 'Community',
+    links: [
+      { label: 'Community', href: `${W_CHAIN_SITE_URL}/community` },
+      { label: 'WayFinders', href: `${W_CHAIN_SITE_URL}/community#wayfinders` },
+      { label: 'Events & AMAs', href: `${W_CHAIN_SITE_URL}/community#events` }
+    ]
+  },
+  {
+    title: 'Legal',
+    links: [
+      { label: 'Legal Disclosures', href: `${W_CHAIN_SITE_URL}/legal/disclosures` },
+      { label: 'Terms of Access', href: `${W_CHAIN_SITE_URL}/legal/terms-of-access` },
+      { label: 'Audit Reports', href: `${W_CHAIN_SITE_URL}/legal/audit-report` },
+      { label: 'WCO Terms & Conditions', href: `${W_CHAIN_SITE_URL}/legal/wco-terms` }
+    ]
+  }
+]
 
 const FooterWrapper = styled.footer`
   position: relative;
-  min-height: 60px;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  gap: 0;
   width: 100%;
-  background: #ffffff;
-  color: #1a2430;
   border-top: 1px solid #e4ddd2;
-  margin-top: 0;
+  background: #faf8f4;
+  color: #1a2430;
 `
 
-const Description = styled.p`
-  color: #5c6a78;
-  font-size: 0.75rem;
-  font-weight: 400;
-  line-height: 1.6;
-  max-width: 220px;
+const FooterInner = styled.div`
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  padding: 64px 24px 56px;
+
+  @media (min-width: 768px) {
+    padding: 80px 100px 56px;
+  }
 `
-
-// Try to import FaXTwitter from fa6
-// If not available, use a custom SVG
-
-let XIcon = null
-try {
-  // @ts-ignore
-  XIcon = require('react-icons/fa6').FaXTwitter
-} catch {
-  XIcon = () => (
-    <svg width="22" height="22" viewBox="0 0 1200 1227" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M299 0h202l299 441L1099 0h101L801 508l399 719h-202l-299-441-299 441H99l399-719L0 0h299Zm101 1102 200-295 200 295h-400Zm-60-1002H161l340 613-60 108-440-721h199l299 441 60-108-199-333Zm520 0-340 613 60 108 440-721H839l-299 441-60-108 199-333Zm-260 502 60 108 60-108-60-108-60 108Z"
-        fill="#043F84"
-      />
-    </svg>
-  )
-}
-
-const socialLinks = [
-  { icon: XIcon, href: 'https://x.com/WChainNetwork' },
-  { icon: FaDiscord, href: 'https://discord.com/invite/MKwECfek45' },
-  { icon: FaLinkedin, href: 'https://www.linkedin.com/company/wadzchain/posts/?feedView=all' },
-  { icon: FaTelegramPlane, href: 'https://t.me/Official_WChain_Updates' }
-]
 
 const FooterGrid = styled.div`
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  padding: 64px 52px 48px;
-  gap: 48px;
   width: 100%;
-  align-items: flex-start;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px 48px;
 
-  & > div:first-child {
-    max-width: 400px;
-  }
-
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
-    padding: 32px 24px;
-    gap: 32px;
-
-    & > div:first-child {
-      max-width: 100%;
-      width: 100%;
-    }
+  @media (min-width: 1024px) {
+    grid-template-columns: 1.5fr repeat(5, 1fr);
+    gap: 32px 40px;
   }
 `
 
-const Section = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+const BrandColumn = styled.div`
+  grid-column: span 2;
 
-  @media (max-width: 768px) {
-    align-items: center;
-    text-align: center;
+  @media (min-width: 1024px) {
+    grid-column: span 1;
   }
 `
 
-const SectionTitle = styled.div`
-  font-weight: 600;
+const LogoLink = styled.a`
+  display: inline-block;
+  line-height: 0;
+`
+
+const LogoImg = styled.img`
+  width: 70px;
+  height: auto;
+  display: block;
+`
+
+const Tagline = styled.p`
+  margin: 12px 0 0;
+  max-width: 220px;
   font-size: 12px;
-  margin-bottom: 12px;
+  line-height: 1.6;
+  color: #5c6a78;
+  font-weight: 400;
+
+  @media (max-width: 1023px) {
+    max-width: 100%;
+  }
+`
+
+const Column = styled.div`
+  min-width: 0;
+`
+
+const ColumnTitle = styled.p`
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.33;
   color: #1a2430;
 `
 
-const SectionLine = styled.div`
-  display: none;
+const LinkList = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `
 
-const SectionLink = styled.a`
+const FooterLink = styled.a`
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.25rem;
   color: #5c6a78;
   text-decoration: none;
-  font-size: 0.75rem;
-  font-weight: 400;
-  margin-bottom: 8px;
-  line-height: 1.25rem;
+  transition: color 0.15s ease, transform 0.15s ease;
+
   &:hover {
     color: #0e9a86;
-  }
-`
-
-const SocialIconsRow = styled.div`
-  display: flex;
-  gap: 12px;
-  margin-top: 8px;
-
-  @media (max-width: 768px) {
-    justify-content: center;
-    width: 100%;
-  }
-`
-
-const SocialIconBox = styled.a`
-  width: 30px;
-  height: 30px;
-  background: #fff;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.2s;
-  color: #043f84;
-  font-size: 22px;
-
-  &:hover {
-    opacity: 0.8;
+    transform: translateX(2px);
   }
 `
 
 const BottomBar = styled.div`
-  width: 100%;
-  background: #ffffff;
-  color: #5c6a78;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px 32px;
   border-top: 1px solid #e4ddd2;
-  font-size: 12px;
-  margin-top: 0;
+  background: #faf8f4;
+`
 
-  @media (max-width: 768px) {
-    padding: 24px 16px;
-    text-align: center;
-    justify-content: center;
+const BottomInner = styled.div`
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    padding: 24px 100px;
   }
 `
 
-const buildTheBlockLinks = [
-  { text: 'Blogs & Article', href: 'https://w-chain.com/blog/' },
-  { text: 'Tutorials', href: 'https://wchain.gitbook.io/wchain-hub/' },
-  { text: 'Guidelines', href: 'https://w-chain.com/guidelines/' },
-  { text: 'FAQ', href: 'https://w-chain.com/faq/' }
-]
-const programLinks = [
-  { text: 'Tokenomics', href: 'https://w-chain.com/wchain-tokenomics/' },
-  { text: 'Airdrop', href: 'https://w-chain.com/airdrop/' }
-]
-const wcnLinks = [
-  {
-    text: 'WCN Testnet Scan',
-    href:
-      'https://scan-testnet.w-chain.com/?_gl=1*10f265a*_ga*ODgzMzM5NzEyLjE3NDY2MjgxMDU.*_ga_SNV30L8084*czE3NDk4MTM5MjAkbzQkZzEkdDE3NDk4MTUzNzckajYwJGwwJGgw'
-  },
-  {
-    text: 'WCN Mainnet Scan',
-    href:
-      'https://scan.w-chain.com/?_gl=1*10f265a*_ga*ODgzMzM5NzEyLjE3NDY2MjgxMDU.*_ga_SNV30L8084*czE3NDk4MTM5MjAkbzQkZzEkdDE3NDk4MTUzNzckajYwJGwwJGgw'
-  },
-]
+const Copyright = styled.p`
+  margin: 0;
+  font-size: 12px;
+  color: #5c6a78;
+  text-align: center;
 
-const companyLinks = [
-  { text: 'About W Chain', href: 'https://w-chain.com/about-w-chain/' },
-  { text: 'W Foundation', href: 'https://w-chain.com/w-foundation/' },
-  { text: 'Roadmap', href: 'https://w-chain.com/roadmap/' },
-  { text: 'Contact Us', href: 'https://w-chain.com/contact-us/' }
-]
+  @media (min-width: 640px) {
+    text-align: left;
+  }
+`
+
+const AuditBadge = styled.img`
+  width: 76px;
+  height: auto;
+  display: block;
+`
 
 export function Footer() {
+  const logoSrc = `${W_CHAIN_SITE_URL}/images/logo-w-chain.png`
+  const badgeSrc = `${W_CHAIN_SITE_URL}/images/badge-audited.png`
+
   return (
     <FooterWrapper>
-      <FooterGrid>
-        <Section>
-          <Description>{MAIN_TEXT}</Description>
-        </Section>
-        <Section>
-          <SectionTitle>Build The Block</SectionTitle>
-          <SectionLine />
-          {buildTheBlockLinks.map(link => (
-            <SectionLink key={link.text} href={link.href} target="_blank" rel="noopener noreferrer">
-              {link.text}
-            </SectionLink>
+      <FooterInner>
+        <FooterGrid>
+          <BrandColumn>
+            <LogoLink href={W_CHAIN_SITE_URL} target="_blank" rel="noopener noreferrer" aria-label="W Chain home">
+              <LogoImg src={logoSrc} alt="W Chain" width={70} height={39} loading="lazy" />
+            </LogoLink>
+            <Tagline>{TAGLINE}</Tagline>
+          </BrandColumn>
+          {FOOTER_COLUMNS.map(column => (
+            <Column key={column.title}>
+              <ColumnTitle>{column.title}</ColumnTitle>
+              <LinkList>
+                {column.links.map(link => (
+                  <li key={link.label}>
+                    <FooterLink
+                      href={link.href}
+                      {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    >
+                      {link.label}
+                    </FooterLink>
+                  </li>
+                ))}
+              </LinkList>
+            </Column>
           ))}
-        </Section>
-        <Section>
-          <SectionTitle>Program</SectionTitle>
-          <SectionLine />
-          {programLinks.map(link => (
-            <SectionLink key={link.text} href={link.href} target="_blank" rel="noopener noreferrer">
-              {link.text}
-            </SectionLink>
-          ))}
-        </Section>
-        <Section>
-          <SectionTitle>WCN</SectionTitle>
-          <SectionLine />
-          {wcnLinks.map(link => (
-            <SectionLink key={link.text} href={link.href} target="_blank" rel="noopener noreferrer">
-              {link.text}
-            </SectionLink>
-          ))}
-        </Section>
-        <Section>
-          <SectionTitle>Company</SectionTitle>
-          <SectionLine />
-          {companyLinks.map(link => (
-            <SectionLink key={link.text} href={link.href} target="_blank" rel="noopener noreferrer">
-              {link.text}
-            </SectionLink>
-          ))}
-        </Section>
-        <Section>
-          <SectionTitle>Social Media</SectionTitle>
-          <SectionLine />
-          <SocialIconsRow>
-            {socialLinks.map(({ icon: Icon, href }) => {
-              const IconComponent = Icon as React.ComponentType<{ size: number }>
-              return (
-                <SocialIconBox key={href} href={href} target="_blank" rel="noopener noreferrer">
-                  <IconComponent size={16} />
-                </SocialIconBox>
-              )
-            })}
-          </SocialIconsRow>
-        </Section>
-      </FooterGrid>
+        </FooterGrid>
+      </FooterInner>
       <BottomBar>
-        <span>© 2026 W Chain. Infrastructure for builders.</span>
+        <BottomInner>
+          <Copyright>© 2026 W Chain. Infrastructure for builders.</Copyright>
+          <AuditBadge src={badgeSrc} alt="Audited by QuilAudits" width={76} height={31} loading="lazy" />
+        </BottomInner>
       </BottomBar>
     </FooterWrapper>
   )

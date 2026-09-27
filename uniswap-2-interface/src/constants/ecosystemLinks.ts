@@ -1,3 +1,7 @@
+/** Marketing site (footer links, W Chain home). Use http://localhost:3000 in local dev. */
+export const W_CHAIN_SITE_URL =
+  process.env.REACT_APP_W_CHAIN_SITE_URL?.replace(/\/$/, '') ?? 'https://www.w-chain.com'
+
 /** Official W Chain ecosystem destinations (override via env for staging). */
 export const WCO_ECOSYSTEM_URL =
   process.env.REACT_APP_WCO_PORTAL_URL?.replace(/\/$/, '') ?? 'https://w-chain.com/ecosystem/wco'

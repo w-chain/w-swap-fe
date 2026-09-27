@@ -96,18 +96,11 @@ type ExternalLink = {
   label: string
 }
 
+const W_CHAIN_HOME_URL = 'https://w-chain.com'
+
 const NAV_LINKS: (InternalLink | ExternalLink)[] = [
-  { kind: 'internal', to: '/', key: 'home', label: 'Home', exact: true, match: p => p === '/' },
-  { kind: 'internal', to: '/swap', key: 'swap', label: 'Swap', match: p => p.startsWith('/swap') },
-  {
-    kind: 'internal',
-    to: '/pool',
-    key: 'pool',
-    label: 'Pool',
-    match: p => p === '/pool' || p.startsWith('/add') || p.startsWith('/remove') || p === '/find'
-  },
+  { kind: 'external', href: W_CHAIN_HOME_URL, key: 'wChainHome', label: 'W Chain home' },
   { kind: 'internal', to: '/portfolio', key: 'portfolio', label: 'Portfolio', match: p => p === '/portfolio' },
-  { kind: 'internal', to: '/bridge', key: 'bridge', label: 'Bridge', match: p => p === '/bridge' },
   { kind: 'external', href: WCO_ECOSYSTEM_URL, key: 'wco', label: 'WCO' },
   { kind: 'external', href: WAVE_FARM_URL, key: 'waveFarm', label: 'Wave Farm' }
 ]
@@ -117,9 +110,7 @@ export default function AppNav() {
   const { pathname } = useLocation()
 
   const labelFor = (item: InternalLink | ExternalLink) => {
-    if (item.key === 'home') return 'Home'
     if (item.key === 'portfolio') return t('portfolio')
-    if (item.key === 'swap' || item.key === 'pool' || item.key === 'bridge') return t(item.key)
     return item.label
   }
 
