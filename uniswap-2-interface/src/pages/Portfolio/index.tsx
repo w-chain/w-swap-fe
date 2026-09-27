@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import { AutoColumn } from '../../components/Column'
 import FullPositionCard from '../../components/PositionCard'
 import Question from '../../components/QuestionHelper'
 import LiquidityOverview from '../../components/LiquidityAnalytics/LiquidityOverview'
@@ -13,8 +12,19 @@ import {
   PortfolioTokenBalances,
   PortfolioWalletSummary
 } from '../../components/Portfolio/PortfolioSections'
-import { SwapPoolTabs } from '../../components/NavigationTabs'
-import { RowBetween } from '../../components/Row'
+import {
+  PortfolioConnectHero,
+  PortfolioMainColumn,
+  PortfolioMainGrid,
+  PortfolioPageHeader,
+  PortfolioPageShell,
+  PortfolioPageSubtitle,
+  PortfolioPageTitle,
+  PortfolioSectionHeading,
+  PortfolioSectionTitle,
+  PortfolioSideColumn,
+  PortfolioTitleBlock
+} from '../../components/Portfolio/PortfolioPageShell'
 import { EcosystemMessageCard, EcosystemSection } from '../../components/ecosystem/styled'
 import { useUserLiquidityPairs } from '../../hooks/useUserLiquidityPairs'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -29,61 +39,76 @@ export default function Portfolio() {
   const { pairs, isLoading } = useUserLiquidityPairs()
 
   return (
-    <AppBody card>
-      <SwapPoolTabs active="portfolio" />
-      <AutoColumn gap="lg">
-        <RowBetween padding="0 4px">
-          <Text color="#1a2430" fontWeight={700} fontSize={20}>
-            Portfolio
-          </Text>
-          <Question text="Portfolio P/L (24h) compares current LP value to snapshots saved in this browser (~24h ago). Green ▲ is gain, red ▼ is loss." />
-        </RowBetween>
-
-        <PortfolioQuickActions />
+    <AppBody plain>
+      <PortfolioPageShell>
+        <PortfolioPageHeader>
+          <PortfolioTitleBlock>
+            <PortfolioPageTitle>Portfolio</PortfolioPageTitle>
+            <PortfolioPageSubtitle>
+              Liquidity, balances, and estimated P/L across W-Swap — independent of the swap widget.
+            </PortfolioPageSubtitle>
+          </PortfolioTitleBlock>
+          {account ? <PortfolioQuickActions /> : null}
+        </PortfolioPageHeader>
 
         {!account ? (
-          <EcosystemPrimaryButton onClick={toggleWalletModal}>Connect Wallet</EcosystemPrimaryButton>
+          <PortfolioConnectHero>
+            <Text fontSize={15} fontWeight={500} color="#5c6a78" maxWidth="420px" lineHeight="1.5">
+              Connect your wallet to view LP positions (including Wave Farm stakes), token balances, and 24h P/L
+              snapshots saved in this browser.
+            </Text>
+            <EcosystemPrimaryButton style={{ maxWidth: 280 }} onClick={toggleWalletModal}>
+              Connect wallet
+            </EcosystemPrimaryButton>
+          </PortfolioConnectHero>
         ) : (
           <>
             <PortfolioWalletSummary pairs={pairs} />
-            <PortfolioMarketPrices />
             {pairs.length > 0 && !isLoading ? <LiquidityOverview pairs={pairs} showPnl /> : null}
-            <PortfolioTokenBalances />
+
+            <PortfolioMainGrid>
+              <PortfolioMainColumn>
+                <EcosystemSection>
+                  <PortfolioSectionHeading>
+                    <PortfolioSectionTitle>
+                      Liquidity positions
+                      {pairs.length > 0 ? (
+                        <Text as="span" fontSize={14} fontWeight={600} color="#5c6a78" ml="8px">
+                          ({pairs.length})
+                        </Text>
+                      ) : null}
+                    </PortfolioSectionTitle>
+                    <Question text="Pool tokens represent your share of each pair. Expand a row for oracle volume, fees, and add/remove actions." />
+                  </PortfolioSectionHeading>
+
+                  {isLoading ? (
+                    <EcosystemMessageCard>
+                      <Dots style={{ color: '#5c6a78', fontWeight: 500 }}>Loading</Dots>
+                    </EcosystemMessageCard>
+                  ) : pairs.length > 0 ? (
+                    pairs.map(pair => <FullPositionCard key={pair.liquidityToken.address} pair={pair} showPnl />)
+                  ) : (
+                    <EcosystemMessageCard>
+                      No liquidity positions yet.{' '}
+                      <Link to="/add/ETH" style={{ color: '#0e9a86', fontWeight: 600 }}>
+                        Add liquidity
+                      </Link>
+                    </EcosystemMessageCard>
+                  )}
+
+                  <PortfolioImportHint />
+                </EcosystemSection>
+              </PortfolioMainColumn>
+
+              <PortfolioSideColumn>
+                <PortfolioMarketPrices />
+                <PortfolioTokenBalances />
+                <PortfolioActivity />
+              </PortfolioSideColumn>
+            </PortfolioMainGrid>
           </>
         )}
-
-        <EcosystemSection>
-          <RowBetween padding="0 4px">
-            <Text color="#1a2430" fontWeight={600} fontSize={14}>
-              Liquidity positions
-            </Text>
-            <Question text="Pool tokens represent your share of each pair. Expand a row for oracle volume, fees, and add/remove actions." />
-          </RowBetween>
-
-          {!account ? (
-            <EcosystemMessageCard>Connect to view liquidity positions.</EcosystemMessageCard>
-          ) : isLoading ? (
-            <EcosystemMessageCard>
-              <Dots style={{ color: '#5c6a78', fontWeight: 500 }}>Loading</Dots>
-            </EcosystemMessageCard>
-          ) : pairs.length > 0 ? (
-            pairs.map(pair => (
-              <FullPositionCard key={pair.liquidityToken.address} pair={pair} showPnl />
-            ))
-          ) : (
-            <EcosystemMessageCard>
-              No liquidity positions yet.{' '}
-              <Link to="/add/ETH" style={{ color: '#0e9a86', fontWeight: 600 }}>
-                Add liquidity
-              </Link>
-            </EcosystemMessageCard>
-          )}
-
-          <PortfolioImportHint />
-        </EcosystemSection>
-
-        {account ? <PortfolioActivity /> : null}
-      </AutoColumn>
+      </PortfolioPageShell>
     </AppBody>
   )
 }

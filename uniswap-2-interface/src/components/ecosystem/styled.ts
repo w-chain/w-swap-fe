@@ -130,6 +130,60 @@ export const EcosystemModalList = styled.div`
   padding: 16px 24px 24px;
 `
 
+/** Header wallet row: balance + address pill */
+export const HeaderAccountShell = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 4px 4px 12px;
+  background: #ffffff;
+  border: 1px solid #e4ddd2;
+  border-radius: 12px;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset, 0 8px 24px -20px rgba(26, 36, 48, 0.12);
+  white-space: nowrap;
+  width: 100%;
+`
+
+export const HeaderBalanceText = styled.span`
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a2430;
+  padding-right: 4px;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `};
+`
+
+export const HeaderSettingsButton = styled.button`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #e4ddd2;
+  border-radius: 10px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+
+  svg {
+    stroke: #1a2430;
+  }
+
+  &:hover,
+  &:focus {
+    outline: none;
+    border-color: #0e9a86;
+    background: #faf8f4;
+  }
+`
+
 export const EcosystemPickButton = styled.button<{ $selected?: boolean }>`
   display: flex;
   align-items: center;

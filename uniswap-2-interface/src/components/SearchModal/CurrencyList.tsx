@@ -25,8 +25,9 @@ function currencyKey(currency: Currency): string {
 const StyledBalanceText = styled(Text)`
   white-space: nowrap;
   overflow: hidden;
-  max-width: 5rem;
+  max-width: 7rem;
   text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
 `
 
 const Tag = styled.div`
@@ -202,7 +203,7 @@ export default function CurrencyList({
       width="100%"
       itemData={itemData}
       itemCount={itemData.length}
-      itemSize={62}
+      itemSize={76}
       itemKey={itemKey}
     >
       {Row}

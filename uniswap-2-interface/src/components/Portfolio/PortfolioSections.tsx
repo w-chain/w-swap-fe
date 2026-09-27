@@ -26,12 +26,9 @@ import {
 import { ExternalLink, StyledInternalLink } from '../../theme'
 import { Pair } from '@uniswap/sdk'
 
-const StatGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  width: 100%;
-`
+import { PortfolioStatGrid } from './PortfolioPageShell'
+
+const StatGrid = PortfolioStatGrid
 
 const StatCard = styled.div`
   background: #ffffff;
@@ -251,22 +248,35 @@ export function PortfolioActivity() {
   )
 }
 
+const QuickActionsWrap = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+  max-width: 420px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    max-width: 100%;
+    justify-content: flex-start;
+  `};
+`
+
 export function PortfolioQuickActions() {
   return (
-    <StatGrid style={{ marginBottom: 8 }}>
-      <EcosystemPrimaryButton as={Link} to="/swap">
+    <QuickActionsWrap>
+      <EcosystemPrimaryButton as={Link} to="/swap" style={{ flex: '1 1 auto', minWidth: 100, padding: '10px 14px' }}>
         Swap
       </EcosystemPrimaryButton>
-      <EcosystemPrimaryButton as={Link} to="/add/ETH">
-        Add liquidity
+      <EcosystemPrimaryButton as={Link} to="/add/ETH" style={{ flex: '1 1 auto', minWidth: 100, padding: '10px 14px' }}>
+        Add LP
       </EcosystemPrimaryButton>
-      <EcosystemPrimaryButton as={Link} to="/bridge">
+      <EcosystemPrimaryButton as={Link} to="/bridge" style={{ flex: '1 1 auto', minWidth: 100, padding: '10px 14px' }}>
         Bridge
       </EcosystemPrimaryButton>
-      <EcosystemPrimaryButton as={Link} to="/find">
-        Import pool
+      <EcosystemPrimaryButton as={Link} to="/find" style={{ flex: '1 1 auto', minWidth: 100, padding: '10px 14px' }}>
+        Import
       </EcosystemPrimaryButton>
-    </StatGrid>
+    </QuickActionsWrap>
   )
 }
 

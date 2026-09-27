@@ -10,12 +10,7 @@ import { formatUsd } from '../../utils/formatUsd'
 import Question from '../QuestionHelper'
 import PnlPercentBadge from '../Portfolio/PnlPercentBadge'
 
-const StatGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  width: 100%;
-`
+import { PortfolioStatGrid as StatGrid } from '../Portfolio/PortfolioPageShell'
 
 const StatCard = styled.div`
   background: #ffffff;

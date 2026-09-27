@@ -33,14 +33,15 @@ const IconWrapper = styled.div<{ size?: number }>`
   }
 `
 
-const Web3StatusGeneric = styled(ButtonSecondary)`
+const Web3StatusGeneric = styled(ButtonSecondary)<{ $ecosystem?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
-  width: 100%;
+  width: ${({ $ecosystem }) => ($ecosystem ? 'auto' : '100%')};
   align-items: center;
-  padding: 0.5rem;
-  border-radius: 12px;
+  padding: ${({ $ecosystem }) => ($ecosystem ? '0.35rem 0.55rem' : '0.5rem')};
+  border-radius: ${({ $ecosystem }) => ($ecosystem ? '8px' : '12px')};
   cursor: pointer;
   user-select: none;
+  border: ${({ $ecosystem }) => ($ecosystem ? 'none' : undefined)};
   :focus {
     outline: none;
   }
@@ -60,21 +61,25 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 // box-shadow: inset -2px -2px 4px rgba(4, 63, 132, 0.2);
 // border-radius: 7px;
 
-const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
-  background-color: ${({ theme }) => theme.primary1};
+const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean; $ecosystem?: boolean }>`
+  background-color: ${({ theme, $ecosystem }) => ($ecosystem ? 'transparent' : theme.primary1)};
+  background-image: ${({ $ecosystem }) =>
+    $ecosystem ? 'linear-gradient(90deg, #12b39c 0%, #3b82f6 100%)' : 'none'};
   border: none;
-  color: ${({ theme }) => theme.primaryText1};
-  font-weight: 500;
-  box-shadow: inset -2px -2px 4px rgba(4, 63, 132, 0.2);
+  color: ${({ theme, $ecosystem }) => ($ecosystem ? '#060a0d' : theme.primaryText1)};
+  font-weight: ${({ $ecosystem }) => ($ecosystem ? 600 : 500)};
+  box-shadow: ${({ $ecosystem }) => ($ecosystem ? 'none' : 'inset -2px -2px 4px rgba(4, 63, 132, 0.2)')};
 
   :hover,
   :focus {
-    border: 1px solid ${({ theme }) => darken(0.05, theme.primary1)};
-    color: ${({ theme }) => theme.primaryText1};
+    border: ${({ $ecosystem, theme }) => ($ecosystem ? 'none' : `1px solid ${darken(0.05, theme.primary1)}`)};
+    color: ${({ theme, $ecosystem }) => ($ecosystem ? '#060a0d' : theme.primaryText1)};
+    filter: ${({ $ecosystem }) => ($ecosystem ? 'brightness(0.97)' : 'none')};
   }
 
-  ${({ faded }) =>
+  ${({ faded, $ecosystem }) =>
     faded &&
+    !$ecosystem &&
     css`
       background-color: ${({ theme }) => theme.primary2};
       border: 1px solid ${({ theme }) => theme.primary2};
@@ -88,27 +93,41 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
     `}
 `
 
-const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
-  color: white;
-  background: rgba(4, 63, 132, 0.2);
-  box-shadow: inset -2px -2px 4px rgba(4, 63, 132, 0.2);
-  border-radius: 7px;
+const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean; $ecosystem?: boolean }>`
+  color: ${({ $ecosystem }) => ($ecosystem ? '#060a0d' : 'white')};
+  background-color: ${({ $ecosystem }) => ($ecosystem ? 'transparent' : 'rgba(4, 63, 132, 0.2)')};
+  background-image: ${({ $ecosystem }) =>
+    $ecosystem ? 'linear-gradient(90deg, #12b39c 0%, #3b82f6 100%)' : 'none'};
+  box-shadow: ${({ $ecosystem }) => ($ecosystem ? 'none' : 'inset -2px -2px 4px rgba(4, 63, 132, 0.2)')};
+  border-radius: ${({ $ecosystem }) => ($ecosystem ? '8px' : '7px')};
 
-  font-weight: 500;
+  font-weight: ${({ $ecosystem }) => ($ecosystem ? 600 : 500)};
   :hover,
   :focus {
-    background: rgba(4, 63, 132, 0.4);
-    box-shadow: inset -2px -2px 4px rgba(4, 63, 132, 0.4);
+    background-color: ${({ $ecosystem }) => ($ecosystem ? 'transparent' : 'rgba(4, 63, 132, 0.4)')};
+    background-image: ${({ $ecosystem }) =>
+      $ecosystem ? 'linear-gradient(90deg, #12b39c 0%, #3b82f6 100%)' : 'none'};
+    box-shadow: ${({ $ecosystem }) => ($ecosystem ? 'none' : 'inset -2px -2px 4px rgba(4, 63, 132, 0.4)')};
+    filter: ${({ $ecosystem }) => ($ecosystem ? 'brightness(0.97)' : 'none')};
   }
+
+  ${({ $ecosystem }) =>
+    $ecosystem &&
+    css`
+      &:hover,
+      &:focus {
+        color: #060a0d;
+      }
+    `}
 `
 
-const Text = styled.p`
+const Text = styled.p<{ $ecosystem?: boolean }>`
   flex: 1 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin: 0 0.5rem 0 0.25rem;
-  font-size: 1rem;
+  margin: 0 0.35rem 0 0.15rem;
+  font-size: ${({ $ecosystem }) => ($ecosystem ? '14px' : '1rem')};
   width: fit-content;
   font-weight: 600;
 `
@@ -151,7 +170,7 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
   return null
 }
 
-function Web3StatusInner() {
+function Web3StatusInner({ ecosystem }: { ecosystem?: boolean }) {
   const { t } = useTranslation()
   const { account, connector, error } = useWeb3React()
 
@@ -172,15 +191,21 @@ function Web3StatusInner() {
 
   if (account) {
     return (
-      <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
+      <Web3StatusConnected
+        id="web3-status-connected"
+        onClick={toggleWalletModal}
+        pending={hasPendingTransactions}
+        $ecosystem={ecosystem}
+      >
         {hasPendingTransactions ? (
           <RowBetween>
-            <Text>{pending?.length} Pending</Text> <Loader stroke="white" />
+            <Text $ecosystem={ecosystem}>{pending?.length} Pending</Text>{' '}
+            <Loader stroke={ecosystem ? '#060a0d' : 'white'} />
           </RowBetween>
         ) : (
           <>
             {hasSocks ? SOCK : null}
-            <Text>{ENSName || shortenAddress(account)}</Text>
+            <Text $ecosystem={ecosystem}>{ENSName || shortenAddress(account)}</Text>
           </>
         )}
         {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}
@@ -195,14 +220,14 @@ function Web3StatusInner() {
     )
   } else {
     return (
-      <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-        <Text>{t('Connect Wallet')}</Text>
+      <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account} $ecosystem={ecosystem}>
+        <Text $ecosystem={ecosystem}>{t('Connect Wallet')}</Text>
       </Web3StatusConnect>
     )
   }
 }
 
-export default function Web3Status() {
+export default function Web3Status({ ecosystem }: { ecosystem?: boolean }) {
   const { active, account } = useWeb3React()
   const contextNetwork = useWeb3React(NetworkContextName)
 
@@ -224,7 +249,7 @@ export default function Web3Status() {
 
   return (
     <>
-      <Web3StatusInner />
+      <Web3StatusInner ecosystem={ecosystem} />
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
     </>
   )

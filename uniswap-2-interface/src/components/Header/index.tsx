@@ -2,7 +2,7 @@ import { ChainId } from '@uniswap/sdk'
 import React from 'react'
 import { useLocation } from 'react-router-dom'
 import { usesEcosystemTheme } from '../../utils/ecosystemTheme'
-import { Text } from 'rebass'
+import { HeaderAccountShell, HeaderBalanceText } from '../ecosystem/styled'
 
 import styled from 'styled-components'
 
@@ -138,11 +138,16 @@ const RightSection = styled.div`
   gap: 8px;
 `
 
-const BalanceText = styled(Text)`
+const BalanceText = styled.span`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
   `};
   color: ${({ theme }) => theme.primaryText1};
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 600;
+  padding-left: 0.75rem;
+  padding-right: 0.5rem;
 `
 
 const NETWORK_IMAGE: { [chainId in ChainId]: string | null } = {
@@ -165,7 +170,8 @@ const NetworkSelectorWrapper = styled.div`
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { pathname } = useLocation()
-  const isLanding = usesEcosystemTheme(pathname)
+  const ecosystemTheme = usesEcosystemTheme(pathname)
+  const isLanding = ecosystemTheme && pathname === '/'
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
@@ -189,15 +195,26 @@ export default function Header() {
             <NetworkSelector />
           </NetworkSelectorWrapper>
           <RightSection>
-            <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-              {account && userEthBalance ? (
-                <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={600}>
-                  {userEthBalance?.toSignificant(4)} {getNativeTokenSymbol(chainId)}
-                </BalanceText>
-              ) : null}
-              <Web3Status />
-            </AccountElement>
-            <Settings />
+            {ecosystemTheme ? (
+              <HeaderAccountShell style={{ pointerEvents: 'auto' }}>
+                {account && userEthBalance ? (
+                  <HeaderBalanceText>
+                    {userEthBalance?.toSignificant(4)} {getNativeTokenSymbol(chainId)}
+                  </HeaderBalanceText>
+                ) : null}
+                <Web3Status ecosystem />
+              </HeaderAccountShell>
+            ) : (
+              <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
+                {account && userEthBalance ? (
+                  <BalanceText>
+                    {userEthBalance?.toSignificant(4)} {getNativeTokenSymbol(chainId)}
+                  </BalanceText>
+                ) : null}
+                <Web3Status />
+              </AccountElement>
+            )}
+            <Settings ecosystem={ecosystemTheme} />
           </RightSection>
         </HeaderControls>
       </RowBetween>

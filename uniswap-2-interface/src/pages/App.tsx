@@ -48,12 +48,12 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
 `
 
-const BodyWrapper = styled.div<{ $landing?: boolean }>`
+const BodyWrapper = styled.div<{ $landing?: boolean; $portfolio?: boolean }>`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-top: ${({ $landing }) => ($landing ? '88px' : '120px')};
-  align-items: center;
+  padding-top: ${({ $landing, $portfolio }) => ($portfolio ? '96px' : $landing ? '88px' : '120px')};
+  align-items: ${({ $portfolio }) => ($portfolio ? 'stretch' : 'center')};
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
@@ -96,10 +96,11 @@ const BodyWrapper = styled.div<{ $landing?: boolean }>`
 function AppRoutes() {
   const { pathname } = useLocation()
   const isLanding = pathname === '/'
+  const isPortfolio = pathname === '/portfolio'
   const ecosystemTheme = usesEcosystemTheme(pathname)
 
   return (
-    <BodyWrapper $landing={isLanding || ecosystemTheme}>
+    <BodyWrapper $landing={isLanding || ecosystemTheme} $portfolio={isPortfolio}>
       <Popups />
       <AppBg $ecosystem={ecosystemTheme} />
       {ecosystemTheme ? <LandingHeroGlow /> : <SeamlessGradient />}

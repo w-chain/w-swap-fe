@@ -27,7 +27,7 @@ export const MenuItem = styled(RowBetween)`
   min-height: 52px;
   margin: 0 16px 10px;
   display: grid;
-  grid-template-columns: auto minmax(auto, 1fr) auto minmax(0, 72px);
+  grid-template-columns: auto minmax(auto, 1fr) auto minmax(0, 96px);
   grid-gap: 16px;
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
