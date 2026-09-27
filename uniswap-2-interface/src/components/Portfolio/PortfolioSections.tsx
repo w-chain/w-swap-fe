@@ -249,33 +249,44 @@ export function PortfolioActivity() {
 }
 
 const QuickActionsWrap = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
-  justify-content: flex-end;
-  max-width: 420px;
+  width: min(100%, 288px);
+  flex-shrink: 0;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    max-width: 100%;
-    justify-content: flex-start;
+    width: 100%;
+    max-width: 320px;
   `};
+
+  @media (min-width: 640px) {
+    width: min(100%, 320px);
+  }
+`
+
+const QuickActionButton = styled(EcosystemPrimaryButton)`
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  font-size: 13px;
 `
 
 export function PortfolioQuickActions() {
   return (
     <QuickActionsWrap>
-      <EcosystemPrimaryButton as={Link} to="/swap" style={{ flex: '1 1 auto', minWidth: 100, padding: '10px 14px' }}>
+      <QuickActionButton as={Link} to="/swap">
         Swap
-      </EcosystemPrimaryButton>
-      <EcosystemPrimaryButton as={Link} to="/add/ETH" style={{ flex: '1 1 auto', minWidth: 100, padding: '10px 14px' }}>
+      </QuickActionButton>
+      <QuickActionButton as={Link} to="/add/ETH">
         Add LP
-      </EcosystemPrimaryButton>
-      <EcosystemPrimaryButton as={Link} to="/bridge" style={{ flex: '1 1 auto', minWidth: 100, padding: '10px 14px' }}>
+      </QuickActionButton>
+      <QuickActionButton as={Link} to="/bridge">
         Bridge
-      </EcosystemPrimaryButton>
-      <EcosystemPrimaryButton as={Link} to="/find" style={{ flex: '1 1 auto', minWidth: 100, padding: '10px 14px' }}>
-        Import
-      </EcosystemPrimaryButton>
+      </QuickActionButton>
+      <QuickActionButton as={Link} to="/find">
+        Import pool
+      </QuickActionButton>
     </QuickActionsWrap>
   )
 }

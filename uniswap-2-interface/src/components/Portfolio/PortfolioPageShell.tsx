@@ -20,6 +20,12 @@ export const PortfolioPageHeader = styled.header`
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 28px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  `};
 `
 
 export const PortfolioTitleBlock = styled.div`
@@ -27,6 +33,8 @@ export const PortfolioTitleBlock = styled.div`
   flex-direction: column;
   gap: 6px;
   max-width: 640px;
+  flex: 1;
+  min-width: 0;
 `
 
 export const PortfolioPageTitle = styled.h1`
@@ -48,6 +56,13 @@ export const PortfolioPageSubtitle = styled.p`
   font-weight: 500;
   line-height: 1.45;
   color: #5c6a78;
+  max-width: 22rem;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 14px;
+    line-height: 1.4;
+    max-width: 100%;
+  `};
 `
 
 /** Vertical stack for wallet, analytics, and main grid sections */

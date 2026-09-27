@@ -46,7 +46,9 @@ export default function Portfolio() {
           <PortfolioTitleBlock>
             <PortfolioPageTitle>Portfolio</PortfolioPageTitle>
             <PortfolioPageSubtitle>
-              Liquidity, balances, and estimated P/L across W-Swap — independent of the swap widget.
+              Liquidity, balances, and estimated P/L
+              <br />
+              across W-Swap — independent of the swap widget.
             </PortfolioPageSubtitle>
           </PortfolioTitleBlock>
           {account ? <PortfolioQuickActions /> : null}
