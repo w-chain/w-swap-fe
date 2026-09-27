@@ -1,29 +1,12 @@
-import { CurrencyAmount, Token } from '@uniswap/sdk'
-import React, { useCallback, useContext, useMemo, useState } from 'react'
-import { ArrowDown } from 'react-feather'
-import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components'
-import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonPrimaryGradient } from '../../components/Button'
-import { AutoColumn } from '../../components/Column'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { AutoRow, RowBetween } from '../../components/Row'
-import { ArrowWrapper, BottomGrouping, Wrapper } from '../../components/swap/styleds'
-import TradePrice from '../../components/swap/TradePrice'
-import { useHistory } from 'react-router-dom'
-import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
-import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
-import { Field } from '../../state/swap/actions'
-import {
-  useDerivedSwapInfo,
-  useSwapActionHandlers,
-  useSwapState
-} from '../../state/swap/hooks'
-import { useExpertModeManager } from '../../state/user/hooks'
-import { LinkStyledButton } from '../../theme'
-import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import AppBody from '../AppBody'
+import React, { useState } from 'react'
+import styled from 'styled-components'
 import { Footer } from '../../components/Footer'
+import AppBody from '../AppBody'
+import Swap from '../Swap'
+import Pool from '../Pool'
+import Bridge from '../Bridge'
+
+type LandingWidgetTab = 'swap' | 'pool' | 'bridge'
 const STATS = [
   { value: '240K+', label: 'Completed Txns' },
   { value: '5K+', label: 'Active Wallets' },
@@ -69,90 +52,7 @@ const COMPARISON_INTRO =
   'W-SWAP DEX is an AMM DEX: you trade against liquidity pools, LPs earn 0.3% on every swap, and the trade settles on W Chain. Compare the numbers a trader feels — gas to execute the swap, the pool fee, and how fast the trade confirms.'
 
 export default function Landing() {
-  const theme = useContext(ThemeContext)
-
-  // for expert mode
-  const [isExpertMode] = useExpertModeManager()
-
-  // swap state
-  const { independentField, typedValue, recipient } = useSwapState()
-  const {
-    v1Trade,
-    v2Trade,
-    currencyBalances,
-    parsedAmount,
-    currencies
-  } = useDerivedSwapInfo()
-  const { wrapType } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
-  const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
-  const toggledVersion = useToggledVersion()
-  const trade = showWrap
-    ? undefined
-    : {
-        [Version.v1]: v1Trade,
-        [Version.v2]: v2Trade
-      }[toggledVersion]
-
-  const parsedAmounts = showWrap
-    ? {
-        [Field.INPUT]: parsedAmount,
-        [Field.OUTPUT]: parsedAmount
-      }
-    : {
-        [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-        [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
-      }
-
-  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
-  const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
-
-  const handleTypeInput = useCallback(
-    (value: string) => {
-      onUserInput(Field.INPUT, value)
-    },
-    [onUserInput]
-  )
-  const handleTypeOutput = useCallback(
-    (value: string) => {
-      onUserInput(Field.OUTPUT, value)
-    },
-    [onUserInput]
-  )
-
-  const formattedAmounts = {
-    [independentField]: typedValue,
-    [dependentField]: showWrap
-      ? parsedAmounts[independentField]?.toExact() ?? ''
-      : parsedAmounts[dependentField]?.toSignificant(6) ?? ''
-  }
-
-  // check if user has gone through approval process, used to show two step buttons, reset on token change
-  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
-
-  const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
-  const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
-
-  const handleInputSelect = useCallback(
-    inputCurrency => {
-      setApprovalSubmitted(false) // reset 2 step UI for approvals
-      onCurrencySelection(Field.INPUT, inputCurrency)
-    },
-    [onCurrencySelection]
-  )
-
-  const handleMaxInput = useCallback(() => {
-    maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
-  }, [maxAmountInput, onUserInput])
-
-  const handleOutputSelect = useCallback(outputCurrency => onCurrencySelection(Field.OUTPUT, outputCurrency), [
-    onCurrencySelection
-  ])
-
-  const history = useHistory()
-
-  const handleNavigateToSwap = useCallback(() => {
-    history.push('/swap')
-  }, [history])
+  const [widgetTab, setWidgetTab] = useState<LandingWidgetTab>('swap')
 
   return (
     <>
@@ -178,98 +78,25 @@ export default function Landing() {
               </HeroStats>
             </HeroCopy>
 
-            <WidgetColumn id="swap-widget">
+            <WidgetColumn id="swap-widget" $wide={widgetTab === 'bridge'}>
               <AppBody plain>
-                <TradingCard>
+                <TradingCard $compact={widgetTab !== 'pool'}>
                   <LandingTabs>
-                    <TabPill active type="button">
+                    <TabPill active={widgetTab === 'swap'} type="button" onClick={() => setWidgetTab('swap')}>
                       swap
                     </TabPill>
-                    <TabPill type="button" onClick={() => history.push('/pool')}>
+                    <TabPill active={widgetTab === 'pool'} type="button" onClick={() => setWidgetTab('pool')}>
                       pool
                     </TabPill>
-                    <TabPill type="button" onClick={() => history.push('/bridge')}>
+                    <TabPill active={widgetTab === 'bridge'} type="button" onClick={() => setWidgetTab('bridge')}>
                       bridge
                     </TabPill>
                   </LandingTabs>
-                  <Wrapper id="swap-page">
-                    <AutoColumn gap={'sm'}>
-                      <CurrencyInputPanel
-                label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'}
-                value={formattedAmounts[Field.INPUT]}
-                showMaxButton={!atMaxAmountInput}
-                currency={currencies[Field.INPUT]}
-                onUserInput={handleTypeInput}
-                onMax={handleMaxInput}
-                onCurrencySelect={handleInputSelect}
-                otherCurrency={currencies[Field.OUTPUT]}
-                id="swap-currency-input"
-                variant="light"
-              />
-                      <AutoColumn justify="space-between">
-                        <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '4px 0' }}>
-                          <FlipButton
-                            type="button"
-                            aria-label="Flip tokens"
-                            onClick={() => {
-                              setApprovalSubmitted(false)
-                              onSwitchTokens()
-                            }}
-                          >
-                            ⇄
-                          </FlipButton>
-                  {recipient === null && !showWrap && isExpertMode ? (
-                    <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
-                      + Add a send (optional)
-                    </LinkStyledButton>
-                  ) : null}
-                </AutoRow>
-              </AutoColumn>
-              <CurrencyInputPanel
-                value={formattedAmounts[Field.OUTPUT]}
-                onUserInput={handleTypeOutput}
-                label={independentField === Field.INPUT && !showWrap && trade ? 'To (estimated)' : 'To'}
-                showMaxButton={false}
-                currency={currencies[Field.OUTPUT]}
-                onCurrencySelect={handleOutputSelect}
-                otherCurrency={currencies[Field.INPUT]}
-                id="swap-currency-output"
-                variant="light"
-              />
-
-              {recipient !== null && !showWrap ? (
-                <>
-                  <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                    <ArrowWrapper clickable={false}>
-                      <ArrowDown size="16" color={theme.text2} />
-                    </ArrowWrapper>
-                    <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
-                      - Remove send
-                    </LinkStyledButton>
-                  </AutoRow>
-                  <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
-                </>
-              ) : null}
-
-                      {showWrap ? null : (
-                        <PriceRow>
-                          <Text fontWeight={400} fontSize={14} color="#1a2430">
-                            Price
-                          </Text>
-                          <TradePrice
-                            price={trade?.executionPrice}
-                            showInverted={false}
-                            setShowInverted={() => undefined}
-                          />
-                        </PriceRow>
-                      )}
-                    </AutoColumn>
-                    <BottomGrouping>
-                      <LaunchButton onClick={handleNavigateToSwap}>
-                        Get Started <span aria-hidden>→</span>
-                      </LaunchButton>
-                    </BottomGrouping>
-                  </Wrapper>
+                  <LandingWidgetScroll $tall={widgetTab === 'pool'}>
+                    {widgetTab === 'swap' && <Swap embedded />}
+                    {widgetTab === 'pool' && <Pool embedded />}
+                    {widgetTab === 'bridge' && <Bridge embedded />}
+                  </LandingWidgetScroll>
                 </TradingCard>
               </AppBody>
             </WidgetColumn>
@@ -462,9 +289,9 @@ const HeroStat = styled.div`
   }
 `
 
-const WidgetColumn = styled.div`
+const WidgetColumn = styled.div<{ $wide?: boolean }>`
   width: 100%;
-  max-width: 500px;
+  max-width: ${({ $wide }) => ($wide ? '600px' : '500px')};
   flex-shrink: 0;
   scroll-margin-top: 96px;
 
@@ -473,14 +300,21 @@ const WidgetColumn = styled.div`
   }
 `
 
-const TradingCard = styled.div`
+const TradingCard = styled.div<{ $compact?: boolean }>`
   width: 100%;
   margin: 0 auto;
   background: #ffffff;
   border: 1px solid #e4ddd2;
   border-radius: 16px;
-  padding: 35px 35px 50px;
+  padding: ${({ $compact }) => ($compact ? '35px 35px 40px' : '35px 35px 50px')};
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset, 0 18px 40px -28px rgba(26, 36, 48, 0.18);
+`
+
+const LandingWidgetScroll = styled.div<{ $tall?: boolean }>`
+  max-height: ${({ $tall }) => ($tall ? 'min(70vh, 720px)' : 'none')};
+  overflow-y: ${({ $tall }) => ($tall ? 'auto' : 'visible')};
+  overflow-x: hidden;
+  padding-right: ${({ $tall }) => ($tall ? '4px' : '0')};
 `
 
 const LandingTabs = styled.div`
@@ -514,38 +348,6 @@ const TabPill = styled.button<{ active?: boolean }>`
     background: #fff;
     color: #5c6a78;
   `}
-`
-
-const FlipButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  border: 1px solid #e4ddd2;
-  background: #ffffff;
-  color: #9ca3af;
-  font-size: 18px;
-  cursor: pointer;
-  transition: border-color 0.2s ease, color 0.2s ease;
-
-  &:hover {
-    border-color: #22d3ee;
-    color: #1a2430;
-  }
-`
-
-const PriceRow = styled(RowBetween)`
-  margin-top: 28px;
-  padding: 0 4px;
-`
-
-const LaunchButton = styled(ButtonPrimaryGradient)`
-  width: 100%;
-  min-height: 42px;
-  border-radius: 5px;
-  font-size: 14px;
 `
 
 const SurfaceBand = styled.div`

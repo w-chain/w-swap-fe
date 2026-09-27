@@ -17,16 +17,15 @@ import AppBody from '../AppBody'
 import { Dots } from '../../components/swap/styleds'
 import LiquidityOverview from '../../components/LiquidityAnalytics/LiquidityOverview'
 
-export default function Pool() {
+export default function Pool({ embedded = false }: { embedded?: boolean }) {
   const { account } = useActiveWeb3React()
   const { pairs: allV2PairsWithLiquidity, isLoading: v2IsLoading } = useUserLiquidityPairs()
   const hasV1Liquidity = useUserHasLiquidityInAllTokens()
 
-  return (
+  const poolBody = (
     <>
-      <AppBody card>
-        <SwapPoolTabs active={'pool'} />
-        <AutoColumn gap="lg" justify="center">
+      {!embedded && <SwapPoolTabs active={'pool'} />}
+      <AutoColumn gap="lg" justify="center">
           <EcosystemPrimaryButton id="join-pool-button" as={Link} to="/add/ETH">
             Add Liquidity
           </EcosystemPrimaryButton>
@@ -66,8 +65,9 @@ export default function Pool() {
               </StyledInternalLink>
             </Text>
           </EcosystemSection>
-        </AutoColumn>
-      </AppBody>
+      </AutoColumn>
     </>
   )
+
+  return embedded ? poolBody : <AppBody card>{poolBody}</AppBody>
 }

@@ -26,7 +26,7 @@ import { useBridgeApproveCallback } from './stores/hooks/useBridgeApproveCallbac
 import { ApprovalState } from '../../hooks/useApproveCallback'
 import ConfirmBridgeModal from './components/ConfirmBridgeModal'
 
-export default function Bridge() {
+export default function Bridge({ embedded = false }: { embedded?: boolean }) {
   const { account, chainId } = useActiveWeb3React()
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [ wrongNetwork, setWrongNetwork ] = useState(false)
@@ -206,15 +206,18 @@ export default function Bridge() {
     setOpenHistory(!openHistory)
   }, [openHistory])
 
-  return (
-    <div style={{ position: 'relative' }}>
-      <AppBody card wideCard>
-        <SwapPoolTabs active={'bridge'} />
-
-        {openHistory ? (
-          <BridgeHistory />
-        ) : (
-          <Wrapper id="bridge-page">
+  const bridgeBody = (
+    <>
+      {!embedded && <SwapPoolTabs active={'bridge'} />}
+      {embedded && (
+        <EmbeddedHistoryRow type="button" onClick={toggleHistory}>
+          {openHistory ? '← Back to bridge' : 'View bridge history'}
+        </EmbeddedHistoryRow>
+      )}
+      {openHistory ? (
+        <BridgeHistory />
+      ) : (
+        <Wrapper id="bridge-page">
             <ConfirmBridgeModal
               isOpen={showConfirm}
               amount={bridgeState.fromAmount}
@@ -266,10 +269,16 @@ export default function Bridge() {
               )}
               </BottomGrouping>
             </AutoColumn>
-          </Wrapper>
-        )}
-      </AppBody>
+        </Wrapper>
+      )}
+    </>
+  )
 
+  return (
+    <div style={{ position: 'relative' }}>
+      {embedded ? bridgeBody : <AppBody card wideCard>{bridgeBody}</AppBody>}
+
+      {!embedded && (
       <StyledBridgeHistoryLink type="button" aria-label="Bridge history" onClick={toggleHistory}>
         {!openHistory ? 
           <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -312,9 +321,28 @@ export default function Bridge() {
         }
         
       </StyledBridgeHistoryLink>
+      )}
     </div>
   )
 }
+
+const EmbeddedHistoryRow = styled.button`
+  display: block;
+  width: 100%;
+  margin: 0 0 12px;
+  padding: 0;
+  border: none;
+  background: none;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0e9a86;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`
 
 const BridgeNetworkRow = styled.div`
   display: grid;

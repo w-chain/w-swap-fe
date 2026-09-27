@@ -49,7 +49,7 @@ import { getTokensRequiringWarning } from '../../utils/tokenValidation'
 import WSwapPoolStatsCard from '../../components/LiquidityAnalytics/WSwapPoolStatsCard'
 import { useIndexedPairAddress } from '../../hooks/useIndexedPairAddress'
 
-export default function Swap() {
+export default function Swap({ embedded = false }: { embedded?: boolean }) {
   const history = useHistory()
   const location = useLocation()
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -328,16 +328,10 @@ export default function Swap() {
     onCurrencySelection
   ])
 
-  return (
+  const swapBody = (
     <>
-      <TokenWarningModal
-        isOpen={tokensRequiringWarning.length > 0 && !dismissTokenWarning}
-        tokens={tokensRequiringWarning}
-        onConfirm={handleConfirmTokenWarning}
-      />
-      <AppBody card>
-        <SwapPoolTabs active={'swap'} />
-        <Wrapper id="swap-page">
+      {!embedded && <SwapPoolTabs active={'swap'} />}
+      <Wrapper id="swap-page">
           <ConfirmSwapModal
             isOpen={showConfirm}
             trade={trade}
@@ -546,8 +540,18 @@ export default function Swap() {
           ) : null}
 
           <AdvancedSwapDetailsDropdown trade={wrapType === WrapType.WRAP ? undefined : trade} />
-        </Wrapper>
-      </AppBody>
+      </Wrapper>
+    </>
+  )
+
+  return (
+    <>
+      <TokenWarningModal
+        isOpen={tokensRequiringWarning.length > 0 && !dismissTokenWarning}
+        tokens={tokensRequiringWarning}
+        onConfirm={handleConfirmTokenWarning}
+      />
+      {embedded ? swapBody : <AppBody card>{swapBody}</AppBody>}
     </>
   )
 }
