@@ -25,6 +25,7 @@ import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Bridge from './Bridge'
 import Landing from './Landing'
 import FishComponent from '../components/FishComponent'
+import { Footer } from '../components/Footer'
 import { usesEcosystemTheme } from '../utils/ecosystemTheme'
 
 const AppWrapper = styled.div`
@@ -129,6 +130,12 @@ function AppRoutes() {
       </Web3ReactManager>
 
       <FishComponent />
+
+      {ecosystemTheme && !isLanding ? (
+        <EcosystemFooterWrap>
+          <Footer />
+        </EcosystemFooterWrap>
+      ) : null}
     </BodyWrapper>
   )
 }
@@ -183,6 +190,14 @@ const LandingHeroGlow = styled.div`
     filter: blur(64px);
     background: linear-gradient(135deg, #1faeff, #043f83);
   }
+`
+
+const EcosystemFooterWrap = styled.div`
+  width: 100%;
+  align-self: stretch;
+  margin-top: auto;
+  z-index: 2;
+  padding-top: 32px;
 `
 
 const SeamlessGradient = styled.div`

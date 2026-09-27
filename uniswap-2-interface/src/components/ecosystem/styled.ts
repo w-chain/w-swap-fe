@@ -7,6 +7,8 @@ export const FlipButton = styled.button`
   justify-content: center;
   width: 40px;
   height: 40px;
+  flex-shrink: 0;
+  margin-bottom: 10px;
   border-radius: 8px;
   border: 1px solid #e4ddd2;
   background: #ffffff;

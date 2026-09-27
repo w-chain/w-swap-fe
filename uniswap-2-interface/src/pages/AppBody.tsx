@@ -11,7 +11,12 @@ const cardStyles = css`
   margin-bottom: 48px;
 `
 
-export const BodyWrapper = styled.div<{ $plain?: boolean; $card?: boolean }>`
+const cardWideStyles = css`
+  max-width: min(600px, calc(100vw - 32px));
+  padding: 32px 32px 40px;
+`
+
+export const BodyWrapper = styled.div<{ $plain?: boolean; $card?: boolean; $wideCard?: boolean }>`
   position: relative;
   width: 100%;
   max-width: ${({ $plain, $card }) => ($plain || $card ? 'none' : '480px')};
@@ -24,15 +29,15 @@ export const BodyWrapper = styled.div<{ $plain?: boolean; $card?: boolean }>`
   margin-bottom: ${({ $plain, $card }) => ($plain ? '0' : $card ? '0' : '100px')};
   height: auto;
 
-  ${({ $card }) => $card && cardStyles}
+  ${({ $card, $wideCard }) => $card && ($wideCard ? cardWideStyles : cardStyles)}
 
   @media (max-width: 768px) {
     padding: ${({ $plain, $card }) => ($plain ? '0' : $card ? '0' : '1rem 1.2rem 1.2rem 1.2rem')};
-    ${({ $card }) =>
+    ${({ $card, $wideCard }) =>
       $card &&
       css`
         max-width: calc(100vw - 24px);
-        padding: 22px 18px 28px;
+        padding: ${$wideCard ? '24px 20px 32px' : '22px 18px 28px'};
       `}
   }
 `
@@ -43,14 +48,17 @@ export const BodyWrapper = styled.div<{ $plain?: boolean; $card?: boolean }>`
 export default function AppBody({
   children,
   plain,
-  card
+  card,
+  wideCard
 }: {
   children: React.ReactNode
   plain?: boolean
   card?: boolean
+  /** Wider card for bridge (From / To network row). */
+  wideCard?: boolean
 }) {
   return (
-    <BodyWrapper $plain={plain} $card={card}>
+    <BodyWrapper $plain={plain} $card={card} $wideCard={wideCard}>
       {children}
     </BodyWrapper>
   )

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
-import { AutoRow } from '../../components/Row'
 import { BottomGrouping, Wrapper } from '../../components/swap/styleds'
 import {
   EcosystemPrimaryButton,
@@ -213,7 +212,7 @@ export default function Bridge() {
 
   return (
     <div style={{ position: 'relative' }}>
-      <AppBody card>
+      <AppBody card wideCard>
         <SwapPoolTabs active={'bridge'} />
 
         {openHistory ? (
@@ -233,20 +232,13 @@ export default function Bridge() {
               onDismiss={handleConfirmDismiss}
             />
 
-            <AutoRow gap={'sm'} style={{ alignItems: 'flex-end', justifyContent: 'space-between' }}>
+            <BridgeNetworkRow>
               <NetworkInputPanel label="From" id="from-chain" direction="from" />
-              <FlipButton
-                type="button"
-                aria-label="Swap networks"
-                style={{ marginBottom: '12px', flexShrink: 0 }}
-                onClick={() => swapNetworks()}
-              >
+              <FlipButton type="button" aria-label="Swap networks" onClick={() => swapNetworks()}>
                 ⇄
               </FlipButton>
               <NetworkInputPanel label="To" id="to-chain" direction="to" />
-            </AutoRow>
-
-            <br />
+            </BridgeNetworkRow>
 
             <BridgeTokenInputPanel
               value={inputValue}
@@ -330,6 +322,26 @@ export default function Bridge() {
     </div>
   )
 }
+
+const BridgeNetworkRow = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 14px;
+  align-items: end;
+  width: 100%;
+  margin-bottom: 8px;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    grid-template-columns: 1fr;
+    gap: 12px;
+    justify-items: center;
+
+    & > button[aria-label='Swap networks'] {
+      margin-bottom: 0 !important;
+      transform: rotate(90deg);
+    }
+  `};
+`
 
 const StyledBridgeHistoryLink = styled.button`
   background: #ffffff;

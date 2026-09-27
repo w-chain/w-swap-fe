@@ -8,7 +8,9 @@ import NetworkSelect from './NetworkSelect'
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
+  padding: 10px 12px 0 12px;
+  width: 100%;
+  box-sizing: border-box;
 `
 
 const LabelRow = styled.div`
@@ -17,7 +19,7 @@ const LabelRow = styled.div`
   color: ${({ theme }) => theme.text1};
   font-size: 0.75rem;
   line-height: 1rem;
-  padding: 0.75rem 1rem 0 1rem;
+  padding: 12px 14px 0 14px;
   span:hover {
     cursor: pointer;
     color: ${({ theme }) => darken(0.2, theme.text2)};
@@ -29,13 +31,15 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
   position: relative;
   border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
   z-index: 1;
+  width: 100%;
+  min-width: 0;
 `
 
 const Container = styled.div<{ hideInput: boolean }>`
   border-radius: 12px;
   background-color: #ffffff;
   border: 1px solid #e4ddd2;
-  padding: 4px 0;
+  padding: 0 0 10px;
 `
 
 interface NetworkInputPanelProps {

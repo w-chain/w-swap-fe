@@ -70,7 +70,7 @@ export function SwapPoolTabs({
   active,
   landing
 }: {
-  active: 'swap' | 'pool' | 'portfolio' | 'bridge'
+  active: 'swap' | 'pool' | 'bridge'
   landing?: boolean
 }) {
   const { t } = useTranslation()
@@ -82,14 +82,6 @@ export function SwapPoolTabs({
         </StyledNavLink>
         <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={() => active === 'pool'} disabled={landing}>
           {t('pool')}
-        </StyledNavLink>
-        <StyledNavLink
-          id={`portfolio-nav-link`}
-          to={'/portfolio'}
-          isActive={() => active === 'portfolio'}
-          disabled={landing}
-        >
-          {t('portfolio')}
         </StyledNavLink>
         <StyledNavLink id={`bridge-nav-link`} to={'/bridge'} isActive={() => active === 'bridge'} disabled={landing}>
           {t('bridge')}
