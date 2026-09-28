@@ -31,11 +31,29 @@ export default function Pool({ embedded = false }: { embedded?: boolean }) {
   const { pairs: allV2PairsWithLiquidity, isLoading: v2IsLoading } = useUserLiquidityPairs()
   const hasV1Liquidity = useUserHasLiquidityInAllTokens()
   const [showAddLiquidity, setShowAddLiquidity] = useState(false)
+  const [addLiquidityPair, setAddLiquidityPair] = useState<{ currencyIdA: string; currencyIdB?: string } | null>(
+    null
+  )
+
+  const openEmbeddedAddLiquidity = (currencyIdA: string, currencyIdB?: string) => {
+    setAddLiquidityPair({ currencyIdA, currencyIdB })
+    setShowAddLiquidity(true)
+  }
+
+  const closeEmbeddedAddLiquidity = () => {
+    setShowAddLiquidity(false)
+    setAddLiquidityPair(null)
+  }
 
   if (embedded && showAddLiquidity) {
     return (
       <EmbeddedPoolShell>
-        <AddLiquidityContent embedded currencyIdA="ETH" onBack={() => setShowAddLiquidity(false)} />
+        <AddLiquidityContent
+          embedded
+          currencyIdA={addLiquidityPair?.currencyIdA ?? 'ETH'}
+          currencyIdB={addLiquidityPair?.currencyIdB}
+          onBack={closeEmbeddedAddLiquidity}
+        />
       </EmbeddedPoolShell>
     )
   }
@@ -45,7 +63,11 @@ export default function Pool({ embedded = false }: { embedded?: boolean }) {
       {!embedded && <SwapPoolTabs active={'pool'} />}
       <AutoColumn gap="lg" justify="center">
           {embedded ? (
-            <EcosystemPrimaryButton id="join-pool-button" type="button" onClick={() => setShowAddLiquidity(true)}>
+            <EcosystemPrimaryButton
+              id="join-pool-button"
+              type="button"
+              onClick={() => openEmbeddedAddLiquidity('ETH')}
+            >
               Add Liquidity
             </EcosystemPrimaryButton>
           ) : (
@@ -75,7 +97,15 @@ export default function Pool({ embedded = false }: { embedded?: boolean }) {
             ) : allV2PairsWithLiquidity?.length > 0 ? (
               <>
                 {allV2PairsWithLiquidity.map(v2Pair => (
-                  <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
+                  <FullPositionCard
+                    key={v2Pair.liquidityToken.address}
+                    pair={v2Pair}
+                    onAddToPool={
+                      embedded
+                        ? (currencyIdA, currencyIdB) => openEmbeddedAddLiquidity(currencyIdA, currencyIdB)
+                        : undefined
+                    }
+                  />
                 ))}
               </>
             ) : (
