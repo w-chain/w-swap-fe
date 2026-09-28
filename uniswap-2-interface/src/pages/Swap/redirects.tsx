@@ -1,9 +1,18 @@
 import React from 'react'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
+import { landingSearchForTab } from '../../utils/landingWidgetTab'
 
-// Redirects to swap but only replace the pathname
+// Redirects to home swap widget but preserves query string
 export function RedirectPathToSwapOnly({ location }: RouteComponentProps) {
-  return <Redirect to={{ ...location, pathname: '/swap' }} />
+  return (
+    <Redirect
+      to={{
+        ...location,
+        pathname: '/',
+        search: landingSearchForTab('swap', location.search)
+      }}
+    />
+  )
 }
 
 // Redirects from the /swap/:outputCurrency path to the /swap?outputCurrency=:outputCurrency format
@@ -15,15 +24,17 @@ export function RedirectToSwap(props: RouteComponentProps<{ outputCurrency: stri
     }
   } = props
 
+  const mergedSearch =
+    search && search.length > 1
+      ? `${search}&outputCurrency=${outputCurrency}`
+      : `?outputCurrency=${outputCurrency}`
+
   return (
     <Redirect
       to={{
         ...props.location,
-        pathname: '/swap',
-        search:
-          search && search.length > 1
-            ? `${search}&outputCurrency=${outputCurrency}`
-            : `?outputCurrency=${outputCurrency}`
+        pathname: '/',
+        search: landingSearchForTab('swap', mergedSearch)
       }}
     />
   )

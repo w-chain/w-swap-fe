@@ -275,13 +275,13 @@ const QuickActionButton = styled(EcosystemPrimaryButton)`
 export function PortfolioQuickActions() {
   return (
     <QuickActionsWrap>
-      <QuickActionButton as={Link} to="/swap">
+      <QuickActionButton as={Link} to={{ pathname: '/', search: '?tab=swap' }}>
         Swap
       </QuickActionButton>
       <QuickActionButton as={Link} to="/add/ETH">
         Add LP
       </QuickActionButton>
-      <QuickActionButton as={Link} to="/bridge">
+      <QuickActionButton as={Link} to={{ pathname: '/', search: '?tab=bridge' }}>
         Bridge
       </QuickActionButton>
       <QuickActionButton as={Link} to="/find">

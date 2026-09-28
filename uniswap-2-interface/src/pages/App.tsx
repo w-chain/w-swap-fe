@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { HashRouter, Route, Switch, useLocation } from 'react-router-dom'
+import { HashRouter, Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Header from '../components/Header'
@@ -27,6 +27,7 @@ import Landing from './Landing'
 import FishComponent from '../components/FishComponent'
 import { Footer } from '../components/Footer'
 import { usesEcosystemTheme } from '../utils/ecosystemTheme'
+import { landingSearchForTab } from '../utils/landingWidgetTab'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -105,13 +106,27 @@ function AppRoutes() {
       <Web3ReactManager>
         <Switch>
           <Route exact strict path="/" component={Landing} />
-          <Route exact strict path="/swap" component={Swap} />
+          <Route
+            exact
+            strict
+            path="/swap"
+            render={({ location }) => (
+              <Redirect to={{ ...location, pathname: '/', search: landingSearchForTab('swap', location.search) }} />
+            )}
+          />
           <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
           <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
           <Route exact strict path="/find" component={PoolFinder} />
           <Route exact strict path="/pool" component={Pool} />
           <Route exact strict path="/portfolio" component={Portfolio} />
-          <Route exact strict path="/bridge" component={Bridge} />
+          <Route
+            exact
+            strict
+            path="/bridge"
+            render={({ location }) => (
+              <Redirect to={{ ...location, pathname: '/', search: landingSearchForTab('bridge', location.search) }} />
+            )}
+          />
           <Route exact strict path="/create" component={RedirectToAddLiquidity} />
           <Route exact path="/add" component={AddLiquidity} />
           <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { NavLink, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { WAVE_FARM_URL } from '../../constants/ecosystemLinks'
+import { getLandingWidgetTab } from '../../utils/landingWidgetTab'
 
 const Nav = styled.nav`
   display: flex;
@@ -69,11 +70,10 @@ const ExternalNavItem = styled.a`
 
 type InternalLink = {
   kind: 'internal'
-  to: string
+  to: string | { pathname: string; search?: string; hash?: string }
   key: string
   label: string
-  match?: (path: string) => boolean
-  exact?: boolean
+  isActive?: (pathname: string, search: string) => boolean
 }
 
 type ExternalLink = {
@@ -84,16 +84,40 @@ type ExternalLink = {
 }
 
 const NAV_LINKS: (InternalLink | ExternalLink)[] = [
-  { kind: 'internal', to: '/', key: 'home', label: 'Home', exact: true, match: p => p === '/' },
-  { kind: 'internal', to: '/portfolio', key: 'portfolio', label: 'Portfolio', match: p => p === '/portfolio' },
-  { kind: 'internal', to: '/swap', key: 'swap', label: 'SWAP', match: p => p.startsWith('/swap') },
-  { kind: 'internal', to: '/bridge', key: 'bridge', label: 'Bridge', match: p => p === '/bridge' },
+  {
+    kind: 'internal',
+    to: { pathname: '/', search: '' },
+    key: 'home',
+    label: 'Home',
+    isActive: (pathname, search) => pathname === '/' && getLandingWidgetTab(search) === null
+  },
+  {
+    kind: 'internal',
+    to: '/portfolio',
+    key: 'portfolio',
+    label: 'Portfolio',
+    isActive: pathname => pathname === '/portfolio'
+  },
+  {
+    kind: 'internal',
+    to: { pathname: '/', search: '?tab=swap' },
+    key: 'swap',
+    label: 'SWAP',
+    isActive: (pathname, search) => pathname === '/' && getLandingWidgetTab(search) === 'swap'
+  },
+  {
+    kind: 'internal',
+    to: { pathname: '/', search: '?tab=bridge' },
+    key: 'bridge',
+    label: 'Bridge',
+    isActive: (pathname, search) => pathname === '/' && getLandingWidgetTab(search) === 'bridge'
+  },
   { kind: 'external', href: WAVE_FARM_URL, key: 'waveFarm', label: 'Wave Farm' }
 ]
 
 export default function AppNav() {
   const { t } = useTranslation()
-  const { pathname } = useLocation()
+  const { pathname, search } = useLocation()
 
   const labelFor = (item: InternalLink | ExternalLink) => {
     if (item.key === 'portfolio') return t('portfolio')
@@ -121,8 +145,7 @@ export default function AppNav() {
           <NavItem
             key={item.key}
             to={item.to}
-            isActive={() => (item.match ? item.match(pathname) : pathname === item.to)}
-            exact={item.exact}
+            isActive={() => (item.isActive ? item.isActive(pathname, search) : pathname === item.to)}
           >
             {labelFor(item)}
           </NavItem>

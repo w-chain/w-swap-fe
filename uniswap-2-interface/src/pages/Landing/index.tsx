@@ -1,12 +1,18 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
+import {
+  getLandingWidgetTab,
+  LandingWidgetTab,
+  landingSearchForTab,
+  resolveLandingWidgetTab
+} from '../../utils/landingWidgetTab'
 import { Footer } from '../../components/Footer'
 import AppBody from '../AppBody'
 import Swap from '../Swap'
 import Pool from '../Pool'
 import Bridge from '../Bridge'
 
-type LandingWidgetTab = 'swap' | 'pool' | 'bridge'
 const STATS = [
   { value: '240K+', label: 'Completed Txns' },
   { value: '5K+', label: 'Active Wallets' },
@@ -52,7 +58,28 @@ const COMPARISON_INTRO =
   'W-SWAP DEX is an AMM DEX: you trade against liquidity pools, LPs earn 0.3% on every swap, and the trade settles on W Chain. Compare the numbers a trader feels — gas to execute the swap, the pool fee, and how fast the trade confirms.'
 
 export default function Landing() {
-  const [widgetTab, setWidgetTab] = useState<LandingWidgetTab>('swap')
+  const history = useHistory()
+  const { search } = useLocation()
+  const [widgetTab, setWidgetTab] = useState<LandingWidgetTab>(() => resolveLandingWidgetTab(search))
+
+  useEffect(() => {
+    setWidgetTab(resolveLandingWidgetTab(search))
+  }, [search])
+
+  useEffect(() => {
+    const tab = getLandingWidgetTab(search)
+    if (tab === 'swap' || tab === 'bridge') {
+      document.getElementById('swap-widget')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [search])
+
+  const selectWidgetTab = useCallback(
+    (tab: LandingWidgetTab) => {
+      setWidgetTab(tab)
+      history.replace({ pathname: '/', search: landingSearchForTab(tab, search) })
+    },
+    [history, search]
+  )
 
   return (
     <>
@@ -82,13 +109,13 @@ export default function Landing() {
               <AppBody plain>
                 <TradingCard $compact={widgetTab !== 'pool'}>
                   <LandingTabs>
-                    <TabPill active={widgetTab === 'swap'} type="button" onClick={() => setWidgetTab('swap')}>
+                    <TabPill active={widgetTab === 'swap'} type="button" onClick={() => selectWidgetTab('swap')}>
                       swap
                     </TabPill>
-                    <TabPill active={widgetTab === 'pool'} type="button" onClick={() => setWidgetTab('pool')}>
+                    <TabPill active={widgetTab === 'pool'} type="button" onClick={() => selectWidgetTab('pool')}>
                       pool
                     </TabPill>
-                    <TabPill active={widgetTab === 'bridge'} type="button" onClick={() => setWidgetTab('bridge')}>
+                    <TabPill active={widgetTab === 'bridge'} type="button" onClick={() => selectWidgetTab('bridge')}>
                       bridge
                     </TabPill>
                   </LandingTabs>
