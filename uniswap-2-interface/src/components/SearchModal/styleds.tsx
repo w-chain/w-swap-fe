@@ -23,15 +23,22 @@ export const PaddedColumn = styled(AutoColumn)`
 `
 
 export const MenuItem = styled(RowBetween)`
-  padding: 4px 20px;
-  height: 56px;
+  padding: 10px 16px;
+  min-height: 52px;
+  margin: 0 16px 10px;
   display: grid;
-  grid-template-columns: auto minmax(auto, 1fr) auto minmax(0, 72px);
+  grid-template-columns: auto minmax(auto, 1fr) auto minmax(0, 96px);
   grid-gap: 16px;
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
+  border: 1px solid #e4ddd2;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #1a2430;
+  transition: border-color 0.15s ease, background 0.15s ease;
   :hover {
-    background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
+    background-color: ${({ disabled }) => (!disabled ? '#faf8f4' : '#ffffff')};
+    border-color: ${({ disabled }) => (!disabled ? '#0e9a86' : '#e4ddd2')};
   }
   opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `
@@ -49,7 +56,8 @@ export const SearchInput = styled.input`
   border-radius: 20px;
   color: ${({ theme }) => theme.text1};
   border-style: solid;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid #e4ddd2;
+  background: #ffffff;
   -webkit-appearance: none;
 
   font-size: 18px;
@@ -66,11 +74,17 @@ export const SearchInput = styled.input`
 export const Separator = styled.div`
   width: 100%;
   height: 1px;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: #e4ddd2;
 `
 
 export const SeparatorDark = styled.div`
   width: 100%;
   height: 1px;
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: #e4ddd2;
+`
+
+export const TokenListFooter = styled.div`
+  padding: 16px 20px 20px;
+  border-top: 1px solid #e4ddd2;
+  background: #ffffff;
 `

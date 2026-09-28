@@ -2,6 +2,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { BridgeTransaction } from '../shared/types/transaction'
 import { TransactionStatus } from '../shared/types/enums'
+import {
+  BRIDGE_TRANSACTIONS_STORAGE_KEY,
+  isBridgeTransactionCompleted,
+  isBridgeTransactionPending,
+  normalizeStoredBridgeTransaction
+} from '../shared/utils/bridgeTransactionStorage'
 
 interface TransactionState {
   transactions: BridgeTransaction[]
@@ -12,26 +18,20 @@ interface TransactionState {
 // Load transactions from localStorage on initialization
 const loadStoredTransactions = (): BridgeTransaction[] => {
   try {
-    const stored = localStorage.getItem('bridge_transactions')
+    const stored = localStorage.getItem(BRIDGE_TRANSACTIONS_STORAGE_KEY)
     if (stored) {
       const transactions = JSON.parse(stored)
       // Validate that the stored data is an array
       if (Array.isArray(transactions)) {
-        // Filter out any invalid transactions and ensure they have required fields
-        return transactions.filter(tx => 
-          tx && 
-          typeof tx === 'object' && 
-          tx.txHash && 
-          tx.fromChainId && 
-          tx.toChainId && 
-          tx.status
-        )
+        return transactions
+          .map(normalizeStoredBridgeTransaction)
+          .filter((tx): tx is BridgeTransaction => tx !== null)
       }
     }
   } catch (error) {
     console.error('Failed to load stored transactions:', error)
     // Clear corrupted data
-    localStorage.removeItem('bridge_transactions')
+    localStorage.removeItem(BRIDGE_TRANSACTIONS_STORAGE_KEY)
   }
   return []
 }
@@ -43,26 +43,24 @@ const saveTransactionsToStorage = (transactions: BridgeTransaction[]) => {
     const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000)
     const cleanedTransactions = transactions.filter(tx => {
       // Keep all pending/awaiting transactions regardless of age
-      if (tx.status === TransactionStatus.PENDING || tx.status === TransactionStatus.AWAITING) {
+      if (isBridgeTransactionPending(tx.status)) {
         return true
       }
       // Keep completed transactions only if they're less than 30 days old
       return tx.timestamp > thirtyDaysAgo
     })
-    
-    localStorage.setItem('bridge_transactions', JSON.stringify(cleanedTransactions))
+
+    localStorage.setItem(BRIDGE_TRANSACTIONS_STORAGE_KEY, JSON.stringify(cleanedTransactions))
   } catch (error) {
     console.error('Failed to save transactions to localStorage:', error)
     // If localStorage is full, try to clear old completed transactions and retry
     if (error.name === 'QuotaExceededError') {
       try {
         const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000)
-        const essentialTransactions = transactions.filter(tx => 
-          tx.status === TransactionStatus.PENDING || 
-          tx.status === TransactionStatus.AWAITING ||
-          tx.timestamp > sevenDaysAgo
+        const essentialTransactions = transactions.filter(
+          tx => isBridgeTransactionPending(tx.status) || tx.timestamp > sevenDaysAgo
         )
-        localStorage.setItem('bridge_transactions', JSON.stringify(essentialTransactions))
+        localStorage.setItem(BRIDGE_TRANSACTIONS_STORAGE_KEY, JSON.stringify(essentialTransactions))
       } catch (retryError) {
         console.error('Failed to save transactions even after cleanup:', retryError)
       }
@@ -71,9 +69,9 @@ const saveTransactionsToStorage = (transactions: BridgeTransaction[]) => {
 }
 
 const initialState: TransactionState = {
-  transactions: loadStoredTransactions(),
+  transactions: [],
   loading: false,
-  initialized: true
+  initialized: false
 }
 
 const transactionSlice = createSlice({
@@ -103,20 +101,16 @@ const transactionSlice = createSlice({
       saveTransactionsToStorage(state.transactions)
     },
     clearCompletedTransactions: (state) => {
-      state.transactions = state.transactions.filter(tx => 
-        tx.status === TransactionStatus.PENDING || 
-        tx.status === TransactionStatus.AWAITING
-      )
+      state.transactions = state.transactions.filter(tx => isBridgeTransactionPending(tx.status))
       saveTransactionsToStorage(state.transactions)
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload
     },
     initializeTransactions: (state) => {
-      if (!state.initialized) {
-        state.transactions = loadStoredTransactions()
-        state.initialized = true
-      }
+      state.transactions = loadStoredTransactions()
+      state.initialized = true
+      state.loading = false
     }
   }
 })

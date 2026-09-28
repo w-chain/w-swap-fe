@@ -6,8 +6,6 @@ import USDCLogo from '../../components/CurrencyLogo/assets/usdc.webp'
 import WAVELogo from '../../components/CurrencyLogo/assets/wave.jpeg'
 import { ConnectSvg, GuidelinesSvg, LiquiditySvg, StakingSvg, SupportSvg, WaveSvg } from './connectSvgs'
 import FishBG from '../../assets/images/fish-bg.png'
-import ReviewCards from '../ReviewCards/ReviewCards'
-
 const pairs = [
   {
     icon: USDTLogo,
@@ -165,7 +163,6 @@ const ConnectWithUs = () => {
         </ConnectWithUsContainer>
       </ConnectWithUsWrapper> */}
 
-      <ReviewCards />
     </ConnectWithUsBg>
   )
 }

@@ -6,7 +6,7 @@ import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { useHistory, useLocation } from 'react-router-dom'
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonError, ButtonConfirmed, ButtonPrimaryDark } from '../../components/Button'
+import { ButtonError, ButtonConfirmed } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
@@ -15,7 +15,7 @@ import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { AutoRow, RowBetween } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
@@ -43,11 +43,13 @@ import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
-import FishIcon from '../../assets/svg/fish-icon.svg'
+import { FlipButton, EcosystemPrimaryButton } from '../../components/ecosystem/styled'
 
 import { getTokensRequiringWarning } from '../../utils/tokenValidation'
+import WSwapPoolStatsCard from '../../components/LiquidityAnalytics/WSwapPoolStatsCard'
+import { useIndexedPairAddress } from '../../hooks/useIndexedPairAddress'
 
-export default function Swap() {
+export default function Swap({ embedded = false }: { embedded?: boolean }) {
   const history = useHistory()
   const location = useLocation()
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -95,7 +97,8 @@ export default function Swap() {
     currencyBalances,
     parsedAmount,
     currencies,
-    inputError: swapInputError
+    inputError: swapInputError,
+    swapRouteLoading
   } = useDerivedSwapInfo()
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
     currencies[Field.INPUT],
@@ -108,6 +111,7 @@ export default function Swap() {
   
   // Use only V2 trade
   const trade = showWrap ? undefined : v2Trade
+  const indexedPairAddress = useIndexedPairAddress(currencies[Field.INPUT], currencies[Field.OUTPUT], trade)
 
   // Function to update URL with current currency selection
   const updateURL = useCallback((inputCurrencyId?: string, outputCurrencyId?: string) => {
@@ -325,16 +329,10 @@ export default function Swap() {
     onCurrencySelection
   ])
 
-  return (
+  const swapBody = (
     <>
-      <TokenWarningModal
-        isOpen={tokensRequiringWarning.length > 0 && !dismissTokenWarning}
-        tokens={tokensRequiringWarning}
-        onConfirm={handleConfirmTokenWarning}
-      />
-      <AppBody>
-        <SwapPoolTabs active={'swap'} />
-        <Wrapper id="swap-page">
+      {!embedded && <SwapPoolTabs active={'swap'} />}
+      <Wrapper id="swap-page">
           <ConfirmSwapModal
             isOpen={showConfirm}
             trade={trade}
@@ -360,19 +358,20 @@ export default function Swap() {
               onCurrencySelect={handleInputSelect}
               otherCurrency={currencies[Field.OUTPUT]}
               id="swap-currency-input"
+              variant="light"
             />
             <AutoColumn justify="space-between">
-              <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '4px 1rem 0 1rem' }}>
-                <ArrowWrapper clickable>
-                  <img
-                    src={FishIcon}
-                    alt="fish"
-                    onClick={() => {
-                      setApprovalSubmitted(false) // reset 2 step UI for approvals
-                      onSwitchTokens()
-                    }}
-                  />
-                </ArrowWrapper>
+              <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '4px 0' }}>
+                <FlipButton
+                  type="button"
+                  aria-label="Flip tokens"
+                  onClick={() => {
+                    setApprovalSubmitted(false)
+                    onSwitchTokens()
+                  }}
+                >
+                  ⇄
+                </FlipButton>
                 {recipient === null && !showWrap && isExpertMode ? (
                   <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
                     + Add a send (optional)
@@ -389,6 +388,7 @@ export default function Swap() {
               onCurrencySelect={handleOutputSelect}
               otherCurrency={currencies[Field.INPUT]}
               id="swap-currency-output"
+              variant="light"
             />
 
             {recipient !== null && !showWrap ? (
@@ -436,12 +436,19 @@ export default function Swap() {
           </AutoColumn>
           <BottomGrouping>
             {!account ? (
-              <ButtonPrimaryDark onClick={toggleWalletModal}>Connect Wallet</ButtonPrimaryDark>
+              <EcosystemPrimaryButton onClick={toggleWalletModal}>Connect Wallet</EcosystemPrimaryButton>
             ) : showWrap ? (
-              <ButtonPrimaryDark disabled={Boolean(wrapInputError)} onClick={onWrap}>
+              <EcosystemPrimaryButton disabled={Boolean(wrapInputError)} onClick={onWrap}>
                 {wrapInputError ??
                   (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
-              </ButtonPrimaryDark>
+              </EcosystemPrimaryButton>
+            ) : swapRouteLoading && userHasSpecifiedInputOutput ? (
+              <GreyCard style={{ textAlign: 'center', background: 'transparent' }}>
+                <TYPE.main mb="4px" color="#5c6a78" fontWeight={500}>
+                  Fetching best route
+                  <Dots />
+                </TYPE.main>
+              </GreyCard>
             ) : noRoute && userHasSpecifiedInputOutput ? (
               <GreyCard style={{ textAlign: 'center', background: 'transparent' }}>
                 <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
@@ -520,20 +527,6 @@ export default function Swap() {
                   !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError || hasPendingRecentSwap
                 }
                 error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
-                style={{
-                  background:
-                    !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError || hasPendingRecentSwap
-                      ? '#044084b8'
-                      : '',
-                  cursor:
-                    !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError || hasPendingRecentSwap
-                      ? 'not-allowed'
-                      : '',
-                  color:
-                    !isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError || hasPendingRecentSwap
-                      ? '#e6e6e6'
-                      : ''
-                }}
               >
                 <Text fontSize={14} fontWeight={600}>
                   {hasPendingRecentSwap
@@ -550,9 +543,23 @@ export default function Swap() {
             {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
           </BottomGrouping>
 
+          {!showWrap && indexedPairAddress ? (
+            <WSwapPoolStatsCard pairAddress={indexedPairAddress} title="Trading pool (W Oracle)" />
+          ) : null}
+
           <AdvancedSwapDetailsDropdown trade={wrapType === WrapType.WRAP ? undefined : trade} />
-        </Wrapper>
-      </AppBody>
+      </Wrapper>
+    </>
+  )
+
+  return (
+    <>
+      <TokenWarningModal
+        isOpen={tokensRequiringWarning.length > 0 && !dismissTokenWarning}
+        tokens={tokensRequiringWarning}
+        onConfirm={handleConfirmTokenWarning}
+      />
+      {embedded ? swapBody : <AppBody card>{swapBody}</AppBody>}
     </>
   )
 }

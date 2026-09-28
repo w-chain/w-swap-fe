@@ -1,27 +1,68 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-export const BodyWrapper = styled.div`
+const cardStyles = css`
+  max-width: min(520px, calc(100vw - 32px));
+  padding: 28px 28px 36px;
+  background: #ffffff;
+  border: 1px solid #e4ddd2;
+  border-radius: 16px;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset, 0 18px 40px -28px rgba(26, 36, 48, 0.18);
+  margin-bottom: 48px;
+`
+
+const cardWideStyles = css`
+  max-width: min(600px, calc(100vw - 32px));
+  padding: 32px 32px 40px;
+`
+
+export const BodyWrapper = styled.div<{ $plain?: boolean; $card?: boolean; $wideCard?: boolean }>`
   position: relative;
   width: 100%;
-  max-width: 480px;
+  max-width: ${({ $plain, $card }) => ($plain || $card ? 'none' : '480px')};
   margin: 0 auto;
-  padding: 1rem 2rem 2rem 2rem;
+  padding: ${({ $plain, $card }) => ($plain ? '0' : $card ? '0' : '1rem 2rem 2rem 2rem')};
   z-index: 2;
-  background: #d9ebff;
-  box-shadow: 4px 4px 4px rgba(4, 63, 132, 0.25);
-  border-radius: 15px;
-  margin-bottom: 100px;
+  background: ${({ $plain, $card }) => ($plain ? 'transparent' : $card ? 'transparent' : '#d9ebff')};
+  box-shadow: ${({ $plain, $card }) => ($plain || $card ? 'none' : '4px 4px 4px rgba(4, 63, 132, 0.25)')};
+  border-radius: ${({ $plain, $card }) => ($plain || $card ? '0' : '15px')};
+  margin-bottom: ${({ $plain, $card }) => ($plain ? '0' : $card ? '0' : '100px')};
   height: auto;
 
-  @media (max-width: 768px) {
-    padding: 1rem 1.2rem 1.2rem 1.2rem;
-  }
+  ${({ $card, $wideCard }) => $card && ($wideCard ? cardWideStyles : cardStyles)}
+
+  ${({ theme, $plain, $card }) => theme.mediaWidth.upToSmall`
+    padding: ${$plain ? '0' : $card ? '0' : '1rem 12px 1.25rem'};
+  `};
+
+  ${({ theme, $card, $wideCard }) =>
+    $card &&
+    theme.mediaWidth.upToSmall`
+      max-width: calc(100vw - 16px);
+      margin-left: auto;
+      margin-right: auto;
+      padding: ${$wideCard ? '20px 16px 28px' : '18px 14px 24px'};
+    `}
 `
 
 /**
  * The styled container element that wraps the content of most pages and the tabs.
  */
-export default function AppBody({ children }: { children: React.ReactNode }) {
-  return <BodyWrapper>{children}</BodyWrapper>
+export default function AppBody({
+  children,
+  plain,
+  card,
+  wideCard
+}: {
+  children: React.ReactNode
+  plain?: boolean
+  card?: boolean
+  /** Wider card for bridge (From / To network row). */
+  wideCard?: boolean
+}) {
+  return (
+    <BodyWrapper $plain={plain} $card={card} $wideCard={wideCard}>
+      {children}
+    </BodyWrapper>
+  )
 }

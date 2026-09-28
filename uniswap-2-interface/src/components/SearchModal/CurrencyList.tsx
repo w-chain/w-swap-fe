@@ -25,8 +25,9 @@ function currencyKey(currency: Currency): string {
 const StyledBalanceText = styled(Text)`
   white-space: nowrap;
   overflow: hidden;
-  max-width: 5rem;
+  max-width: 7rem;
   text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
 `
 
 const Tag = styled.div`
@@ -115,7 +116,7 @@ function CurrencyRow({
     >
       <CurrencyLogo currency={currency} size={'24px'} />
       <Column>
-        <Text title={currency.name} fontWeight={500}>
+        <Text title={currency.name} fontWeight={600} fontSize={15} color="#1a2430">
           {currency === ETHER ? getNativeTokenSymbol(chainId) : currency.symbol}
         </Text>
         <FadedSpan>
@@ -202,7 +203,7 @@ export default function CurrencyList({
       width="100%"
       itemData={itemData}
       itemCount={itemData.length}
-      itemSize={56}
+      itemSize={76}
       itemKey={itemKey}
     >
       {Row}

@@ -11,8 +11,8 @@ import QuestionHelper from '../QuestionHelper'
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  border-radius: 3rem;
-  justify-content: space-evenly;
+  justify-content: center;
+  gap: 16px;
   position: relative;
   z-index: 2;
 `
@@ -28,26 +28,40 @@ const StyledNavLink = styled(NavLink).attrs({
   outline: none;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   text-decoration: none;
-  color: ${({ disabled }) => (disabled ? '#00000040' : '#00000080')};
-  font-size: 1.2rem;
-  font-weight: 600;
-  font-family: Montserrat;
-  padding: 6px 32px;
-  border-radius: 12px;
+  width: auto;
+  min-width: 72px;
+  padding: 0 14px;
+  min-height: 36px;
+  height: auto;
+  border-radius: 20px;
+  font-size: 11px;
+  touch-action: manipulation;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    min-height: 44px;
+    min-width: 80px;
+    font-size: 12px;
+    padding: 0 16px;
+  `};
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
+  border: 1px solid #e4ddd2;
+  background: #fff;
+  color: ${({ disabled }) => (disabled ? '#00000040' : '#5c6a78')};
 
   &.${activeClassName} {
-    color: #043f84;
-    background: #b4dafe;
+    border: 1px solid transparent;
+    background-image: linear-gradient(#fff, #fff), linear-gradient(135deg, #12b39c, #2f6fed);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    color: #0e9a86;
   }
 
   :hover,
   :focus {
-    color: ${({ disabled }) => (disabled ? '#00000040' : '#043f84')};
-  }
-
-  @media (max-width: 768px) {
-    padding: 6px 16px;
+    color: ${({ disabled }) => (disabled ? '#00000040' : '#0e9a86')};
   }
 `
 
@@ -61,11 +75,17 @@ const StyledArrowLeft = styled(ArrowLeft)`
   color: ${({ theme }) => theme.text1};
 `
 
-export function SwapPoolTabs({ active, landing }: { active: 'swap' | 'pool' | 'bridge'; landing?: boolean }) {
+export function SwapPoolTabs({
+  active,
+  landing
+}: {
+  active: 'swap' | 'pool' | 'bridge'
+  landing?: boolean
+}) {
   const { t } = useTranslation()
   return (
     <div style={{ position: 'relative' }}>
-      <Tabs style={{ marginBottom: '20px', zIndex: 2 }}>
+      <Tabs style={{ marginBottom: '24px', zIndex: 2, flexWrap: 'wrap', gap: 8 }}>
         <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => active === 'swap'} disabled={landing}>
           {t('swap')}
         </StyledNavLink>

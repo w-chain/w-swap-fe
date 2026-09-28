@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { HashRouter, Route, Switch } from 'react-router-dom'
+import { HashRouter, Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Header from '../components/Header'
@@ -16,6 +16,7 @@ import {
 // import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
 import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
 import Pool from './Pool'
+import Portfolio from './Portfolio'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
@@ -24,6 +25,9 @@ import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Bridge from './Bridge'
 import Landing from './Landing'
 import FishComponent from '../components/FishComponent'
+import { Footer } from '../components/Footer'
+import { usesEcosystemTheme } from '../utils/ecosystemTheme'
+import { landingSearchForTab } from '../utils/landingWidgetTab'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -46,31 +50,27 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
 `
 
-const BodyWrapper = styled.div`
+const BodyWrapper = styled.div<{ $landing?: boolean; $portfolio?: boolean }>`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-top: 120px;
-  align-items: center;
+  padding-top: ${({ $landing, $portfolio }) => ($portfolio ? '96px' : $landing ? '88px' : '120px')};
+  align-items: ${({ $portfolio }) => ($portfolio ? 'stretch' : 'center')};
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 10;
   min-height: calc(100vh - 120px);
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-      padding: 16px;
-  `};
-
   z-index: 1;
 
-  @media (max-width: 768px) {
-    padding-top: 80px;
-  }
+  ${({ theme, $landing, $portfolio }) => theme.mediaWidth.upToSmall`
+    padding: ${$portfolio ? '88px' : $landing ? '68px' : '96px'} 12px 24px;
+  `};
 
-  @media (max-width: 1024px) {
-    padding-top: 100px;
-  }
+  ${({ theme, $landing, $portfolio }) => theme.mediaWidth.upToMedium`
+    padding-top: ${$portfolio ? '92px' : $landing ? '88px' : '104px'};
+  `};
 
   .fish-bottom-right {
     position: fixed;
@@ -91,6 +91,66 @@ const BodyWrapper = styled.div`
   }
 `
 
+function AppRoutes() {
+  const { pathname } = useLocation()
+  const isLanding = pathname === '/'
+  const isPortfolio = pathname === '/portfolio'
+  const ecosystemTheme = usesEcosystemTheme(pathname)
+
+  return (
+    <BodyWrapper $landing={isLanding || ecosystemTheme} $portfolio={isPortfolio}>
+      <Popups />
+      <AppBg $ecosystem={ecosystemTheme} />
+      {ecosystemTheme ? <LandingHeroGlow /> : <SeamlessGradient />}
+
+      <Web3ReactManager>
+        <Switch>
+          <Route exact strict path="/" component={Landing} />
+          <Route
+            exact
+            strict
+            path="/swap"
+            render={({ location }) => (
+              <Redirect to={{ ...location, pathname: '/', search: landingSearchForTab('swap', location.search) }} />
+            )}
+          />
+          <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
+          <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
+          <Route exact strict path="/find" component={PoolFinder} />
+          <Route exact strict path="/pool" component={Pool} />
+          <Route exact strict path="/portfolio" component={Portfolio} />
+          <Route
+            exact
+            strict
+            path="/bridge"
+            render={({ location }) => (
+              <Redirect to={{ ...location, pathname: '/', search: landingSearchForTab('bridge', location.search) }} />
+            )}
+          />
+          <Route exact strict path="/create" component={RedirectToAddLiquidity} />
+          <Route exact path="/add" component={AddLiquidity} />
+          <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
+          <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
+          <Route exact strict path="/remove/v1/:address" component={RemoveV1Exchange} />
+          <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
+          <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
+          {/* <Route exact strict path="/migrate/v1" component={MigrateV1} />
+          <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} /> */}
+          <Route component={RedirectPathToSwapOnly} />
+        </Switch>
+      </Web3ReactManager>
+
+      <FishComponent />
+
+      {ecosystemTheme && !isLanding ? (
+        <EcosystemFooterWrap>
+          <Footer />
+        </EcosystemFooterWrap>
+      ) : null}
+    </BodyWrapper>
+  )
+}
+
 export default function App() {
   return (
     <Suspense fallback={null}>
@@ -102,35 +162,7 @@ export default function App() {
             <HeaderWrapper>
               <Header />
             </HeaderWrapper>
-            <BodyWrapper>
-              <Popups />
-              <AppBg />
-              <SeamlessGradient />
-
-              <Web3ReactManager>
-                <Switch>
-                  <Route exact strict path="/" component={Landing} />
-                  <Route exact strict path="/swap" component={Swap} />
-                  <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
-                  <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
-                  <Route exact strict path="/find" component={PoolFinder} />
-                  <Route exact strict path="/pool" component={Pool} />
-                  <Route exact strict path="/bridge" component={Bridge} />
-                  <Route exact strict path="/create" component={RedirectToAddLiquidity} />
-                  <Route exact path="/add" component={AddLiquidity} />
-                  <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
-                  <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-                  <Route exact strict path="/remove/v1/:address" component={RemoveV1Exchange} />
-                  <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
-                  <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-                  {/* <Route exact strict path="/migrate/v1" component={MigrateV1} />
-                  <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} /> */}
-                  <Route component={RedirectPathToSwapOnly} />
-                </Switch>
-              </Web3ReactManager>
-
-              <FishComponent />
-            </BodyWrapper>
+            <AppRoutes />
           </HeadBodyWrapper>
         </AppWrapper>
       </HashRouter>
@@ -138,14 +170,45 @@ export default function App() {
   )
 }
 
-const AppBg = styled.div`
+const AppBg = styled.div<{ $ecosystem?: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: #fff;
+  background: ${({ $ecosystem }) => ($ecosystem ? '#f6f3ec' : '#fff')};
   overflow: hidden;
+`
+
+const LandingHeroGlow = styled.div`
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 520px;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    left: -10%;
+    width: 450px;
+    height: 450px;
+    border-radius: 50%;
+    opacity: 0.4;
+    filter: blur(64px);
+    background: linear-gradient(135deg, #1faeff, #043f83);
+  }
+`
+
+const EcosystemFooterWrap = styled.div`
+  width: 100%;
+  align-self: stretch;
+  margin-top: auto;
+  z-index: 2;
+  padding-top: 32px;
 `
 
 const SeamlessGradient = styled.div`

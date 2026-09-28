@@ -1,0 +1,30 @@
+[
+  {
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
+    "name": "getUserInfo",
+    "outputs": [
+      {
+        "components": [
+          { "internalType": "uint256", "name": "totalStaked", "type": "uint256" },
+          { "internalType": "uint256", "name": "totalPendingRewards", "type": "uint256" },
+          { "internalType": "uint256", "name": "personalMultiplier", "type": "uint256" },
+          {
+            "components": [
+              { "internalType": "uint256", "name": "pid", "type": "uint256" },
+              { "internalType": "uint256", "name": "stakedAmount", "type": "uint256" },
+              { "internalType": "uint256", "name": "pendingReward", "type": "uint256" }
+            ],
+            "internalType": "struct IWaveMaker.UserPoolInfo[]",
+            "name": "poolsInfo",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct IWaveMaker.UserInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

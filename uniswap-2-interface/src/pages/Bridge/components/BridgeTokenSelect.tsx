@@ -1,5 +1,7 @@
 import React, { useState, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
+import { RowBetween } from '../../../components/Row'
+import { TYPE } from '../../../theme'
 import { Input as NumericalInput } from '../../../components/NumericalInput'
 import { TokenSymbols } from '../shared/types'
 import BridgeTokenSearchModal from './BridgeTokenSearchModal'
@@ -10,24 +12,32 @@ import { TokenAmount } from '@uniswap/sdk'
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
-  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
-  background-color: ${({ theme }) => theme.bg2};
+  border-radius: 12px;
+  background-color: transparent;
   z-index: 1;
+`
+
+const LabelRow = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items: center;
+  padding: 12px 14px 0 14px;
 `
 
 const Container = styled.div<{ hideInput: boolean }>`
   border-radius: 12px;
-  background-color: #b4dafe;
+  background-color: #ffffff;
+  border: 1px solid #e4ddd2;
+  padding: 0 0 10px;
 `
 
 const StyledInput = styled(NumericalInput)`
-background: transparent;
-color: #000;
-font-size: 1.875rem;
-font-weight: 600;
-&::placeholder {
-  color: #000;
-}
+  background: transparent;
+  color: #1a2430;
+  font-size: 1.875rem;
+  font-weight: 600;
+  &::placeholder {
+    color: #9ca3af;
+  }
 `
 
 const TokenSelect = styled.button`
@@ -36,18 +46,19 @@ const TokenSelect = styled.button`
   height: 2.2rem;
   font-size: 0.8rem;
   font-weight: 600;
-  background-color: ${({ theme }) => theme.buttonBg1};
-  color: #043f84;
-  border-radius: 12px;
+  background-color: #ffffff;
+  color: #5c6a78;
+  border: 1px solid #e4ddd2;
+  border-radius: 5px;
   outline: none;
   cursor: pointer;
   user-select: none;
-  border: none;
   padding: 0 0.5rem;
   white-space: nowrap;
   :focus,
   :hover {
-    background-color: ${({ theme }) => theme.buttonHoverBg1};
+    border-color: #0e9a86;
+    color: #1a2430;
   }
 `
 
@@ -94,7 +105,14 @@ export default function BridgeTokenInputPanel({
   return (
     <InputPanel id={id}>
       <Container hideInput={false}>
-      <div style={{ display: 'flex', alignItems: 'center', padding: '1rem' }}>
+        <LabelRow>
+          <RowBetween style={{ width: '100%' }}>
+            <TYPE.body color="#5c6a78" fontWeight={500} fontSize={14}>
+              Amount
+            </TYPE.body>
+          </RowBetween>
+        </LabelRow>
+        <div style={{ display: 'flex', alignItems: 'center', padding: '10px 12px 0' }}>
         <StyledInput
           className="token-amount-input"
           value={value === undefined ? '' : value}
@@ -111,11 +129,11 @@ export default function BridgeTokenInputPanel({
       </div>
       <div
         style={{
-          padding: '0 1rem 1rem',
-          fontSize: '14px',
+          padding: '8px 14px 0',
+          fontSize: 13,
           fontWeight: 600,
-          color: '#000',
-          justifySelf: 'flex-end'
+          color: '#5c6a78',
+          textAlign: 'right'
         }}
       >
         {balance ? `Balance: ${balance.toSignificant(6)}` : "Balance: 0.00"}

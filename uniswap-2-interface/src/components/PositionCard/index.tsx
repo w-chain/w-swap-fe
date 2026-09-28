@@ -1,4 +1,5 @@
 import { JSBI, Pair, Percent } from '@uniswap/sdk'
+import { WAVE_FARM_URL } from '../../constants/ecosystemLinks'
 import { darken } from 'polished'
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -22,22 +23,54 @@ import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { Dots } from '../swap/styleds'
 import { getCurrencySymbol } from '../../utils/getNativeTokenSymbol'
 import { getPoolLink } from '../../utils'
+import { useLiquidityPositionAnalytics } from '../../hooks/useLiquidityPositionAnalytics'
+import { usePositionPnlPercent } from '../../hooks/usePortfolioTotalPnl'
+import { formatUsd } from '../../utils/formatUsd'
+import PnlPercentBadge from '../Portfolio/PnlPercentBadge'
+import Question from '../QuestionHelper'
+import { useUserTotalLpBalance } from '../../hooks/useWaveFarmStakedLp'
 
 export const FixedHeightRow = styled(RowBetween)`
-  height: 24px;
+  min-height: 28px;
+  height: auto;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  row-gap: 8px;
 `
 
 export const HoverCard = styled(Card)`
-  background: #95cbfe;
-  border: 1px solid rgba(4, 63, 132, 0.2);
+  background: #ffffff;
+  border: 1px solid #e4ddd2;
   border-radius: 12px;
   padding: 13px;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset, 0 8px 24px -20px rgba(26, 36, 48, 0.15);
 `
+
+const FarmStakedTag = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #043f84;
+  background: rgba(14, 154, 134, 0.12);
+  border: 1px solid rgba(14, 154, 134, 0.35);
+  vertical-align: middle;
+`
+
+const FARM_UNSTAKE_HINT =
+  'Part or all of this LP is staked on Wave Farm. Unstake on Wave Farm first, then return here to remove liquidity.'
 
 interface PositionCardProps {
   pair: Pair
   showUnwrapped?: boolean
   border?: string
+  /** Show ~24h P/L % (portfolio page; uses local value history). */
+  showPnl?: boolean
 }
 
 export function MinimalPositionCard({ pair, showUnwrapped = false, border }: PositionCardProps) {
@@ -125,7 +158,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
   )
 }
 
-export default function FullPositionCard({ pair, border }: PositionCardProps) {
+export default function FullPositionCard({ pair, border, showPnl }: PositionCardProps) {
   const { account, chainId } = useActiveWeb3React()
 
   const currency0 = unwrappedToken(pair.token0)
@@ -133,25 +166,33 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
 
   const [showMore, setShowMore] = useState(false)
 
-  const userPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
+  const walletPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
+  const { total: userPoolBalance, farmStaked, wallet: walletOnlyBalance } = useUserTotalLpBalance(
+    pair.liquidityToken,
+    walletPoolBalance
+  )
   const totalPoolTokens = useTotalSupply(pair.liquidityToken)
+  const farmStakedActive = farmStaked !== undefined && JSBI.greaterThan(farmStaked.raw, JSBI.BigInt(0))
+  const walletLpAvailable =
+    walletOnlyBalance !== undefined && JSBI.greaterThan(walletOnlyBalance.raw, JSBI.BigInt(0))
+  const {
+    poolShare,
+    poolTvlUsd,
+    positionValueUsd,
+    token0Deposited,
+    token1Deposited,
+    price,
+    valueSource,
+    vol24h,
+    feesUsd24h,
+    lpPriceInUsd,
+    oraclePairName,
+    latestOraclePrice,
+    oracle
+  } = useLiquidityPositionAnalytics(pair)
+  const { percent: pnlPercent } = usePositionPnlPercent(pair, showPnl ? positionValueUsd : undefined)
 
-  const poolTokenPercentage =
-    !!userPoolBalance && !!totalPoolTokens && JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
-      ? new Percent(userPoolBalance.raw, totalPoolTokens.raw)
-      : undefined
-
-  const [token0Deposited, token1Deposited] =
-    !!pair &&
-    !!totalPoolTokens &&
-    !!userPoolBalance &&
-    // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
-    JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
-      ? [
-          pair.getLiquidityValue(pair.token0, totalPoolTokens, userPoolBalance, false),
-          pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false)
-        ]
-      : [undefined, undefined]
+  const poolTokenPercentage = poolShare
 
   return (
     <HoverCard border={border}>
@@ -159,15 +200,32 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
         <FixedHeightRow onClick={() => setShowMore(!showMore)} style={{ cursor: 'pointer' }}>
           <RowFixed>
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
-            <Text fontWeight={600} fontSize={16} color={'#043F84'}>
+            <Text fontWeight={600} fontSize={16} color={'#1a2430'}>
               {!currency0 || !currency1 ? (
-                <Dots style={{ color: '#043F84', fontWeight: 500 }}>Loading</Dots>
+                <Dots style={{ color: '#5c6a78', fontWeight: 500 }}>Loading</Dots>
               ) : (
-                `${getCurrencySymbol(currency0, chainId)}/${getCurrencySymbol(currency1, chainId)}`
+                <>
+                  {`${getCurrencySymbol(currency0, chainId)}/${getCurrencySymbol(currency1, chainId)}`}
+                  {farmStakedActive ? (
+                    <FarmStakedTag>
+                      Staked on Farm
+                      <Question text={FARM_UNSTAKE_HINT} />
+                    </FarmStakedTag>
+                  ) : null}
+                </>
               )}
             </Text>
           </RowFixed>
           <RowFixed>
+            <AutoColumn gap="2px" style={{ alignItems: 'flex-end' }}>
+              <Text fontWeight={700} fontSize={14} color="#1a2430">
+                {formatUsd(positionValueUsd)}
+              </Text>
+              <Text fontWeight={500} fontSize={12} color="#5c6a78">
+                {poolTokenPercentage ? `${poolTokenPercentage.toFixed(2)}% pool` : '—'}
+              </Text>
+              {showPnl ? <PnlPercentBadge percent={pnlPercent} suffix=" (24h)" /> : null}
+            </AutoColumn>
             {showMore ? (
               <ChevronUp size="20" style={{ marginLeft: '10px' }} strokeWidth={2} />
             ) : (
@@ -177,6 +235,79 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
         </FixedHeightRow>
         {showMore && (
           <AutoColumn gap="8px">
+            <FixedHeightRow>
+              <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                Est. position value
+              </Text>
+              <Text fontSize={14} fontWeight={700} color="#1a2430">
+                {formatUsd(positionValueUsd)}
+              </Text>
+            </FixedHeightRow>
+            {showPnl ? (
+              <FixedHeightRow>
+                <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                  P/L (24h est.)
+                </Text>
+                <PnlPercentBadge percent={pnlPercent} suffix="" />
+              </FixedHeightRow>
+            ) : null}
+            <FixedHeightRow>
+              <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                Pool TVL {valueSource === 'oracle' ? '(oracle)' : '(est.)'}
+              </Text>
+              <Text fontSize={14} fontWeight={600} color="#1a2430">
+                {formatUsd(poolTvlUsd)}
+              </Text>
+            </FixedHeightRow>
+            {oracle && !oracle.loading && !oracle.error ? (
+              <>
+                <FixedHeightRow>
+                  <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                    24h volume
+                  </Text>
+                  <Text fontSize={14} fontWeight={600} color="#1a2430">
+                    {formatUsd(vol24h)}
+                  </Text>
+                </FixedHeightRow>
+                <FixedHeightRow>
+                  <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                    Est. your 24h fees
+                  </Text>
+                  <Text fontSize={14} fontWeight={600} color="#1a2430">
+                    {formatUsd(feesUsd24h)}
+                  </Text>
+                </FixedHeightRow>
+                <FixedHeightRow>
+                  <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                    LP token price
+                  </Text>
+                  <Text fontSize={14} fontWeight={600} color="#1a2430">
+                    {lpPriceInUsd ? formatUsd(lpPriceInUsd) : '—'}
+                  </Text>
+                </FixedHeightRow>
+                <FixedHeightRow>
+                  <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                    Oracle rate ({oraclePairName})
+                  </Text>
+                  <Text fontSize={14} fontWeight={600} color="#1a2430">
+                    {latestOraclePrice ? latestOraclePrice.toLocaleString(undefined, { maximumFractionDigits: 4 }) : '—'}
+                  </Text>
+                </FixedHeightRow>
+              </>
+            ) : null}
+            <FixedHeightRow>
+              <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                Rate (on-chain)
+              </Text>
+              <Text fontSize={14} fontWeight={600} color="#1a2430">
+                {price
+                  ? `1 ${getCurrencySymbol(currency0, chainId)} = ${price.toSignificant(4)} ${getCurrencySymbol(
+                      currency1,
+                      chainId
+                    )}`
+                  : '—'}
+              </Text>
+            </FixedHeightRow>
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={500}>
@@ -211,6 +342,26 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                 '-'
               )}
             </FixedHeightRow>
+            {farmStakedActive ? (
+              <>
+                <FixedHeightRow>
+                  <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                    Staked on Wave Farm
+                  </Text>
+                  <Text fontSize={14} fontWeight={600} color="#1a2430">
+                    {farmStaked?.toSignificant(4) ?? '—'} LP
+                  </Text>
+                </FixedHeightRow>
+                <FixedHeightRow>
+                  <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                    In wallet
+                  </Text>
+                  <Text fontSize={14} fontWeight={600} color="#1a2430">
+                    {walletOnlyBalance ? walletOnlyBalance.toSignificant(4) : '0'} LP
+                  </Text>
+                </FixedHeightRow>
+              </>
+            ) : null}
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
                 Your pool tokens:
@@ -232,6 +383,25 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                 View pool information ↗
               </ExternalLink>
             </AutoRow>
+            {farmStakedActive ? (
+              <AutoColumn gap="8px" marginTop="10px">
+                <Text fontSize={13} color="#5c6a78" lineHeight="1.45">
+                  {walletLpAvailable
+                    ? 'LP staked on Wave Farm must be unstaked there before you can remove that portion here.'
+                    : 'All of this LP is on Wave Farm. Unstake on '}
+                  {!walletLpAvailable ? (
+                    <>
+                      <ExternalLink href={WAVE_FARM_URL}>Wave Farm</ExternalLink> before removing liquidity here.
+                    </>
+                  ) : (
+                    <>
+                      {' '}
+                      <ExternalLink href={WAVE_FARM_URL}>Open Wave Farm</ExternalLink>
+                    </>
+                  )}
+                </Text>
+              </AutoColumn>
+            ) : null}
             <RowBetween marginTop="10px">
               <ButtonSecondary
                 as={Link}
@@ -243,16 +413,31 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
               >
                 Add
               </ButtonSecondary>
-              <ButtonSecondary
-                as={Link}
-                width="48%"
-                to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
-                style={{
-                  background: 'rgba(4, 63, 132, 0.2)'
-                }}
-              >
-                Remove
-              </ButtonSecondary>
+              {farmStakedActive && !walletLpAvailable ? (
+                <ButtonSecondary
+                  as="a"
+                  href={WAVE_FARM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  width="48%"
+                  style={{
+                    background: 'rgba(4, 63, 132, 0.2)'
+                  }}
+                >
+                  Unstake on Farm
+                </ButtonSecondary>
+              ) : (
+                <ButtonSecondary
+                  as={Link}
+                  width="48%"
+                  to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
+                  style={{
+                    background: 'rgba(4, 63, 132, 0.2)'
+                  }}
+                >
+                  Remove
+                </ButtonSecondary>
+              )}
             </RowBetween>
           </AutoColumn>
         )}
