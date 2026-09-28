@@ -69,6 +69,10 @@ export function useSwitchChain() {
               }
             ]
           })
+          await ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: hexChainId }]
+          })
         } catch (addError) {
           const addErr = addError as { code: number; message?: string }
           if (addErr.code === 4001) {

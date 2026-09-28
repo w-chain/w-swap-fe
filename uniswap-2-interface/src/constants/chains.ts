@@ -54,7 +54,7 @@ export const CHAIN_CONFIG: { [chainId in ChainId]?: ChainConfig } = {
       decimals: 18
     },
     rpcUrls: ['https://rpc2.w-chain.com'],
-    blockExplorerUrls: ['https://explorer.w-chain.com']
+    blockExplorerUrls: ['https://scan.w-chain.com']
   },
   [ChainId.WCHAIN_TESTNET]: {
     chainId: 71117,
@@ -65,7 +65,7 @@ export const CHAIN_CONFIG: { [chainId in ChainId]?: ChainConfig } = {
       decimals: 18
     },
     rpcUrls: ['https://rpc-testnet.w-chain.com'],
-    blockExplorerUrls: ['https://explorer-testnet.w-chain.com']
+    blockExplorerUrls: ['https://scan-testnet.w-chain.com']
   }
 }
 
@@ -103,6 +103,9 @@ export const NETWORK_INFO: { [chainId in ChainId]?: NetworkInfo } = {
     isTestnet: true
   }
 }
+
+/** Default network for W-Swap (wallet prompt + read-only fallback). */
+export const PREFERRED_APP_CHAIN_ID = ChainId.WCHAIN
 
 export const SELECTABLE_CHAINS = [
   ChainId.WCHAIN,

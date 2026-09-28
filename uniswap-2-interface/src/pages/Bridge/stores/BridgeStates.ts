@@ -20,10 +20,10 @@ export interface BridgeState {
 }
 
 const initialState: BridgeState = {
-  from: Networks.ETH,
-  fromChainId: ChainId.ETH,
-  to: Networks.WCHAIN,
-  toChainId: ChainId.WCHAIN,
+  from: Networks.WCHAIN,
+  fromChainId: ChainId.WCHAIN,
+  to: Networks.ETH,
+  toChainId: ChainId.ETH,
   fee: 0,
   handlerAllowance: '0'
 }

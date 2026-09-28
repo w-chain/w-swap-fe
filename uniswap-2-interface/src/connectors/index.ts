@@ -3,10 +3,13 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import { NetworkConnector } from './NetworkConnector'
+import { PREFERRED_APP_CHAIN_ID } from '../constants/chains'
 
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL ?? 'https://rpc2.w-chain.com'
 
-export const NETWORK_CHAIN_ID: number = parseInt(process.env.REACT_APP_CHAIN_ID ?? '171717')
+export const NETWORK_CHAIN_ID: number = parseInt(
+  process.env.REACT_APP_CHAIN_ID ?? String(PREFERRED_APP_CHAIN_ID)
+)
 
 export const network = new NetworkConnector({
   urls: { [NETWORK_CHAIN_ID]: NETWORK_URL }

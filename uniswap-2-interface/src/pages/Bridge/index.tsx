@@ -48,19 +48,24 @@ export default function Bridge({ embedded = false }: { embedded?: boolean }) {
 
   const { setFromToken, swapNetworks, setFromAmount } = useBridgeStates()
 
+  const [openHistory, setOpenHistory] = useState(false)
+
   useEffect(() => {
-    if (!account || !bridgeState.fromChainId) return
-    
+    if (!account || !bridgeState.fromChainId || openHistory) return
+
     const fromChainId = Number(bridgeState.fromChainId) as SDKChainId
-    
-    if (fromChainId !== chainId) {
+    if (fromChainId === chainId) return
+
+    const timer = window.setTimeout(() => {
       switchChain(fromChainId).catch((error) => {
         if (error instanceof SwitchChainError && error.type !== SwitchChainErrorType.USER_REJECTED) {
           console.error('Failed to auto-switch chain:', error.message)
         }
       })
-    }
-  }, [bridgeState.fromChainId, chainId, account, switchChain])
+    }, 400)
+
+    return () => window.clearTimeout(timer)
+  }, [bridgeState.fromChainId, chainId, account, switchChain, openHistory])
 
   const availableFromTokens = useMemo(() => getAvailableFromTokens(bridgeState.from, bridgeState.to), [
     bridgeState.from,
@@ -207,10 +212,9 @@ export default function Bridge({ embedded = false }: { embedded?: boolean }) {
     }
   }, [bridgeState.fromAmount, bridgeState.fromToken, bridgeState.fromChainId, bridgeState.toChainId, deposit])
 
-  const [openHistory, setOpenHistory] = useState(false)
   const toggleHistory = useCallback(() => {
-    setOpenHistory(!openHistory)
-  }, [openHistory])
+    setOpenHistory(prev => !prev)
+  }, [])
 
   const bridgeBody = (
     <>
