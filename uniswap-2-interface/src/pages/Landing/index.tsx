@@ -82,6 +82,13 @@ export default function Landing() {
     [history, search]
   )
 
+  const scrollToSwapWidget = useCallback(() => {
+    selectWidgetTab('swap')
+    window.requestAnimationFrame(() => {
+      document.getElementById('swap-widget')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }, [selectWidgetTab])
+
   return (
     <>
       <BodyWrapper>
@@ -109,14 +116,6 @@ export default function Landing() {
             <WidgetColumn id="swap-widget" $wide={widgetTab === 'bridge'}>
               <AppBody plain>
                 <TradingCard $compact={widgetTab !== 'pool'}>
-                  <WidgetTopActions>
-                    <WidgetCtaPrimary type="button" onClick={() => selectWidgetTab('swap')}>
-                      Start swapping →
-                    </WidgetCtaPrimary>
-                    <WidgetCtaFarm href={WAVE_FARM_URL} target="_blank" rel="noopener noreferrer">
-                      Farm →
-                    </WidgetCtaFarm>
-                  </WidgetTopActions>
                   <LandingTabs>
                     <TabPill active={widgetTab === 'swap'} type="button" onClick={() => selectWidgetTab('swap')}>
                       swap
@@ -195,6 +194,14 @@ export default function Landing() {
             <SectionSubTitle>
               Join thousands of traders moving value at the speed of payments - not the speed of blocks.
             </SectionSubTitle>
+            <CtaActions>
+              <CtaPrimary type="button" onClick={scrollToSwapWidget}>
+                Start swapping →
+              </CtaPrimary>
+              <CtaOutline href={WAVE_FARM_URL} target="_blank" rel="noopener noreferrer">
+                Farm →
+              </CtaOutline>
+            </CtaActions>
           </CtaCard>
         </CtaSection>
       </BodyWrapper>
@@ -432,58 +439,6 @@ const LandingWidgetScroll = styled.div<{ $tall?: boolean }>`
   padding-right: ${({ $tall }) => ($tall ? '4px' : '0')};
 `
 
-const WidgetTopActions = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 18px;
-
-  @media (min-width: 768px) {
-    gap: 16px;
-    margin-bottom: 22px;
-  }
-`
-
-const widgetCtaBase = `
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 148px;
-  height: 40px;
-  padding: 0 18px;
-  border-radius: 9999px;
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  cursor: pointer;
-  touch-action: manipulation;
-`
-
-const WidgetCtaPrimary = styled.button`
-  ${widgetCtaBase}
-  color: #fff;
-  border: none;
-  background: linear-gradient(90deg, #2f6fed, #1e4fd8);
-
-  &:hover {
-    opacity: 0.92;
-  }
-`
-
-const WidgetCtaFarm = styled.a`
-  ${widgetCtaBase}
-  color: #1a2430;
-  border: 1px solid #cfc6b8;
-  background: transparent;
-
-  &:hover {
-    transform: translateY(-2px);
-    border-color: #0e9a86;
-  }
-`
-
 const LandingTabs = styled.div`
   display: flex;
   justify-content: center;
@@ -702,5 +657,51 @@ const CtaCard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`
+
+const CtaActions = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 40px;
+`
+
+const ctaButtonBase = `
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 176px;
+  height: 40px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+  touch-action: manipulation;
+`
+
+const CtaPrimary = styled.button`
+  ${ctaButtonBase}
+  color: #fff;
+  background: linear-gradient(90deg, #2f6fed, #1e4fd8);
+  border: none;
+
+  &:hover {
+    opacity: 0.92;
+  }
+`
+
+const CtaOutline = styled.a`
+  ${ctaButtonBase}
+  color: #1a2430;
+  border: 1px solid #cfc6b8;
+  background: transparent;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: #0e9a86;
+  }
 `
 
