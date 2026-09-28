@@ -8,6 +8,7 @@ import styled from 'styled-components'
 
 import { W_CHAIN_SITE_URL } from '../../constants/ecosystemLinks'
 import { useActiveWeb3React } from '../../hooks'
+import { usePreferredChain } from '../../hooks/usePreferredChain'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 
@@ -183,6 +184,7 @@ const NetworkSelectorWrapper = styled.div`
 `
 
 export default function Header() {
+  usePreferredChain()
   const { account, chainId } = useActiveWeb3React()
   const { pathname } = useLocation()
   const ecosystemTheme = usesEcosystemTheme(pathname)
