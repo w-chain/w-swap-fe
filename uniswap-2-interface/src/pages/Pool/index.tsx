@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
+import AddLiquidityContent from '../AddLiquidity/AddLiquidityContent'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 
 import Question from '../../components/QuestionHelper'
@@ -29,14 +30,29 @@ export default function Pool({ embedded = false }: { embedded?: boolean }) {
   const { account } = useActiveWeb3React()
   const { pairs: allV2PairsWithLiquidity, isLoading: v2IsLoading } = useUserLiquidityPairs()
   const hasV1Liquidity = useUserHasLiquidityInAllTokens()
+  const [showAddLiquidity, setShowAddLiquidity] = useState(false)
+
+  if (embedded && showAddLiquidity) {
+    return (
+      <EmbeddedPoolShell>
+        <AddLiquidityContent embedded currencyIdA="ETH" onBack={() => setShowAddLiquidity(false)} />
+      </EmbeddedPoolShell>
+    )
+  }
 
   const poolBody = (
     <>
       {!embedded && <SwapPoolTabs active={'pool'} />}
       <AutoColumn gap="lg" justify="center">
-          <EcosystemPrimaryButton id="join-pool-button" as={Link} to="/add/ETH">
-            Add Liquidity
-          </EcosystemPrimaryButton>
+          {embedded ? (
+            <EcosystemPrimaryButton id="join-pool-button" type="button" onClick={() => setShowAddLiquidity(true)}>
+              Add Liquidity
+            </EcosystemPrimaryButton>
+          ) : (
+            <EcosystemPrimaryButton id="join-pool-button" as={Link} to="/add/ETH">
+              Add Liquidity
+            </EcosystemPrimaryButton>
+          )}
 
           {account && allV2PairsWithLiquidity.length > 0 && !v2IsLoading ? (
             <LiquidityOverview pairs={allV2PairsWithLiquidity} />
