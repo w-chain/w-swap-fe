@@ -114,13 +114,39 @@ export function FindPoolTabs() {
   )
 }
 
-export function AddRemoveTabs({ adding }: { adding: boolean }) {
+const EmbeddedBackButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: ${({ theme }) => theme.text1};
+`
+
+export function AddRemoveTabs({
+  adding,
+  embedded,
+  onBack
+}: {
+  adding: boolean
+  embedded?: boolean
+  onBack?: () => void
+}) {
   return (
     <Tabs>
-      <RowBetween style={{ padding: '1rem' }}>
-        <HistoryLink to="/pool">
-          <StyledArrowLeft />
-        </HistoryLink>
+      <RowBetween style={{ padding: embedded ? '0 0 12px' : '1rem' }}>
+        {embedded && onBack ? (
+          <EmbeddedBackButton type="button" aria-label="Back to pool" onClick={onBack}>
+            <StyledArrowLeft />
+          </EmbeddedBackButton>
+        ) : (
+          <HistoryLink to="/pool">
+            <StyledArrowLeft />
+          </HistoryLink>
+        )}
         <ActiveText>{adding ? 'Add' : 'Remove'} Liquidity</ActiveText>
         <QuestionHelper
           text={
