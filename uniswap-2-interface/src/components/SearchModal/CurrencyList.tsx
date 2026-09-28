@@ -24,10 +24,33 @@ function currencyKey(currency: Currency): string {
 
 const StyledBalanceText = styled(Text)`
   white-space: nowrap;
-  overflow: hidden;
-  max-width: 7rem;
-  text-overflow: ellipsis;
   font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a2430;
+  text-align: right;
+  flex-shrink: 0;
+`
+
+const TokenMainRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 auto;
+  min-width: 0;
+`
+
+const TokenMetaColumn = styled(Column)`
+  min-width: 0;
+  flex: 1 1 auto;
+`
+
+const TokenTrailing = styled(RowFixed)`
+  flex-shrink: 0;
+  margin-left: auto;
+  gap: 8px;
+  max-width: 45%;
+  justify-content: flex-end;
 `
 
 const Tag = styled.div`
@@ -114,44 +137,52 @@ function CurrencyRow({
       disabled={isSelected}
       selected={otherSelected}
     >
-      <CurrencyLogo currency={currency} size={'24px'} />
-      <Column>
-        <Text title={currency.name} fontWeight={600} fontSize={15} color="#1a2430">
-          {currency === ETHER ? getNativeTokenSymbol(chainId) : currency.symbol}
-        </Text>
-        <FadedSpan>
-          {!isOnSelectedList && customAdded ? (
-            <TYPE.main fontWeight={500}>
-              Added by user
-              <LinkStyledButton
-                onClick={event => {
-                  event.stopPropagation()
-                  if (chainId && currency instanceof Token) removeToken(chainId, currency.address)
-                }}
-              >
-                (Remove)
-              </LinkStyledButton>
-            </TYPE.main>
-          ) : null}
-          {!isOnSelectedList && !customAdded ? (
-            <TYPE.main fontWeight={500}>
-              Found by address
-              <LinkStyledButton
-                onClick={event => {
-                  event.stopPropagation()
-                  if (currency instanceof Token) addToken(currency)
-                }}
-              >
-                (Add)
-              </LinkStyledButton>
-            </TYPE.main>
-          ) : null}
-        </FadedSpan>
-      </Column>
-      <TokenTags currency={currency} />
-      <RowFixed style={{ justifySelf: 'flex-end' }}>
+      <TokenMainRow>
+        <CurrencyLogo currency={currency} size={'24px'} />
+        <TokenMetaColumn>
+          <Text
+            title={currency.name}
+            fontWeight={600}
+            fontSize={15}
+            color="#1a2430"
+            style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+          >
+            {currency === ETHER ? getNativeTokenSymbol(chainId) : currency.symbol}
+          </Text>
+          <FadedSpan>
+            {!isOnSelectedList && customAdded ? (
+              <TYPE.main fontWeight={500}>
+                Added by user
+                <LinkStyledButton
+                  onClick={event => {
+                    event.stopPropagation()
+                    if (chainId && currency instanceof Token) removeToken(chainId, currency.address)
+                  }}
+                >
+                  (Remove)
+                </LinkStyledButton>
+              </TYPE.main>
+            ) : null}
+            {!isOnSelectedList && !customAdded ? (
+              <TYPE.main fontWeight={500}>
+                Found by address
+                <LinkStyledButton
+                  onClick={event => {
+                    event.stopPropagation()
+                    if (currency instanceof Token) addToken(currency)
+                  }}
+                >
+                  (Add)
+                </LinkStyledButton>
+              </TYPE.main>
+            ) : null}
+          </FadedSpan>
+        </TokenMetaColumn>
+      </TokenMainRow>
+      <TokenTrailing>
+        <TokenTags currency={currency} />
         {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
-      </RowFixed>
+      </TokenTrailing>
     </MenuItem>
   )
 }

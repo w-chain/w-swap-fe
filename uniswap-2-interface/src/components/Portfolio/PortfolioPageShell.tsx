@@ -130,26 +130,27 @@ export const PortfolioConnectHero = styled.div`
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset, 0 18px 40px -28px rgba(26, 36, 48, 0.12);
 `
 
-/** Responsive stat tiles for portfolio summary row */
+/** Responsive stat tiles — use minmax(0,1fr) so nested cards (e.g. landing pool widget) do not clip. */
 export const PortfolioStatGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
   width: 100%;
+  min-width: 0;
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     gap: 8px;
   `};
 
-  @media (min-width: 480px) {
-    grid-template-columns: repeat(2, 1fr);
+  @media (min-width: 520px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  @media (min-width: 640px) {
-    grid-template-columns: repeat(3, 1fr);
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  @media (min-width: 960px) {
-    grid-template-columns: repeat(5, 1fr);
+  @media (min-width: 1180px) {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 `
