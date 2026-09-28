@@ -108,6 +108,8 @@ interface PositionCardProps {
   border?: string
   /** Show ~24h P/L % (portfolio page; uses local value history). */
   showPnl?: boolean
+  /** Embedded pool tab: open in-widget add liquidity instead of /add route. */
+  onAddToPool?: (currencyIdA: string, currencyIdB: string) => void
 }
 
 export function MinimalPositionCard({ pair, showUnwrapped = false, border }: PositionCardProps) {
@@ -195,7 +197,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
   )
 }
 
-export default function FullPositionCard({ pair, border, showPnl }: PositionCardProps) {
+export default function FullPositionCard({ pair, border, showPnl, onAddToPool }: PositionCardProps) {
   const { account, chainId } = useActiveWeb3React()
 
   const currency0 = unwrappedToken(pair.token0)
@@ -440,16 +442,29 @@ export default function FullPositionCard({ pair, border, showPnl }: PositionCard
               </AutoColumn>
             ) : null}
             <RowBetween marginTop="10px">
-              <ButtonSecondary
-                as={Link}
-                to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}
-                width="48%"
-                style={{
-                  background: 'rgba(4, 63, 132, 0.2)'
-                }}
-              >
-                Add
-              </ButtonSecondary>
+              {onAddToPool ? (
+                <ButtonSecondary
+                  type="button"
+                  onClick={() => onAddToPool(currencyId(currency0), currencyId(currency1))}
+                  width="48%"
+                  style={{
+                    background: 'rgba(4, 63, 132, 0.2)'
+                  }}
+                >
+                  Add
+                </ButtonSecondary>
+              ) : (
+                <ButtonSecondary
+                  as={Link}
+                  to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}
+                  width="48%"
+                  style={{
+                    background: 'rgba(4, 63, 132, 0.2)'
+                  }}
+                >
+                  Add
+                </ButtonSecondary>
+              )}
               {farmStakedActive && !walletLpAvailable ? (
                 <ButtonSecondary
                   as="a"
