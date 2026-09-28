@@ -33,12 +33,19 @@ export const EcosystemPrimaryButton = styled(ButtonPrimaryGradient)`
 
 export const EcosystemSection = styled.div`
   width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 12px;
   border: 1px solid #e4ddd2;
   border-radius: 12px;
-  padding: 16px;
+  padding: 14px 12px;
+
+  @media (min-width: 480px) {
+    padding: 16px;
+  }
+
   background: #faf8f4;
 `
 
@@ -79,14 +86,25 @@ export const EcosystemMutedLink = styled.a`
 
 export const EcosystemModalBody = styled.div`
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   background: #ffffff;
+  overflow: hidden;
 `
 
 export const EcosystemModalHeader = styled.div`
-  padding: 24px 24px 0;
+  padding: 20px 16px 0;
+
+  @media (min-width: 480px) {
+    padding: 24px 20px 0;
+  }
+
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  min-width: 0;
+  box-sizing: border-box;
 `
 
 export const EcosystemModalTitle = styled.div`
@@ -123,7 +141,11 @@ export const EcosystemModalClose = styled.button`
 export const EcosystemModalDivider = styled.div`
   height: 1px;
   background: #e4ddd2;
-  margin: 0 24px;
+  margin: 0 16px;
+
+  @media (min-width: 480px) {
+    margin: 0 20px;
+  }
 `
 
 export const EcosystemModalList = styled.div`

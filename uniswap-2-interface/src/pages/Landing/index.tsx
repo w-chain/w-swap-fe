@@ -113,7 +113,7 @@ export default function Landing() {
               </HeroStats>
             </HeroCopy>
 
-            <WidgetColumn id="swap-widget" $wide={widgetTab === 'bridge'}>
+            <WidgetColumn id="swap-widget" $wide={widgetTab === 'bridge' || widgetTab === 'pool'}>
               <AppBody plain>
                 <TradingCard $compact={widgetTab !== 'pool'}>
                   <LandingTabs>
@@ -408,7 +408,7 @@ const HeroStat = styled.div`
 
 const WidgetColumn = styled.div<{ $wide?: boolean }>`
   width: 100%;
-  max-width: ${({ $wide }) => ($wide ? 'min(600px, 100%)' : 'min(500px, 100%)')};
+  max-width: ${({ $wide }) => ($wide ? 'min(640px, 100%)' : 'min(500px, 100%)')};
   flex-shrink: 0;
   scroll-margin-top: 120px;
 
@@ -436,7 +436,10 @@ const LandingWidgetScroll = styled.div<{ $tall?: boolean }>`
   max-height: ${({ $tall }) => ($tall ? 'min(70vh, 720px)' : 'none')};
   overflow-y: ${({ $tall }) => ($tall ? 'auto' : 'visible')};
   overflow-x: hidden;
-  padding-right: ${({ $tall }) => ($tall ? '4px' : '0')};
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: ${({ $tall }) => ($tall ? '0 2px 8px 0' : '0')};
 `
 
 const LandingTabs = styled.div`

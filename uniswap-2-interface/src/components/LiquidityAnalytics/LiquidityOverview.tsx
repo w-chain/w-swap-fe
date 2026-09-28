@@ -20,28 +20,35 @@ const StatCard = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
+  box-sizing: border-box;
 `
 
 const StatLabel = styled.span`
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: #5c6a78;
   text-transform: uppercase;
   letter-spacing: 0.02em;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 `
 
 const StatValue = styled.span`
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
   color: #1a2430;
-  line-height: 1.2;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 `
 
 const Note = styled.p`
   margin: 0;
+  padding: 0 2px;
   font-size: 13px;
-  line-height: 1.45;
+  line-height: 1.5;
   color: #5c6a78;
+  overflow-wrap: anywhere;
 `
 
 interface LiquidityOverviewProps {
@@ -68,7 +75,7 @@ export default function LiquidityOverview({ pairs, showPnl }: LiquidityOverviewP
 
   return (
     <EcosystemSection>
-      <RowBetween padding="0 4px">
+      <RowBetween padding="0 2px">
         <Text color="#1a2430" fontWeight={600} fontSize={14}>
           Liquidity analytics
         </Text>

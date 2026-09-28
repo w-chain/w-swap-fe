@@ -33,18 +33,55 @@ import { useUserTotalLpBalance } from '../../hooks/useWaveFarmStakedLp'
 export const FixedHeightRow = styled(RowBetween)`
   min-height: 28px;
   height: auto;
-  align-items: center;
+  width: 100%;
+  min-width: 0;
+  align-items: flex-start;
   flex-wrap: wrap;
-  gap: 6px 8px;
+  gap: 6px 10px;
   row-gap: 8px;
+
+  & > * {
+    min-width: 0;
+  }
+`
+
+const MetricLabel = styled(Text)`
+  flex: 1 1 140px;
+  min-width: 0;
+  padding-right: 8px;
+  line-height: 1.35;
+`
+
+const MetricValue = styled(Text)`
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  text-align: right;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 `
 
 export const HoverCard = styled(Card)`
   background: #ffffff;
   border: 1px solid #e4ddd2;
   border-radius: 12px;
-  padding: 13px;
+  padding: 14px 12px;
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset, 0 8px 24px -20px rgba(26, 36, 48, 0.15);
+
+  @media (min-width: 480px) {
+    padding: 14px;
+  }
+`
+
+const PairTitleBlock = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  flex: 1 1 160px;
+  min-width: 0;
 `
 
 const FarmStakedTag = styled.span`
@@ -197,10 +234,10 @@ export default function FullPositionCard({ pair, border, showPnl }: PositionCard
   return (
     <HoverCard border={border}>
       <AutoColumn gap="12px">
-        <FixedHeightRow onClick={() => setShowMore(!showMore)} style={{ cursor: 'pointer' }}>
-          <RowFixed>
+        <FixedHeightRow onClick={() => setShowMore(!showMore)} style={{ cursor: 'pointer', alignItems: 'center' }}>
+          <PairTitleBlock>
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
-            <Text fontWeight={600} fontSize={16} color={'#1a2430'}>
+            <Text fontWeight={600} fontSize={15} color={'#1a2430'} style={{ lineHeight: 1.35, overflowWrap: 'anywhere' }}>
               {!currency0 || !currency1 ? (
                 <Dots style={{ color: '#5c6a78', fontWeight: 500 }}>Loading</Dots>
               ) : (
@@ -215,8 +252,8 @@ export default function FullPositionCard({ pair, border, showPnl }: PositionCard
                 </>
               )}
             </Text>
-          </RowFixed>
-          <RowFixed>
+          </PairTitleBlock>
+          <RowFixed style={{ flexShrink: 0, marginLeft: 'auto' }}>
             <AutoColumn gap="2px" style={{ alignItems: 'flex-end' }}>
               <Text fontWeight={700} fontSize={14} color="#1a2430">
                 {formatUsd(positionValueUsd)}
@@ -236,77 +273,77 @@ export default function FullPositionCard({ pair, border, showPnl }: PositionCard
         {showMore && (
           <AutoColumn gap="8px">
             <FixedHeightRow>
-              <Text fontSize={14} fontWeight={600} color="#5c6a78">
+              <MetricLabel as="span" fontSize={14} fontWeight={600} color="#5c6a78">
                 Est. position value
-              </Text>
-              <Text fontSize={14} fontWeight={700} color="#1a2430">
+              </MetricLabel>
+              <MetricValue as="span" fontSize={14} fontWeight={700} color="#1a2430">
                 {formatUsd(positionValueUsd)}
-              </Text>
+              </MetricValue>
             </FixedHeightRow>
             {showPnl ? (
               <FixedHeightRow>
-                <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                <MetricLabel as="span" fontSize={14} fontWeight={600} color="#5c6a78">
                   P/L (24h est.)
-                </Text>
+                </MetricLabel>
                 <PnlPercentBadge percent={pnlPercent} suffix="" />
               </FixedHeightRow>
             ) : null}
             <FixedHeightRow>
-              <Text fontSize={14} fontWeight={600} color="#5c6a78">
+              <MetricLabel as="span" fontSize={14} fontWeight={600} color="#5c6a78">
                 Pool TVL {valueSource === 'oracle' ? '(oracle)' : '(est.)'}
-              </Text>
-              <Text fontSize={14} fontWeight={600} color="#1a2430">
+              </MetricLabel>
+              <MetricValue as="span" fontSize={14} fontWeight={600} color="#1a2430">
                 {formatUsd(poolTvlUsd)}
-              </Text>
+              </MetricValue>
             </FixedHeightRow>
             {oracle && !oracle.loading && !oracle.error ? (
               <>
                 <FixedHeightRow>
-                  <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                  <MetricLabel as="span" fontSize={14} fontWeight={600} color="#5c6a78">
                     24h volume
-                  </Text>
-                  <Text fontSize={14} fontWeight={600} color="#1a2430">
+                  </MetricLabel>
+                  <MetricValue as="span" fontSize={14} fontWeight={600} color="#1a2430">
                     {formatUsd(vol24h)}
-                  </Text>
+                  </MetricValue>
                 </FixedHeightRow>
                 <FixedHeightRow>
-                  <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                  <MetricLabel as="span" fontSize={14} fontWeight={600} color="#5c6a78">
                     Est. your 24h fees
-                  </Text>
-                  <Text fontSize={14} fontWeight={600} color="#1a2430">
+                  </MetricLabel>
+                  <MetricValue as="span" fontSize={14} fontWeight={600} color="#1a2430">
                     {formatUsd(feesUsd24h)}
-                  </Text>
+                  </MetricValue>
                 </FixedHeightRow>
                 <FixedHeightRow>
-                  <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                  <MetricLabel as="span" fontSize={14} fontWeight={600} color="#5c6a78">
                     LP token price
-                  </Text>
-                  <Text fontSize={14} fontWeight={600} color="#1a2430">
+                  </MetricLabel>
+                  <MetricValue as="span" fontSize={14} fontWeight={600} color="#1a2430">
                     {lpPriceInUsd ? formatUsd(lpPriceInUsd) : '—'}
-                  </Text>
+                  </MetricValue>
                 </FixedHeightRow>
                 <FixedHeightRow>
-                  <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                  <MetricLabel as="span" fontSize={14} fontWeight={600} color="#5c6a78">
                     Oracle rate ({oraclePairName})
-                  </Text>
-                  <Text fontSize={14} fontWeight={600} color="#1a2430">
+                  </MetricLabel>
+                  <MetricValue as="span" fontSize={14} fontWeight={600} color="#1a2430">
                     {latestOraclePrice ? latestOraclePrice.toLocaleString(undefined, { maximumFractionDigits: 4 }) : '—'}
-                  </Text>
+                  </MetricValue>
                 </FixedHeightRow>
               </>
             ) : null}
             <FixedHeightRow>
-              <Text fontSize={14} fontWeight={600} color="#5c6a78">
+              <MetricLabel as="span" fontSize={14} fontWeight={600} color="#5c6a78">
                 Rate (on-chain)
-              </Text>
-              <Text fontSize={14} fontWeight={600} color="#1a2430">
+              </MetricLabel>
+              <MetricValue as="span" fontSize={14} fontWeight={600} color="#1a2430">
                 {price
                   ? `1 ${getCurrencySymbol(currency0, chainId)} = ${price.toSignificant(4)} ${getCurrencySymbol(
                       currency1,
                       chainId
                     )}`
                   : '—'}
-              </Text>
+              </MetricValue>
             </FixedHeightRow>
             <FixedHeightRow>
               <RowFixed>
@@ -345,20 +382,20 @@ export default function FullPositionCard({ pair, border, showPnl }: PositionCard
             {farmStakedActive ? (
               <>
                 <FixedHeightRow>
-                  <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                  <MetricLabel as="span" fontSize={14} fontWeight={600} color="#5c6a78">
                     Staked on Wave Farm
-                  </Text>
-                  <Text fontSize={14} fontWeight={600} color="#1a2430">
+                  </MetricLabel>
+                  <MetricValue as="span" fontSize={14} fontWeight={600} color="#1a2430">
                     {farmStaked?.toSignificant(4) ?? '—'} LP
-                  </Text>
+                  </MetricValue>
                 </FixedHeightRow>
                 <FixedHeightRow>
-                  <Text fontSize={14} fontWeight={600} color="#5c6a78">
+                  <MetricLabel as="span" fontSize={14} fontWeight={600} color="#5c6a78">
                     In wallet
-                  </Text>
-                  <Text fontSize={14} fontWeight={600} color="#1a2430">
+                  </MetricLabel>
+                  <MetricValue as="span" fontSize={14} fontWeight={600} color="#1a2430">
                     {walletOnlyBalance ? walletOnlyBalance.toSignificant(4) : '0'} LP
-                  </Text>
+                  </MetricValue>
                 </FixedHeightRow>
               </>
             ) : null}

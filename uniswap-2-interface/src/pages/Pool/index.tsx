@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 
@@ -16,6 +17,13 @@ import { useUserLiquidityPairs } from '../../hooks/useUserLiquidityPairs'
 import AppBody from '../AppBody'
 import { Dots } from '../../components/swap/styleds'
 import LiquidityOverview from '../../components/LiquidityAnalytics/LiquidityOverview'
+
+const EmbeddedPoolShell = styled.div`
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+`
 
 export default function Pool({ embedded = false }: { embedded?: boolean }) {
   const { account } = useActiveWeb3React()
@@ -35,7 +43,7 @@ export default function Pool({ embedded = false }: { embedded?: boolean }) {
           ) : null}
 
           <EcosystemSection>
-            <RowBetween padding={'0 4px'}>
+            <RowBetween padding={'0 2px'}>
               <Text color="#1a2430" fontWeight={600} fontSize={14}>
                 Your Liquidity
               </Text>
@@ -69,5 +77,5 @@ export default function Pool({ embedded = false }: { embedded?: boolean }) {
     </>
   )
 
-  return embedded ? poolBody : <AppBody card>{poolBody}</AppBody>
+  return embedded ? <EmbeddedPoolShell>{poolBody}</EmbeddedPoolShell> : <AppBody card>{poolBody}</AppBody>
 }

@@ -103,7 +103,7 @@ export function CurrencySearch({
   const selectedListInfo = useSelectedListInfo()
 
   return (
-    <EcosystemModalBody style={{ display: 'flex', flexDirection: 'column', minHeight: '480px' }}>
+    <EcosystemModalBody style={{ display: 'flex', flexDirection: 'column', minHeight: '480px', minWidth: 0, overflow: 'hidden' }}>
       <EcosystemModalHeader>
         <div>
           <EcosystemModalTitle>
@@ -118,7 +118,18 @@ export function CurrencySearch({
       </EcosystemModalHeader>
       <EcosystemModalDivider />
 
-      <div style={{ flex: '1 1 auto', width: '100%', minHeight: 340, paddingTop: 12, background: '#ffffff' }}>
+      <div
+        style={{
+          flex: '1 1 auto',
+          width: '100%',
+          minWidth: 0,
+          minHeight: 340,
+          padding: '12px 16px 0',
+          boxSizing: 'border-box',
+          background: '#ffffff',
+          overflow: 'hidden'
+        }}
+      >
         <AutoSizer disableWidth>
           {({ height }) => (
             <CurrencyList
