@@ -6,6 +6,11 @@ import { clearCompletedTransactions, initializeTransactions, updateTransactionSt
 import { TransactionStatus, Networks } from '../shared/types/enums'
 import { BridgeTransaction } from '../shared/types/transaction'
 import { BRIDGE_API_BASE } from '../../../constants/ecosystemLinks'
+import {
+  BRIDGE_TRANSACTIONS_STORAGE_KEY,
+  isBridgeTransactionCompleted,
+  isBridgeTransactionPending
+} from '../shared/utils/bridgeTransactionStorage'
 import { getTokenImage, getNetworkImage, getNetworkFromChainId, getExplorerTxUrl } from '../shared/utils'
 import { Dots } from '../../../components/swap/styleds'
 
@@ -258,7 +263,7 @@ export default function BridgeHistory() {
   useEffect(() => {
     if (initialized && transactions.length > 0) {
       try {
-        localStorage.setItem('bridge_transactions', JSON.stringify(transactions))
+        localStorage.setItem(BRIDGE_TRANSACTIONS_STORAGE_KEY, JSON.stringify(transactions))
       } catch (error) {
         console.error('Failed to backup transactions to localStorage:', error)
       }
@@ -309,9 +314,7 @@ export default function BridgeHistory() {
   useEffect(() => {
     if (!initialized) return
 
-    const pendingTxs = transactions.filter(
-      tx => tx.status === TransactionStatus.PENDING || tx.status === TransactionStatus.AWAITING
-    )
+    const pendingTxs = transactions.filter(tx => isBridgeTransactionPending(tx.status))
 
     // Clear existing intervals for transactions that are no longer pending
     intervalRefs.current.forEach((intervalId, txHash) => {
@@ -352,15 +355,11 @@ export default function BridgeHistory() {
   }, [])
 
   const pendingTransactions = transactions
-    .filter(tx => tx.status === TransactionStatus.PENDING || tx.status === TransactionStatus.AWAITING)
+    .filter(tx => isBridgeTransactionPending(tx.status))
     .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-  
+
   const completedTransactions = transactions
-    .filter(tx =>
-      tx.status === TransactionStatus.SUCCESS ||
-      tx.status === TransactionStatus.FAILED ||
-      tx.status === TransactionStatus.REJECTED
-    )
+    .filter(tx => isBridgeTransactionCompleted(tx.status))
     .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
 
   const handleClearCompleted = useCallback(async () => {
