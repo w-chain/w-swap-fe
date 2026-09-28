@@ -63,6 +63,11 @@ const LogoArea = styled.div`
   align-items: center;
   flex-shrink: 0;
   min-width: 0;
+  margin-right: 8px;
+
+  @media (min-width: 768px) {
+    margin-right: 0;
+  }
 `
 
 const NavArea = styled.div`
@@ -70,12 +75,21 @@ const NavArea = styled.div`
   min-width: 0;
   overflow: hidden;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-left: 32px;
+
+  @media (min-width: 768px) {
+    padding-left: 48px;
+  }
+
+  @media (min-width: 1024px) {
+    padding-left: 56px;
+  }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     flex: 1 1 100%;
     order: 3;
-    justify-content: flex-start;
+    padding-left: 0;
     border-top: 1px solid rgba(228, 221, 210, 0.5);
     padding-top: 10px;
     overflow: visible;
