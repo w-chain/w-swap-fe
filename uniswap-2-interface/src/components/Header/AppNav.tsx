@@ -2,12 +2,12 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import { WAVE_FARM_URL, WCO_ECOSYSTEM_URL } from '../../constants/ecosystemLinks'
+import { WAVE_FARM_URL } from '../../constants/ecosystemLinks'
 
 const Nav = styled.nav`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 36px;
   margin-left: 0;
   flex-wrap: nowrap;
   overflow-x: auto;
@@ -16,14 +16,14 @@ const Nav = styled.nav`
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   scroll-padding: 12px;
-  padding: 2px 4px 4px;
+  padding: 2px 0 4px;
 
   &::-webkit-scrollbar {
     display: none;
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    gap: 10px;
+    gap: 24px;
     padding-bottom: 6px;
   `};
 
@@ -32,52 +32,39 @@ const Nav = styled.nav`
   `};
 `
 
-const navPillCss = `
+const navLinkCss = `
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  min-height: 40px;
-  padding: 8px 14px;
-  border-radius: 999px;
   font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
   text-decoration: none;
-  border: 1px solid #e4ddd2;
-  background: #ffffff;
   color: #5c6a78;
   white-space: nowrap;
   flex-shrink: 0;
   touch-action: manipulation;
+  transition: color 0.15s ease;
 
   &:hover,
   &:focus {
-    color: #0e9a86;
-  }
-
-  @media (pointer: coarse) {
-    min-height: 44px;
-    padding: 10px 16px;
+    color: #1a2430;
   }
 `
 
 const activeClassName = 'APP_NAV_ACTIVE'
 
 const NavItem = styled(NavLink).attrs({ activeClassName })`
-  ${navPillCss}
+  ${navLinkCss}
 
   &.${activeClassName} {
-    border-color: transparent;
-    background-image: linear-gradient(#fff, #fff), linear-gradient(135deg, #12b39c, #2f6fed);
-    background-origin: border-box;
-    background-clip: content-box, border-box;
-    color: #0e9a86;
+    color: #1a2430;
+    font-weight: 600;
   }
 `
 
 const ExternalNavItem = styled.a`
-  ${navPillCss}
+  ${navLinkCss}
 `
 
 type InternalLink = {
@@ -96,12 +83,11 @@ type ExternalLink = {
   label: string
 }
 
-const W_CHAIN_HOME_URL = 'https://w-chain.com'
-
 const NAV_LINKS: (InternalLink | ExternalLink)[] = [
-  { kind: 'external', href: W_CHAIN_HOME_URL, key: 'wChainHome', label: 'W Chain home' },
+  { kind: 'internal', to: '/', key: 'home', label: 'Home', exact: true, match: p => p === '/' },
   { kind: 'internal', to: '/portfolio', key: 'portfolio', label: 'Portfolio', match: p => p === '/portfolio' },
-  { kind: 'external', href: WCO_ECOSYSTEM_URL, key: 'wco', label: 'WCO' },
+  { kind: 'internal', to: '/swap', key: 'swap', label: 'SWAP', match: p => p.startsWith('/swap') },
+  { kind: 'internal', to: '/bridge', key: 'bridge', label: 'Bridge', match: p => p === '/bridge' },
   { kind: 'external', href: WAVE_FARM_URL, key: 'waveFarm', label: 'Wave Farm' }
 ]
 
@@ -124,7 +110,7 @@ export default function AppNav() {
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              title={`Open ${item.label} (W Chain)`}
+              title={`Open ${item.label}`}
             >
               {labelFor(item)}
             </ExternalNavItem>
