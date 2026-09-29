@@ -17,7 +17,7 @@ export function useWaveFarmStakedLp(): WaveFarmStakedLpState {
   const { account, chainId } = useActiveWeb3React()
   const makerAddress = chainId && isWaveFarmSupportedChain(chainId) ? WAVE_MAKER_ADDRESSES[chainId] : undefined
   const contract = useContract(makerAddress, WAVE_MAKER_ABI, false)
-  const call = useSingleCallResult(contract, 'getUserInfo', account ? [account] : undefined)
+  const call = useSingleCallResult(contract, 'getUserInfo', [account ?? undefined])
 
   return useMemo(() => {
     if (!account || chainId !== ChainId.WCHAIN || !makerAddress) {
