@@ -35,6 +35,21 @@ const StatCard = styled.div`
   border: 1px solid #e4ddd2;
   border-radius: 12px;
   padding: 12px 14px;
+  min-width: 0;
+  box-sizing: border-box;
+`
+
+/** Sidebar market tiles — cap at 2 cols (PortfolioStatGrid grows to 5 cols by viewport and overlaps here). */
+const MarketStatGrid = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+
+  @media (min-width: 360px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 `
 
 const TokenRow = styled.div`
@@ -155,7 +170,7 @@ export function PortfolioMarketPrices() {
       <Text color="#1a2430" fontWeight={600} fontSize={14} padding="0 4px">
         Market (W Oracle)
       </Text>
-      <StatGrid>
+      <MarketStatGrid>
         <StatCard>
           <Text fontSize={11} fontWeight={600} color="#5c6a78">
             WCO / USD
@@ -172,7 +187,7 @@ export function PortfolioMarketPrices() {
             {wave === undefined ? '…' : wave == null ? '—' : `$${wave.toPrecision(4)}`}
           </Text>
         </StatCard>
-      </StatGrid>
+      </MarketStatGrid>
     </EcosystemSection>
   )
 }
